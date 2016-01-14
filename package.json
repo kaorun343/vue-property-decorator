@@ -1,0 +1,41 @@
+{
+  "name": "vue-property-decorator",
+  "version": "2.0.0",
+  "description": "property decorator for Vue Component",
+  "main": "lib/vue-property-decorator.js",
+  "keywords": [
+    "vue",
+    "typescript",
+    "decorator"
+  ],
+  "author": "kaorun343",
+  "license": "MIT",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "tsc src/vue-property-decorator.ts -m commonjs -t es5 --outDir lib -d",
+    "test": "mocha --compilers js:espower-babel/guess test/decorator.spec.js",
+    "prepublish": "npm run build"
+  },
+  "files": [
+    "lib"
+  ],
+  "devDependencies": {
+    "babel-cli": "^6.4.0",
+    "babel-preset-es2015": "^6.3.13",
+    "espower-babel": "^4.0.1",
+    "mocha": "^2.3.4",
+    "power-assert": "^1.2.0"
+  },
+  "typings": "./lib/vue-property-decorator.d.ts",
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaorun343/vue-property-decorator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kaorun343/vue-property-decorator/issues"
+  },
+  "homepage": "https://github.com/kaorun343/vue-property-decorator#readme"
+}
