@@ -28,7 +28,7 @@ export class Component {
     }
   }
 
-  @watch("child")
+  @watch('child')
   onChildChanged(val: string, oldVal: string) {}
 }
 
@@ -42,6 +42,12 @@ export const Component = Vue.extend({
   data() {
     return {
       child: 'child'
+    }
+  },
+  props: {
+    age: {
+      type: Number,
+      twoWay: true
     }
   },
   methods: {
