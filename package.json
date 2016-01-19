@@ -1,7 +1,7 @@
 {
   "name": "vue-property-decorator",
-  "version": "2.0.0",
-  "description": "property decorator for Vue Component",
+  "version": "2.0.1",
+  "description": "property decorators for Vue Component",
   "main": "lib/vue-property-decorator.js",
   "keywords": [
     "vue",
