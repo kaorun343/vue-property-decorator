@@ -1,3 +1,4 @@
+/* vue-property-decorator MIT LICENSE copyright kaorun343 */
 "use strict";
 
 /**
