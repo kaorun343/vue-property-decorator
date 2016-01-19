@@ -14,7 +14,7 @@
     "test": "test"
   },
   "scripts": {
-    "build": "tsc src/vue-property-decorator.ts -m commonjs -t es5 --outDir lib -d",
+    "build": "tsc -p src",
     "test": "mocha --compilers js:espower-babel/guess test/decorator.spec.js",
     "prepublish": "npm run build"
   },

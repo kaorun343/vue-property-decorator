@@ -7,21 +7,18 @@
         "jsx": "react",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "declaration": false,
+        "declaration": true,
         "noImplicitAny": false,
         "removeComments": true,
         "noLib": false,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
-        "out": "../lib/vue-property-decorator.js"
+        "outDir": "../lib"
     },
     "filesGlob": [
         "**/*.ts",
         "**/*.tsx",
         "!node_modules/**"
-    ],
-    "files": [
-        "vue-property-decorator.ts"
     ],
     "atom": {
         "rewriteTsconfig": true

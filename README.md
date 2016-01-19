@@ -16,20 +16,30 @@ import {event, prop, watch} from 'vue-property-decorator';
 
 @VueComponent
 export class Component {
-  @event('some:event')
-  onEventReceived() {}
+    @event('some:event')
+    onEventReceived() {}
 
-  @prop({type: Number, twoWay: true})
-  age: number
+    @prop(Number)
+    propA: number;
 
-  data() {
-    return {
-      child: 'child'
+    @prop({
+      type: String,
+      required: true,
+      default: '',
+      twoWay: true,
+      validator: (value: string) => value.length > 1,
+      coerce: (val: string) => val.toLowerCase()
+    })
+    propB: string;
+
+    data() {
+        return {
+            child: 'child';
+        };
     }
-  }
 
-  @watch('child')
-  onChildChanged(val: string, oldVal: string) {}
+    @watch('child')
+    onChildChanged(val: string, oldVal: string) {}
 }
 
 ```
@@ -39,26 +49,31 @@ becomes
 ```js
 'use strict'
 export const Component = Vue.extend({
-  data() {
-    return {
-      child: 'child'
+    data() {
+        return {
+            child: 'child'
+        }
+    },
+    props: {
+        propA: Number,
+        propB: {
+            type: String,
+            required: true,
+            default: '',
+            twoWay: true,
+            validator: (value: string) => value.length > 1,
+            coerce: (val: string) => val.toLowerCase()
+        }
+    },
+    methods: {
+        onEventReceived() {},
+        onChildChanged() {}
     }
-  },
-  props: {
-    age: {
-      type: Number,
-      twoWay: true
+    events: {
+        'some:event': 'onEventReceived'
+    },
+    watch: {
+        'child': 'onChildChanged'
     }
-  },
-  methods: {
-    onEventReceived() {},
-    onChildChanged() {}
-  }
-  events: {
-    'some:event': 'onEventReceived'
-  },
-  watch: {
-    'child': 'onChildChanged'
-  }
 })
 ```

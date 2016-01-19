@@ -12,11 +12,12 @@ export function event(eventName: string): PropertyDecorator {
 }
 
 export interface PropOption {
-    type?: any;
+    type: { new (...args: any[]): any; };
     required?: boolean;
     default?: any;
     twoWay?: boolean;
     validator?: (value: any) => boolean;
+    coerce?: (value: any) => any;
 }
 
 /**
@@ -24,7 +25,7 @@ export interface PropOption {
  * @param  {PropOption}        options the option for the prop
  * @return {PropertyDecorator}         PropertyDecorator
  */
-export function prop(options: PropOption): PropertyDecorator {
+export function prop(options: (PropOption | { new (...args: any[]): any; })): PropertyDecorator {
     return function(target: any, propertyKey: string) {
         (target.constructor.props || (target.constructor.props = {}))[propertyKey] = options;
     };
