@@ -1,6 +1,6 @@
 'use strict'
 import assert from 'power-assert'
-import {event, prop, watch} from '../lib/vue-property-decorator'
+import {event, prop, watch, Data} from '../lib/vue-property-decorator'
 
 describe('vue-property-decorator', function () {
     beforeEach(function() {
@@ -59,6 +59,13 @@ describe('vue-property-decorator', function () {
             assert.ok(Object.keys(this.Test).indexOf('watch') > -1);
             assert.ok(Object.keys(this.Test.watch).indexOf(this.path) > -1);
             assert.equal(this.Test.watch[this.path], 'testMethod');
+        });
+    });
+    describe('Data decorator', function() {
+        it('引数をクラスのプロトタイプに追加する', function() {
+            Data(() => ({param: true}))(this.Test);
+            assert(typeof this.Test.prototype.data === 'function');
+            assert.deepEqual((new this.Test()).data(), {param: true});
         });
     });
 });

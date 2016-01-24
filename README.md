@@ -12,9 +12,10 @@ npm i -S vue-property-decorator
 ```ts
 'use strict'
 import VueComponent = require('vue-class-component');
-import {event, prop, watch} from 'vue-property-decorator';
+import {event, prop, watch, Data, $emit} from 'vue-property-decorator';
 
 @VueComponent
+@Data(() => ({child: 'child'}))
 export class Component {
     @event('some:event')
     onEventReceived() {}
@@ -32,14 +33,14 @@ export class Component {
     })
     propB: string;
 
-    data() {
-        return {
-            child: 'child';
-        };
-    }
-
     @watch('child')
     onChildChanged(val: string, oldVal: string) {}
+
+    $emit: $emit;
+
+    send() {
+        this.$emit('some:event');
+    }
 }
 
 ```
@@ -61,13 +62,16 @@ export const Component = Vue.extend({
             required: true,
             default: '',
             twoWay: true,
-            validator: (value: string) => value.length > 1,
-            coerce: (val: string) => val.toLowerCase()
+            validator: (value) => value.length > 1,
+            coerce: (val) => val.toLowerCase()
         }
     },
     methods: {
         onEventReceived() {},
-        onChildChanged() {}
+        onChildChanged() {},
+        send() {
+            this.$emit('some:event')
+        }
     }
     events: {
         'some:event': 'onEventReceived'
