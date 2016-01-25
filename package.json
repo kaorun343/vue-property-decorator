@@ -14,7 +14,7 @@
     "test": "test"
   },
   "scripts": {
-    "build": "tsc src/vue-property-decorator.ts --target es5 --module commonjs --outDir lib",
+    "build": "tsc src/vue-property-decorator.ts --target es5 --module commonjs --outDir lib -d",
     "test": "mocha --compilers ts:espower-typescript/guess"
   },
   "files": [
