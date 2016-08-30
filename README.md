@@ -1,5 +1,9 @@
 # Vue Property Decorator
 
+
+# deprecated
+
+
 ## License
 MIT License
 
