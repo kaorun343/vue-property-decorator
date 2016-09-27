@@ -1,31 +1,16 @@
 "use strict";
-import assert from "power-assert";
-import {event, prop, watch, Data, PropOption} from "../src/vue-property-decorator";
-
-describe("event decorator", () => {
-    it("should add events to 'events' property", () => {
-        class Test {
-            @event("test.event")
-            method() {
-                //
-            }
-
-            @event("another.event")
-            @event("more.event")
-            anotherMethod() {
-                //
-            }
-
-            static events: any;
-        }
-        assert.equal(Test.events["test.event"], "method");
-        assert(Test.events["another.event"], "anotherMethod");
-    });
-});
+import * as Vue from "vue";
+import * as assert from "power-assert";
+import { Component, prop, watch } from "../src/vue-property-decorator";
 
 describe("prop decorator", () => {
     it("should add props to 'props' property", () => {
-        class Test {
+        @Component<Test>({
+            mounted() {
+                this.propB;
+            }
+        })
+        class Test extends Vue {
             @prop(Number)
             propA: number;
 
@@ -34,18 +19,21 @@ describe("prop decorator", () => {
                 default: "propB"
             })
             propB: string;
-
-            static props: any;
         }
 
-        assert.equal(Test.props.propA, Number);
-        assert.deepEqual(Test.props.propB, {type: String, default: "propB"});
+        const { $options } = new Test();
+        const { props } = $options;
+        if (!(props instanceof Array)) {
+            assert.deepEqual(props!["propA"], { type: Number });
+            assert.deepEqual(props!["propB"], { type: String, default: "propB" });
+        }
     });
 });
 
 describe("watch decorator", () => {
     it("should add expressions to 'watch' property", () => {
-        class Test {
+        @Component({})
+        class Test extends Vue {
             @watch("expression")
             method() {
                 //
@@ -56,26 +44,11 @@ describe("watch decorator", () => {
             anotherMethod() {
                 //
             }
-
-            static watch: any;
         }
 
-        assert.equal(Test.watch["expression"], "method");
-        assert.equal(Test.watch["anotherExpression"], "anotherMethod");
-        assert.equal(Test.watch["moreExpression"], "anotherMethod");
-    });
-});
-
-
-describe("Data decorator", () => {
-    it("should add data to 'data' function", () => {
-        @Data(() => ({ property: true }))
-        class Test {
-            property: boolean;
-
-            data: Function;
-        }
-
-        assert.deepEqual((new Test()).data(), { property: true });
+        const { $options } = new Test();
+        assert.equal($options.watch!["expression"], "method");
+        assert.equal($options.watch!["anotherExpression"], "anotherMethod");
+        assert.equal($options.watch!["moreExpression"], "anotherMethod");
     });
 });

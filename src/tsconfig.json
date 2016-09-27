@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "outDir": "../lib",
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "isolatedModules": false,
+        "experimentalDecorators": true,
+        "declaration": true,
+        "noImplicitAny": true,
+        "removeComments": false,
+        "strictNullChecks": true,
+        "typeRoots": [
+            "../node_modules/@types/"
+        ],
+        "lib": [
+            "dom",
+            "es2015",
+            "es2016",
+            "es2017"
+        ]
+    },
+    "include": [
+        "./*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "lib"
+    ],
+    "compileOnSave": false
+}

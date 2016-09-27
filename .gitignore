@@ -1,4 +1,5 @@
 lib
 node_modules
 npm-debug.log
-typings
+src/*.js
+test/*.js
