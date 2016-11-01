@@ -40,15 +40,17 @@ describe("watch decorator", () => {
             }
 
             @watch("anotherExpression")
-            @watch("moreExpression")
+            @watch("moreExpression", { deep: true })
             anotherMethod() {
                 //
             }
         }
 
         const { $options } = new Test();
-        assert.equal($options.watch!["expression"], "method");
-        assert.equal($options.watch!["anotherExpression"], "anotherMethod");
-        assert.equal($options.watch!["moreExpression"], "anotherMethod");
+        assert.equal(($options.watch!["expression"] as any).handler, "method");
+        assert.equal(($options.watch!["anotherExpression"] as any).handler, "anotherMethod");
+        assert.equal(($options.watch!["anotherExpression"] as any).deep, false);
+        assert.equal(($options.watch!["moreExpression"] as any).handler, "anotherMethod");
+        assert.equal(($options.watch!["moreExpression"] as any).deep, true);
     });
 });
