@@ -1,6 +1,6 @@
 # Vue Property Decorator
 
-This library is fully depends on [vue-class-component](https://github.com/vuejs/vue-class-component).
+This library fully depends on [vue-class-component](https://github.com/vuejs/vue-class-component).
 
 ## License
 MIT License
