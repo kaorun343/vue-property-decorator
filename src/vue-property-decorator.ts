@@ -1,4 +1,4 @@
-/* vue-property-decorator verson 3.0.0 MIT LICENSE copyright 2016 kaorun343 */
+/* vue-property-decorator verson 3.1.0 MIT LICENSE copyright 2016 kaorun343 */
 "use strict";
 import * as Vue from "vue";
 import VueComponent from "vue-class-component";
