@@ -26,12 +26,12 @@
     "espower-typescript": "^5.0.1",
     "mocha": "^3.1.0",
     "power-assert": "^1.4.1",
-    "typescript": "^2.0.3",
-    "vue": "^2.0.0-rc.7"
+    "typescript": "^2.0.9",
+    "vue": "^2.0.5"
   },
   "typings": "./lib/vue-property-decorator.d.ts",
   "dependencies": {
-    "vue-class-component": "^4.0.1"
+    "vue-class-component": "^4.3.0"
   },
   "repository": {
     "type": "git",
