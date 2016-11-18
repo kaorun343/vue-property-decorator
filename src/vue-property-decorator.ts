@@ -1,7 +1,7 @@
 /* vue-property-decorator verson 3.1.0 MIT LICENSE copyright 2016 kaorun343 */
 "use strict";
 import * as Vue from "vue";
-import VueComponent from "vue-class-component";
+import VueClassComponent, { createDecorator } from "vue-class-component";
 
 /**
  * decorator of a prop
@@ -9,9 +9,9 @@ import VueComponent from "vue-class-component";
  * @return {PropertyDecorator}         PropertyDecorator
  */
 export function prop(options: (Vue.PropOptions | { new (...args: any[]): any; })): PropertyDecorator {
-    return function (target: any, propertyKey: string) {
-        (target.constructor.props || (target.constructor.props = {}))[propertyKey] = options;
-    };
+    return createDecorator((componentOptions, key) => {
+        (componentOptions.props || (componentOptions.props = {}) as any)[key] = options;
+    });
 }
 
 /**
@@ -22,18 +22,10 @@ export function prop(options: (Vue.PropOptions | { new (...args: any[]): any; })
  */
 export function watch(path: string, options: Vue.WatchOptions = {}): MethodDecorator {
     const { deep = false, immediate = false } = options;
-    return function (target: any, handler: string) {
-        (target.constructor.watch || (target.constructor.watch = {}))[path] = {
-            handler,
-            deep,
-            immediate
-        };
-    };
+
+    return createDecorator((componentOptions, handler) => {
+        (componentOptions.watch || (componentOptions.watch = {}) as any)[path] = {handler, deep, immediate}
+    })
 }
 
-export function Component<V extends Vue>(options: Vue.ComponentOptions<V>): ClassDecorator {
-    return function (Class: any) {
-        Object.assign(options, { props: Class.props, watch: Class.watch });
-        return VueComponent(options)(Class);
-    }
-}
+export const Component = VueClassComponent;
