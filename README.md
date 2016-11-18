@@ -15,7 +15,7 @@ npm i -S vue-property-decorator
 'use strict';
 import { Component, prop, watch } from 'vue-property-decorator';
 
-@Component({})
+@Component
 export class Component {
     @prop(Number)
     propA: number;
@@ -32,7 +32,7 @@ export class Component {
 
 ```
 
-becomes
+is equivalent to
 
 ```js
 'use strict'
