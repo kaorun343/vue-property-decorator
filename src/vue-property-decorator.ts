@@ -24,7 +24,10 @@ export function watch(path: string, options: Vue.WatchOptions = {}): MethodDecor
     const { deep = false, immediate = false } = options;
 
     return createDecorator((componentOptions, handler) => {
-        (componentOptions.watch || (componentOptions.watch = {}) as any)[path] = {handler, deep, immediate}
+        if (typeof componentOptions.watch !== 'object') {
+            componentOptions.watch = Object.create(null)
+        }
+        (componentOptions.watch as any)[path] = {handler, deep, immediate}
     })
 }
 
