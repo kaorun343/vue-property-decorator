@@ -11,12 +11,20 @@ npm i -S vue-property-decorator
 ```
 
 ## Usage
+
+There are 3 decorators:
+
+* prop
+* watch
+* Component (`export Component from 'vue-class-component'`)
+
 ```typescript
 'use strict';
+import * as Vue from 'vue';
 import { Component, prop, watch } from 'vue-property-decorator';
 
 @Component
-export class Component {
+export class Component extends Vue {
     @prop(Number)
     propA: number;
 
