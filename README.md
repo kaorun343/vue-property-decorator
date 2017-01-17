@@ -62,6 +62,6 @@ export const Component = Vue.extend({
 })
 ```
 
-## View also
+## See also
 
 [vuex-class](https://github.com/ktsn/vuex-class/)
