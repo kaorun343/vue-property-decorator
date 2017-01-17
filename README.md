@@ -61,3 +61,7 @@ export const Component = Vue.extend({
     }
 })
 ```
+
+## View also
+
+[vuex-class](https://github.com/ktsn/vuex-class/)
