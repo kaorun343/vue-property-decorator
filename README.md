@@ -19,23 +19,23 @@ There are 3 decorators:
 * Component (`export Component from 'vue-class-component'`)
 
 ```typescript
-'use strict';
-import * as Vue from 'vue';
-import { Component, prop, watch } from 'vue-property-decorator';
+'use strict'
+import * as Vue from 'vue'
+import { Component, prop, watch } from 'vue-property-decorator'
 
 @Component
 export class Component extends Vue {
-    @prop(Number)
-    propA: number;
+  @prop(Number)
+  propA: number;
 
-    @prop({
-      type: String,
-      default: 'default value'
-    })
-    propB: string;
+  @prop({
+    type: String,
+    default: 'default value'
+  })
+  propB: string;
 
-    @watch('child')
-    onChildChanged(val: string, oldVal: string) {}
+  @watch('child')
+  onChildChanged(val: string, oldVal: string) {}
 }
 
 ```
@@ -45,20 +45,20 @@ is equivalent to
 ```js
 'use strict'
 export const Component = Vue.extend({
-    props: {
-        propA: Number,
-        propB: {
-            type: String,
-            required: true,
-            default: ''
-        }
-    },
-    methods: {
-        onChildChanged(val, oldVal) {}
-    },
-    watch: {
-        'child': 'onChildChanged'
+  props: {
+    propA: Number,
+    propB: {
+      type: String,
+      required: true,
+      default: ''
     }
+  },
+  methods: {
+    onChildChanged(val, oldVal) {}
+  },
+  watch: {
+    'child': 'onChildChanged'
+  }
 })
 ```
 
