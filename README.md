@@ -14,28 +14,31 @@ npm i -S vue-property-decorator
 
 There are 3 decorators:
 
-* prop
-* watch
-* Component (`export Component from 'vue-class-component'`)
+* `@Prop` (and `@prop`)
+* `@Watch` (and `@watch`)
+* `@Component` (`export Component from 'vue-class-component'`)
 
 ```typescript
-'use strict'
 import * as Vue from 'vue'
-import { Component, prop, watch } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 
 @Component
 export class Component extends Vue {
-  @prop(Number)
-  propA: number;
+  @Prop()
+  propA: number
 
-  @prop({
-    type: String,
-    default: 'default value'
-  })
-  propB: string;
+  @Prop({ default: 'default value' })
+  propB: string
 
-  @watch('child')
-  onChildChanged(val: string, oldVal: string) {}
+  // when union type, please add its type manually
+  @Prop([String, Boolean])
+  propC: string | boolean
+
+  @Watch('child')
+  onChildChanged(val: string, oldVal: string) { }
+
+  @Watch('person', { immediate: true, deep: true })
+  onPersonChanged(val: Person, oldVal: Person) { }
 }
 
 ```
@@ -43,8 +46,8 @@ export class Component extends Vue {
 is equivalent to
 
 ```js
-'use strict'
 export const Component = Vue.extend({
+  name: 'Component',
   props: {
     propA: Number,
     propB: {
@@ -57,7 +60,16 @@ export const Component = Vue.extend({
     onChildChanged(val, oldVal) {}
   },
   watch: {
-    'child': 'onChildChanged'
+    'child': {
+      handler: 'onChildChanged',
+      immediate: false,
+      deep: false
+    },
+    'person': {
+      handler: 'onPersonChanged',
+      immediate: true,
+      deep: true
+    }
   }
 })
 ```
