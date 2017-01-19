@@ -57,7 +57,8 @@ export const Component = Vue.extend({
     }
   },
   methods: {
-    onChildChanged(val, oldVal) {}
+    onChildChanged(val, oldVal) { },
+    onPersonChanged(val, oldVal) { }
   },
   watch: {
     'child': {
