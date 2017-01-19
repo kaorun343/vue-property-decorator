@@ -1,4 +1,4 @@
-/* vue-property-decorator verson 3.2.1 MIT LICENSE copyright 2016 kaorun343 */
+/* vue-property-decorator verson 3.3.0 MIT LICENSE copyright 2016 kaorun343 */
 'use strict'
 import Vue = require('vue')
 import { PropOptions } from 'vue'
