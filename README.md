@@ -55,9 +55,10 @@ export const Component = Vue.extend({
     propA: Number,
     propB: {
       type: String,
-      required: true,
       default: ''
-    }
+    },
+    propC: [String, Boolean],
+    propD: { type: null }
   },
   methods: {
     onChildChanged(val, oldVal) { },
@@ -99,6 +100,7 @@ export class Component extends Vue {
   @Prop([String, Boolean])
   propC: string | boolean
 
+  // when `any`, please set like this manually
   @Prop({ type: null })
   propD: any
 
