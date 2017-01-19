@@ -16,17 +16,17 @@ export type Constructor = {
  * @param  options the option for the prop
  * @return PropertyDecorator
  */
-export function Prop(options: (PropOptions | Constructor | Constructor[]) = {}): PropertyDecorator {
+export function Prop(options: (PropOptions | Constructor[]) = {}): PropertyDecorator {
   return function (target: Vue, key: string) {
     if (process.env.NODE_ENV !== 'production') {
-      if (!(options instanceof Array) && typeof (options as PropOptions).type === 'undefined') {
-        (options as PropOptions).type = Reflect.getMetadata('design:type', target, key)
+      if (!(options instanceof Array) && typeof options.type === 'undefined') {
+        options.type = Reflect.getMetadata('design:type', target, key)
       }
     } else {
       if ((options instanceof Array)) {
         options = { type: null }
       } else {
-        (options as PropOptions).type = null
+        options.type = null
       }
     }
     createDecorator((componentOptions, k) => {
