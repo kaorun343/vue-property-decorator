@@ -10,8 +10,6 @@ MIT License
 npm i -S vue-property-decorator
 ```
 
-please set `emitDecoratorMetadata` to `true`
-
 ## Usage
 
 There are 3 decorators:
@@ -22,19 +20,22 @@ There are 3 decorators:
 
 ```typescript
 import * as Vue from 'vue'
-import { Component, Prop, Watch } from 'vue-property-decorator'
+import Component from 'vue-class-component'
+import { Prop, Watch } from 'vue-property-decorator'
 
 @Component
 export class Component extends Vue {
-  @Prop()
+  @Prop(Number)
   propA: number
 
-  @Prop({ default: 'default value' })
+  @Prop({ type: String, default: 'default value' })
   propB: string
 
-  // when union type, please add its type manually
   @Prop([String, Boolean])
   propC: string | boolean
+
+  @Prop()
+  propD: any
 
   @Watch('child')
   onChildChanged(val: string, oldVal: string) { }
@@ -75,6 +76,39 @@ export const Component = Vue.extend({
     }
   }
 })
+```
+
+Also, there are altanative `@Prop` which adds `PropOptions.type` automatically.
+This decorator internally uses decorator metadata.
+Please set `emitDecoratorMetadata` to `true`
+
+```typescript
+import * as Vue from 'vue'
+import Component from 'vue-class-component'
+import { Prop, Watch } from 'vue-property-decorator/lib/metadata'
+
+@Component
+export class Component extends Vue {
+  @Prop()
+  propA: number
+
+  @Prop({ default: 'default value' })
+  propB: string
+
+  // when union types, please add its types manually
+  @Prop([String, Boolean])
+  propC: string | boolean
+
+  @Prop({ type: null })
+  propD: any
+
+  @Watch('child')
+  onChildChanged(val: string, oldVal: string) { }
+
+  @Watch('person', { immediate: true, deep: true })
+  onPersonChanged(val: Person, oldVal: Person) { }
+}
+
 ```
 
 ## See also
