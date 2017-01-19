@@ -10,6 +10,8 @@ MIT License
 npm i -S vue-property-decorator
 ```
 
+please set `emitDecoratorMetadata` to `true`
+
 ## Usage
 
 There are 3 decorators:
