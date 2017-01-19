@@ -1,6 +1,7 @@
 import * as Vue from 'vue'
 import * as assert from 'power-assert'
-import { Component, prop, watch } from '../src/vue-property-decorator'
+import Component from 'vue-class-component'
+import { Prop, Watch } from '../src/vue-property-decorator'
 
 declare const process: { env: { NODE_ENV: string } };
 
@@ -8,13 +9,13 @@ describe('prop decorator', () => {
   it('should add props to "props" property', () => {
     @Component
     class Test extends Vue {
-      @prop()
+      @Prop()
       propA: number
 
-      @prop({ default: 'propB' })
+      @Prop({ default: 'propB' })
       propB: string
 
-      @prop([Boolean, String])
+      @Prop([Boolean, String])
       propC: boolean | string
     }
 
@@ -35,13 +36,13 @@ describe('prop decorator', () => {
     process.env.NODE_ENV = 'production'
     @Component
     class Test extends Vue {
-      @prop()
+      @Prop()
       propA: number
 
-      @prop({ default: 'propB' })
+      @Prop({ default: 'propB' })
       propB: string
 
-      @prop([Boolean, String])
+      @Prop([Boolean, String])
       propC: boolean | string
     }
 
@@ -64,8 +65,8 @@ describe('watch decorator', () => {
     class Test extends Vue {
       moreExpression = false
 
-      @watch('expression')
-      @watch('moreExpression', { immediate: true })
+      @Watch('expression')
+      @Watch('moreExpression', { immediate: true })
       method() {
         num = 1
       }

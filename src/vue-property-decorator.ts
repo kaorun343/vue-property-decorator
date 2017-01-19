@@ -16,7 +16,7 @@ export type Constructor = {
  * @param  options the option for the prop
  * @return PropertyDecorator
  */
-export function prop(options: (PropOptions | Constructor | Constructor[]) = {}): PropertyDecorator {
+export function Prop(options: (PropOptions | Constructor | Constructor[]) = {}): PropertyDecorator {
   return function (target: Vue, key: string) {
     if (process.env.NODE_ENV !== 'production') {
       if (!(options instanceof Array) && typeof (options as PropOptions).type === 'undefined') {
@@ -41,7 +41,7 @@ export function prop(options: (PropOptions | Constructor | Constructor[]) = {}):
  * @param  WatchOption
  * @return MethodDecorator
  */
-export function watch(path: string, options: Vue.WatchOptions = {}): MethodDecorator {
+export function Watch(path: string, options: Vue.WatchOptions = {}): MethodDecorator {
   const { deep = false, immediate = false } = options
 
   return createDecorator((componentOptions, handler) => {
@@ -52,4 +52,6 @@ export function watch(path: string, options: Vue.WatchOptions = {}): MethodDecor
   })
 }
 
+export const prop = Prop
+export const watch = Watch
 export const Component = VueClassComponent
