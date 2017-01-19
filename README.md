@@ -55,7 +55,7 @@ export const Component = Vue.extend({
     propA: Number,
     propB: {
       type: String,
-      default: ''
+      default: 'default value'
     },
     propC: [String, Boolean],
     propD: { type: null }
