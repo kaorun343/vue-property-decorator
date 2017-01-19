@@ -1,24 +1,45 @@
 /* vue-property-decorator verson 3.2.1 MIT LICENSE copyright 2016 kaorun343 */
 'use strict'
-import * as Vue from 'vue'
+import Vue = require('vue')
+import { PropOptions } from 'vue'
 import VueClassComponent, { createDecorator } from 'vue-class-component'
+import 'reflect-metadata'
+
+declare const process: { env: { NODE_ENV: string } };
+
+export type Constructor = {
+  new (...args: any[]): any
+}
 
 /**
  * decorator of a prop
- * @param  {PropOption}        options the option for the prop
- * @return {PropertyDecorator}         PropertyDecorator
+ * @param  options the option for the prop
+ * @return PropertyDecorator
  */
-export function prop(options: (Vue.PropOptions | { new (...args: any[]): any })): PropertyDecorator {
-  return createDecorator((componentOptions, key) => {
-    (componentOptions.props || (componentOptions.props = {}) as any)[key] = options
-  })
+export function prop(options: (PropOptions | Constructor | Constructor[]) = {}): PropertyDecorator {
+  return function (target: Vue, key: string) {
+    if (process.env.NODE_ENV !== 'production') {
+      if (!(options instanceof Array) && typeof (options as PropOptions).type === 'undefined') {
+        (options as PropOptions).type = Reflect.getMetadata('design:type', target, key)
+      }
+    } else {
+      if ((options instanceof Array)) {
+        options = { type: null }
+      } else {
+        (options as PropOptions).type = null
+      }
+    }
+    createDecorator((componentOptions, k) => {
+      (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
+    })(target, key)
+  }
 }
 
 /**
  * decorator of a watch function
- * @param  {string}            path the path or the expression to observe
- * @param  {WatchOption}       WatchOption
- * @return {MethodDecorator}      MethodDecorator
+ * @param  path the path or the expression to observe
+ * @param  WatchOption
+ * @return MethodDecorator
  */
 export function watch(path: string, options: Vue.WatchOptions = {}): MethodDecorator {
   const { deep = false, immediate = false } = options
