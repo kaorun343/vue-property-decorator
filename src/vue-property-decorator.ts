@@ -5,8 +5,6 @@ import { PropOptions } from 'vue'
 import VueClassComponent, { createDecorator } from 'vue-class-component'
 import 'reflect-metadata'
 
-declare const process: { env: { NODE_ENV: string } };
-
 export type Constructor = {
   new (...args: any[]): any
 }
@@ -18,16 +16,8 @@ export type Constructor = {
  */
 export function Prop(options: (PropOptions | Constructor[]) = {}): PropertyDecorator {
   return function (target: Vue, key: string) {
-    if (process.env.NODE_ENV !== 'production') {
-      if (!(options instanceof Array) && typeof options.type === 'undefined') {
-        options.type = Reflect.getMetadata('design:type', target, key)
-      }
-    } else {
-      if ((options instanceof Array)) {
-        options = { type: null }
-      } else {
-        options.type = null
-      }
+    if (!(options instanceof Array) && typeof options.type === 'undefined') {
+      options.type = Reflect.getMetadata('design:type', target, key)
     }
     createDecorator((componentOptions, k) => {
       (componentOptions.props || (componentOptions.props = {}) as any)[k] = options

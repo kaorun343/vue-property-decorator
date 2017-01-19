@@ -3,7 +3,6 @@ import * as assert from 'power-assert'
 import Component from 'vue-class-component'
 import { Prop, Watch } from '../src/vue-property-decorator'
 
-declare const process: { env: { NODE_ENV: string } };
 
 describe('prop decorator', () => {
   it('should add props to "props" property', () => {
@@ -30,29 +29,6 @@ describe('prop decorator', () => {
     const test = new Test({ propsData: { propA: 10 } })
     assert.equal(test.propA, 10)
     assert.equal(test.propB, 'propB')
-  })
-
-  it('should do well in production mode', () => {
-    process.env.NODE_ENV = 'production'
-    @Component
-    class Test extends Vue {
-      @Prop()
-      propA: number
-
-      @Prop({ default: 'propB' })
-      propB: string
-
-      @Prop([Boolean, String])
-      propC: boolean | string
-    }
-
-    const { $options } = new Test()
-    const { props } = $options
-    if (!(props instanceof Array)) {
-      assert.deepEqual(props!['propA'], { type: null })
-      assert.deepEqual(props!['propB'], { type: null, default: 'propB' })
-      assert.deepEqual(props!['propC'], { type: null })
-    }
   })
 })
 
