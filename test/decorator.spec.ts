@@ -1,8 +1,6 @@
 import * as Vue from 'vue'
 import * as assert from 'power-assert'
-import Component from 'vue-class-component'
-import { Prop, Watch } from '../src/vue-property-decorator'
-import { Prop as PropWithMetadata } from '../src/metadata'
+import { Component, Prop, Watch } from '../src/vue-property-decorator'
 
 describe('prop decorator', () => {
   it('should add props to "props" property', () => {
@@ -18,8 +16,11 @@ describe('prop decorator', () => {
       @Prop([Boolean, String])
       propC: boolean | string
 
-      @Prop()
+      @Prop
       propD: any
+
+      @Prop
+      propE: boolean
     }
 
     const { $options } = new Test()
@@ -28,39 +29,8 @@ describe('prop decorator', () => {
       assert.deepEqual(props!['propA'], { type: Number })
       assert.deepEqual(props!['propB'], { type: String, default: 'propB' })
       assert.deepEqual(props!['propC'], { type: [Boolean, String] })
-      assert.deepEqual(props!['propD'], { type: null })
-    }
-
-    const test = new Test({ propsData: { propA: 10 } })
-    assert.equal(test.propA, 10)
-    assert.equal(test.propB, 'propB')
-  })
-})
-
-describe('prop decorator with metadata', () => {
-  it('should add props to "props" property', () => {
-    @Component
-    class Test extends Vue {
-      @PropWithMetadata()
-      propA: number
-
-      @PropWithMetadata({ default: 'propB' })
-      propB: string
-
-      @PropWithMetadata([Boolean, String])
-      propC: boolean | string
-
-      @Prop({ type: null })
-      propD: any
-    }
-
-    const { $options } = new Test()
-    const { props } = $options
-    if (!(props instanceof Array)) {
-      assert.deepEqual(props!['propA'], { type: Number })
-      assert.deepEqual(props!['propB'], { type: String, default: 'propB' })
-      assert.deepEqual(props!['propC'], { type: [Boolean, String] })
-      assert.deepEqual(props!['propD'], { type: null })
+      assert.deepEqual(props!['propD'], { type: Object })
+      assert.deepEqual(props!['propE'], { type: Boolean })
     }
 
     const test = new Test({ propsData: { propA: 10 } })

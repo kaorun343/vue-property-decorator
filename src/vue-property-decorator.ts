@@ -3,6 +3,7 @@
 import Vue = require('vue')
 import { PropOptions } from 'vue'
 import VueClassComponent, { createDecorator } from 'vue-class-component'
+import 'reflect-metadata'
 
 export type Constructor = {
   new (...args: any[]): any
@@ -13,10 +14,27 @@ export type Constructor = {
  * @param  options the option for the prop
  * @return PropertyDecorator
  */
-export function Prop(options: (PropOptions | Constructor | Constructor[]) = { type: null }): PropertyDecorator {
-  return createDecorator((componentOptions, key) => {
-      (componentOptions.props || (componentOptions.props = {}) as any)[key] = options
-    })
+export function Prop(target: Vue, key: string): void
+export function Prop(target: (PropOptions | Constructor[])): PropertyDecorator
+export function Prop(options: (Vue | PropOptions | Constructor[]), key?: string): void | PropertyDecorator {
+  const makePropDecorator = function(options: (PropOptions | Constructor[])): PropertyDecorator {
+    return function (target: Vue, key: string) {
+      if (!(options instanceof Array) && typeof options.type === 'undefined') {
+        options.type = Reflect.getMetadata('design:type', target, key)
+      }
+      createDecorator((componentOptions, k) => {
+        (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
+      })(target, key)
+    }
+  }
+
+  if (options instanceof Vue) {
+    const target = options
+    makePropDecorator({})(target, key!)
+    return
+  }
+
+  return makePropDecorator(options)
 }
 
 /**
