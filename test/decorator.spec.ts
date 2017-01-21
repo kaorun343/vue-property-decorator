@@ -16,7 +16,7 @@ describe('prop decorator', () => {
       @Prop([Boolean, String])
       propC: boolean | string
 
-      @Prop
+      @Prop({type: null})
       propD: any
 
       @Prop
@@ -29,7 +29,7 @@ describe('prop decorator', () => {
       assert.deepEqual(props!['propA'], { type: Number })
       assert.deepEqual(props!['propB'], { type: String, default: 'propB' })
       assert.deepEqual(props!['propC'], { type: [Boolean, String] })
-      assert.deepEqual(props!['propD'], { type: Object })
+      assert.deepEqual(props!['propD'], { type: null })
       assert.deepEqual(props!['propE'], { type: Boolean })
     }
 
