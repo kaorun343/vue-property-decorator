@@ -10,7 +10,7 @@ describe('prop decorator', () => {
       @Prop(Number)
       propA: number
 
-      @Prop({ type: String, default: 'propB' })
+      @Prop({ default: 'propB' })
       propB: string
 
       @Prop([Boolean, String])
