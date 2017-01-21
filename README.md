@@ -19,22 +19,21 @@ There are 3 decorators:
 * `@Component` (`export Component from 'vue-class-component'`)
 
 ```typescript
-import * as Vue from 'vue'
-import Component from 'vue-class-component'
-import { Prop, Watch } from 'vue-property-decorator'
+import Vue = require('vue')
+import { Component Prop, Watch } from 'vue-property-decorator'
 
 @Component
 export class Component extends Vue {
-  @Prop(Number)
+  @Prop
   propA: number
 
-  @Prop({ type: String, default: 'default value' })
+  @Prop({ default: 'default value' })
   propB: string
 
   @Prop([String, Boolean])
   propC: string | boolean
 
-  @Prop()
+  @Prop({type: null})
   propD: any
 
   @Watch('child')
@@ -79,39 +78,7 @@ export const Component = Vue.extend({
 })
 ```
 
-Also, there are altanative `@Prop` which adds `PropOptions.type` automatically.
-This decorator internally uses decorator metadata.
-Please set `emitDecoratorMetadata` to `true`
-
-```typescript
-import * as Vue from 'vue'
-import Component from 'vue-class-component'
-import { Prop, Watch } from 'vue-property-decorator/lib/metadata'
-
-@Component
-export class Component extends Vue {
-  @Prop()
-  propA: number
-
-  @Prop({ default: 'default value' })
-  propB: string
-
-  // when union types, please add its types manually
-  @Prop([String, Boolean])
-  propC: string | boolean
-
-  // when `any`, please set like this manually
-  @Prop({ type: null })
-  propD: any
-
-  @Watch('child')
-  onChildChanged(val: string, oldVal: string) { }
-
-  @Watch('person', { immediate: true, deep: true })
-  onPersonChanged(val: Person, oldVal: Person) { }
-}
-
-```
+As you can see at `propA` and `propB`, the type can be inferred automatically when it's a simple type. For more complex types like enums you do need to specify it specifically. Also this library needs to have `emitDecoratorMetadata` set to `true` for this to work.
 
 ## See also
 
