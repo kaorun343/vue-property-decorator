@@ -16,11 +16,14 @@ describe('prop decorator', () => {
       @Prop([Boolean, String])
       propC: boolean | string
 
-      @Prop({type: null})
+      @Prop({ type: null })
       propD: any
 
       @Prop
       propE: boolean
+
+      @Prop()
+      propF: boolean
     }
 
     const { $options } = new Test()
@@ -31,6 +34,7 @@ describe('prop decorator', () => {
       assert.deepEqual(props!['propC'], { type: [Boolean, String] })
       assert.deepEqual(props!['propD'], { type: null })
       assert.deepEqual(props!['propE'], { type: Boolean })
+      assert.deepEqual(props!['propF'], { type: Boolean })
     }
 
     const test = new Test({ propsData: { propA: 10 } })

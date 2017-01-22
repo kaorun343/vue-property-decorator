@@ -10,31 +10,38 @@ export type Constructor = {
 }
 
 /**
- * decorator of a prop
- * @param  options the option for the prop
+ * @brief  Makes a decorator for prop.
+ *
+ * @param  options  The options
+ * @param  target   The target
+ * @param  key      The key
+ *
  * @return PropertyDecorator
  */
-export function Prop(target: Vue, key: string): void
-export function Prop(target: (PropOptions | Constructor[])): PropertyDecorator
-export function Prop(options: (Vue | PropOptions | Constructor[]), key?: string): void | PropertyDecorator {
-  const makePropDecorator = function(options: (PropOptions | Constructor[])): PropertyDecorator {
-    return function (target: Vue, key: string) {
-      if (!(options instanceof Array) && typeof options.type === 'undefined') {
-        options.type = Reflect.getMetadata('design:type', target, key)
-      }
-      createDecorator((componentOptions, k) => {
-        (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
-      })(target, key)
+function makePropDecorator(options: (PropOptions | Constructor[]) = {}): PropertyDecorator {
+  return function (target: Vue, key: string) {
+    if (!(options instanceof Array) && typeof options.type === 'undefined') {
+      options.type = Reflect.getMetadata('design:type', target, key)
     }
+    createDecorator((componentOptions, k) => {
+      (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
+    })(target, key)
   }
+}
 
+/**
+ * decorator of a prop
+ * @param  options the options for the prop
+ * @return PropertyDecorator | void
+ */
+export function Prop(target: Vue, key: string): void
+export function Prop(target?: (PropOptions | Constructor[])): PropertyDecorator
+export function Prop(options: (Vue | PropOptions | Constructor[]) = {}, key?: string): void | PropertyDecorator {
   if (options instanceof Vue) {
-    const target = options
-    makePropDecorator({})(target, key!)
-    return
+    return makePropDecorator()(options, key!)
+  } else {
+    return makePropDecorator(options)
   }
-
-  return makePropDecorator(options)
 }
 
 /**

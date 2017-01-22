@@ -33,7 +33,7 @@ export class Component extends Vue {
   @Prop([String, Boolean])
   propC: string | boolean
 
-  @Prop({type: null})
+  @Prop({ type: null })
   propD: any
 
   @Watch('child')
