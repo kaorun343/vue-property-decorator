@@ -3,27 +3,34 @@
 This library fully depends on [vue-class-component](https://github.com/vuejs/vue-class-component).
 
 ## License
+
 MIT License
 
 ## Install
-```
+
+```bash
 npm i -S vue-property-decorator
 ```
 
 ## Usage
 
-There are 3 decorators:
+There are 4 decorators:
 
+* `@Model`
 * `@Prop` (and `@prop`)
 * `@Watch` (and `@watch`)
 * `@Component` (`export Component from 'vue-class-component'`)
 
 ```typescript
 import Vue = require('vue')
-import { Component Prop, Watch } from 'vue-property-decorator'
+import { Component, Model, Prop, Watch } from 'vue-property-decorator'
 
 @Component
-export class Component extends Vue {
+export class MyComponent extends Vue {
+
+  @Model('change')
+  checked: boolean
+
   @Prop
   propA: number
 
@@ -48,8 +55,12 @@ export class Component extends Vue {
 is equivalent to
 
 ```js
-export const Component = Vue.extend({
-  name: 'Component',
+export const MyComponent = Vue.extend({
+  name: 'MyComponent',
+  model: {
+    prop: 'checked',
+    event: 'change'
+  },
   props: {
     propA: Number,
     propB: {
@@ -78,7 +89,8 @@ export const Component = Vue.extend({
 })
 ```
 
-As you can see at `propA` and `propB`, the type can be inferred automatically when it's a simple type. For more complex types like enums you do need to specify it specifically. Also this library needs to have `emitDecoratorMetadata` set to `true` for this to work.
+As you can see at `propA` and `propB`, the type can be inferred automatically when it's a simple type. For more complex types like enums you do need to specify it specifically.
+Also this library needs to have `emitDecoratorMetadata` set to `true` for this to work.
 
 ## See also
 
