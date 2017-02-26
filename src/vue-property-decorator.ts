@@ -10,6 +10,17 @@ export type Constructor = {
 }
 
 /**
+ * decorator of model
+ * @param  event event name
+ * @return PropertyDecorator
+ */
+export function Model(event: string): PropertyDecorator {
+  return createDecorator((componentOptions, prop) => {
+    componentOptions.model = { prop, event }
+  })
+}
+
+/**
  * @brief  Makes a decorator for prop.
  *
  * @param  options  The options
@@ -20,8 +31,12 @@ export type Constructor = {
  */
 function makePropDecorator(options: (PropOptions | Constructor[]) = {}): PropertyDecorator {
   return function (target: Vue, key: string) {
-    if (!(options instanceof Array) && typeof options.type === 'undefined') {
-      options.type = Reflect.getMetadata('design:type', target, key)
+    if (!Array.isArray(options) && typeof options.type === 'undefined') {
+      if (typeof Reflect === "object" && typeof Reflect.metadata === "function") {
+        options.type = Reflect.getMetadata('design:type', target, key)
+      } else {
+        options.type = null
+      }
     }
     createDecorator((componentOptions, k) => {
       (componentOptions.props || (componentOptions.props = {}) as any)[k] = options

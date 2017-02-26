@@ -1,6 +1,19 @@
 import * as Vue from 'vue'
 import * as assert from 'power-assert'
-import { Component, Prop, Watch } from '../src/vue-property-decorator'
+import { Component, Model, Prop, Watch } from '../src/vue-property-decorator'
+
+describe('model decorator', () => {
+  it('should add options to "model" property', () => {
+    @Component
+    class Test extends Vue {
+      @Model('change')
+      checked: boolean
+    }
+
+    const { $options } = new Test()
+    assert.deepEqual($options.model, { prop: 'checked', event: 'change' })
+  })
+})
 
 describe('prop decorator', () => {
   it('should add props to "props" property', () => {
