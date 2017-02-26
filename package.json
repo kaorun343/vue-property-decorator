@@ -22,12 +22,13 @@
   ],
   "devDependencies": {
     "@types/mocha": "^2.2.38",
+    "@types/node": "^7.0.5",
     "@types/power-assert": "^1.4.29",
     "espower-typescript": "^7.0.0",
     "mocha": "^3.2.0",
     "power-assert": "^1.4.2",
-    "typescript": "^2.1.5",
-    "vue": "^2.1.10"
+    "typescript": "^2.2.1",
+    "vue": "^2.2.0"
   },
   "typings": "./lib/vue-property-decorator.d.ts",
   "dependencies": {
