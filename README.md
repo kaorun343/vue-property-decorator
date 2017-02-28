@@ -14,8 +14,9 @@ npm i -S vue-property-decorator
 
 ## Usage
 
-There are 4 decorators:
+There are 5 decorators:
 
+* `@Inject`
 * `@Model`
 * `@Prop` (and `@prop`)
 * `@Watch` (and `@watch`)
@@ -25,8 +26,14 @@ There are 4 decorators:
 import Vue = require('vue')
 import { Component, Model, Prop, Watch } from 'vue-property-decorator'
 
+const s = Symbol('baz')
+
 @Component
 export class MyComponent extends Vue {
+
+  @Inject() foo: string
+  @Inject('bar') bar: string
+  @Inject(s) baz: string
 
   @Model('change')
   checked: boolean
@@ -55,8 +62,15 @@ export class MyComponent extends Vue {
 is equivalent to
 
 ```js
+const s = Symbol('baz')
+
 export const MyComponent = Vue.extend({
   name: 'MyComponent',
+  inject: {
+    foo: 'foo',
+    bar: 'bar',
+    [s]: s
+  },
   model: {
     prop: 'checked',
     event: 'change'

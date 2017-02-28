@@ -1,12 +1,28 @@
 /* vue-property-decorator verson 3.4.0 MIT LICENSE copyright 2016 kaorun343 */
 'use strict'
-import Vue = require('vue')
+import Vue from 'vue'
 import { PropOptions } from 'vue'
 import VueClassComponent, { createDecorator } from 'vue-class-component'
 import 'reflect-metadata'
 
 export type Constructor = {
   new (...args: any[]): any
+}
+
+/**
+ * decorator of an inject
+ * @param key key
+ * @return PropertyDecorator
+ */
+export function Inject(key?: string | symbol): PropertyDecorator {
+  return createDecorator((componentOptions, k) => {
+    if (typeof componentOptions.inject === 'undefined') {
+      componentOptions.inject = {}
+    }
+    if (!Array.isArray(componentOptions.inject)) {
+      componentOptions.inject[k] = key || k
+    }
+  })
 }
 
 /**

@@ -14,7 +14,7 @@
     "test": "test"
   },
   "scripts": {
-    "build": "tsc -p src/tsconfig.json",
+    "build": "rollup -c",
     "test": "tsc -p test/tsconfig.json && mocha"
   },
   "files": [
@@ -27,13 +27,15 @@
     "espower-typescript": "^7.0.0",
     "mocha": "^3.2.0",
     "power-assert": "^1.4.2",
+    "rollup": "^0.41.4",
+    "rollup-plugin-typescript": "^0.8.1",
     "typescript": "^2.2.1",
-    "vue": "^2.2.0"
+    "vue": "^2.2.1"
   },
   "typings": "./lib/vue-property-decorator.d.ts",
   "dependencies": {
     "reflect-metadata": "^0.1.9",
-    "vue-class-component": "^4.4.0"
+    "vue-class-component": "^5.0.0"
   },
   "repository": {
     "type": "git",

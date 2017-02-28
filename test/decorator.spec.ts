@@ -1,6 +1,48 @@
 import * as Vue from 'vue'
 import * as assert from 'power-assert'
-import { Component, Model, Prop, Watch } from '../src/vue-property-decorator'
+import { Component, Inject, Model, Prop, Watch } from '../lib/vue-property-decorator'
+
+describe('inject decorator', () => {
+  it('should add keys to "inject" property', () => {
+    const s = Symbol()
+    @Component({
+      provide() {
+        return {
+          [s]: 'one',
+          bar: 'two'
+        }
+      }
+    })
+    class Provider extends Vue {
+    }
+
+    const provider = new Provider()
+
+    @Component({
+      parent: provider
+    })
+    class Child extends Vue {
+      @Inject(s) foo: string
+      @Inject() bar: string
+    }
+
+    const child = new Child()
+    assert.equal(child.foo, 'one')
+    assert.equal(child.bar, 'two')
+
+    @Component({
+      parent: child
+    })
+    class GrandChild extends Vue {
+      @Inject(s) foo: string
+      @Inject() bar: string
+    }
+
+    const grandChild = new GrandChild()
+    assert.equal(grandChild.foo, 'one')
+    assert.equal(grandChild.bar, 'two')
+  })
+})
 
 describe('model decorator', () => {
   it('should add options to "model" property', () => {

@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "outDir": "../lib",
+    "outDir": "../",
     "target": "es5",
-    "module": "commonjs",
+    "module": "es2015",
     "moduleResolution": "node",
     "isolatedModules": false,
     "experimentalDecorators": true,
@@ -13,6 +13,7 @@
     "typeRoots": [
       "../node_modules/@types/"
     ],
+    "allowSyntheticDefaultImports": true,
     "lib": [
       "dom",
       "es2015",

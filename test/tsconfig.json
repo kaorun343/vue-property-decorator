@@ -12,6 +12,7 @@
     "typeRoots": [
       "../node_modules/@types/"
     ],
+    "allowSyntheticDefaultImports": true,
     "lib": [
       "dom",
       "es2015",
