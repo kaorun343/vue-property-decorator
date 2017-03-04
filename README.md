@@ -18,13 +18,13 @@ There are 5 decorators:
 
 * `@Inject`
 * `@Model`
-* `@Prop` (and `@prop`)
-* `@Watch` (and `@watch`)
+* `@Prop`
+* `@Watch`
 * `@Component` (`export Component from 'vue-class-component'`)
 
 ```typescript
-import Vue = require('vue')
-import { Component, Model, Prop, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Inject, Model, Prop, Watch } from 'vue-property-decorator'
 
 const s = Symbol('baz')
 
@@ -35,8 +35,7 @@ export class MyComponent extends Vue {
   @Inject('bar') bar: string
   @Inject(s) baz: string
 
-  @Model('change')
-  checked: boolean
+  @Model('change') checked: boolean
 
   @Prop
   propA: number
