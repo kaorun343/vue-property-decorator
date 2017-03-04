@@ -2,7 +2,7 @@
 
 'use strict'
 import Vue from 'vue'
-import { PropOptions } from 'vue'
+import { PropOptions, WatchOptions } from 'vue'
 import VueClassComponent, { createDecorator } from 'vue-class-component'
 import 'reflect-metadata'
 
@@ -49,7 +49,7 @@ export function Model(event: string): PropertyDecorator {
 function makePropDecorator(options: (PropOptions | Constructor[]) = {}): PropertyDecorator {
   return function (target: Vue, key: string) {
     if (!Array.isArray(options) && typeof options.type === 'undefined') {
-      if (typeof Reflect === "object" && typeof Reflect.metadata === "function") {
+      if (typeof Reflect === "object" && typeof Reflect.getMetadata === "function") {
         options.type = Reflect.getMetadata('design:type', target, key)
       } else {
         options.type = null
@@ -82,7 +82,7 @@ export function Prop(options: (Vue | PropOptions | Constructor[]) = {}, key?: st
  * @param  WatchOption
  * @return MethodDecorator
  */
-export function Watch(path: string, options: Vue.WatchOptions = {}): MethodDecorator {
+export function Watch(path: string, options: WatchOptions = {}): MethodDecorator {
   const { deep = false, immediate = false } = options
 
   return createDecorator((componentOptions, handler) => {
