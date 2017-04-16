@@ -37,7 +37,7 @@ export class MyComponent extends Vue {
 
   @Model('change') checked: boolean
 
-  @Prop
+  @Prop()
   propA: number
 
   @Prop({ default: 'default value' })
