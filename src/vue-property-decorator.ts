@@ -2,7 +2,7 @@
 
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
-import VueClassComponent, { createDecorator } from 'vue-class-component'
+import Component, { createDecorator } from 'vue-class-component'
 import 'reflect-metadata'
 
 export type Constructor = {
@@ -69,6 +69,4 @@ export function Watch(path: string, options: WatchOptions = {}): MethodDecorator
   })
 }
 
-export const prop = Prop
-export const watch = Watch
-export const Component = VueClassComponent
+export { Component }
