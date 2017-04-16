@@ -15,22 +15,14 @@
   },
   "scripts": {
     "build": "tsc -p src/tsconfig.json",
-    "test": "tsc -p test/tsconfig.json && mocha --compilers js:babel-register"
+    "test": "tsc -p test/tsconfig.json && ava test/decorator.spec.js"
   },
   "files": [
     "lib"
   ],
   "devDependencies": {
-    "@types/mocha": "^2.2.38",
     "@types/node": "^7.0.5",
-    "@types/power-assert": "^1.4.29",
-    "babel": "^6.23.0",
-    "babel-core": "^6.23.1",
-    "babel-preset-es2015": "^6.22.0",
-    "espower-typescript": "^7.0.0",
-    "mocha": "^3.2.0",
-    "power-assert": "^1.4.2",
-    "rollup": "^0.41.4",
+    "ava": "^0.19.1",
     "typescript": "^2.2.1",
     "vue": "^2.2.1"
   },
