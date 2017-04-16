@@ -1,6 +1,6 @@
 import * as Vue from 'vue'
 import * as assert from 'power-assert'
-import { Component, Inject, Model, Prop, Watch } from '../lib/vue-property-decorator'
+import { Component, Inject, Model, Prop, Watch } from '../src/vue-property-decorator'
 
 describe('inject decorator', () => {
   it('should add keys to "inject" property', () => {

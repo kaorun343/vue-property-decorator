@@ -2,7 +2,7 @@
   "name": "vue-property-decorator",
   "version": "4.0.0",
   "description": "property decorators for Vue Component",
-  "main": "lib/vue-property-decorator.common.js",
+  "main": "src/vue-property-decorator.js",
   "keywords": [
     "vue",
     "typescript",
@@ -14,8 +14,8 @@
     "test": "test"
   },
   "scripts": {
-    "build": "tsc -p src/tsconfig.json && rollup -c",
-    "test": "npm run build && tsc -p test/tsconfig.json && mocha --compilers js:babel-register"
+    "build": "tsc -p src/tsconfig.json",
+    "test": "tsc -p test/tsconfig.json && mocha --compilers js:babel-register"
   },
   "files": [
     "lib"

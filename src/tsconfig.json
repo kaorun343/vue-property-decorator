@@ -2,10 +2,11 @@
   "compilerOptions": {
     "outDir": "../lib",
     "target": "es5",
-    "module": "es2015",
+    "module": "commonjs",
     "moduleResolution": "node",
     "isolatedModules": false,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "declaration": true,
     "noImplicitAny": true,
     "removeComments": false,
