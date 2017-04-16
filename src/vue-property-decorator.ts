@@ -49,11 +49,7 @@ export function Model(event: string): PropertyDecorator {
 function makePropDecorator(options: (PropOptions | Constructor[]) = {}): PropertyDecorator {
   return function (target: Vue, key: string) {
     if (!Array.isArray(options) && typeof options.type === 'undefined') {
-      if (typeof Reflect === "object" && typeof Reflect.getMetadata === "function") {
-        options.type = Reflect.getMetadata('design:type', target, key)
-      } else {
-        options.type = null
-      }
+      options.type = Reflect.getMetadata('design:type', target, key)
     }
     createDecorator((componentOptions, k) => {
       (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
