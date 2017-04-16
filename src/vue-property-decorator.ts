@@ -1,8 +1,7 @@
 /** vue-property-decorator verson 4.0.0 MIT LICENSE copyright 2017 kaorun343 */
 
 'use strict'
-import Vue from 'vue'
-import { PropOptions, WatchOptions } from 'vue'
+import Vue, { PropOptions, WatchOptions } from 'vue'
 import VueClassComponent, { createDecorator } from 'vue-class-component'
 import 'reflect-metadata'
 
@@ -38,15 +37,11 @@ export function Model(event: string): PropertyDecorator {
 }
 
 /**
- * @brief  Makes a decorator for prop.
- *
- * @param  options  The options
- * @param  target   The target
- * @param  key      The key
- *
- * @return PropertyDecorator
+ * decorator of a prop
+ * @param  options the options for the prop
+ * @return PropertyDecorator | void
  */
-function makePropDecorator(options: (PropOptions | Constructor[]) = {}): PropertyDecorator {
+export function Prop(options: (PropOptions | Constructor[]) = {}): PropertyDecorator {
   return function (target: Vue, key: string) {
     if (!Array.isArray(options) && typeof options.type === 'undefined') {
       options.type = Reflect.getMetadata('design:type', target, key)
@@ -54,21 +49,6 @@ function makePropDecorator(options: (PropOptions | Constructor[]) = {}): Propert
     createDecorator((componentOptions, k) => {
       (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
     })(target, key)
-  }
-}
-
-/**
- * decorator of a prop
- * @param  options the options for the prop
- * @return PropertyDecorator | void
- */
-export function Prop(target: Vue, key: string): void
-export function Prop(target?: (PropOptions | Constructor[])): PropertyDecorator
-export function Prop(options: (Vue | PropOptions | Constructor[]) = {}, key?: string): void | PropertyDecorator {
-  if (options instanceof Vue) {
-    return makePropDecorator()(options, key!)
-  } else {
-    return makePropDecorator(options)
   }
 }
 
