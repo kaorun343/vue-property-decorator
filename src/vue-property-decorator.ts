@@ -26,14 +26,14 @@ export function Inject(key?: string | symbol): PropertyDecorator {
 }
 
 /**
- * decorator of a provided
- * @param  options the options for the prop
+ * decorator of a provide
+ * @param key key
  * @return PropertyDecorator | void
  */
 export function Provide(key?: string | symbol): PropertyDecorator {
   return createDecorator((componentOptions, k) => {
 		var provide: any = componentOptions.provide;
-		if('function'!== typeof provide || provide.managed) {
+		if('function'!== typeof provide || !provide.managed) {
 			var original = provide;
 			provide = componentOptions.provide = {
 				provide() {
