@@ -1,5 +1,5 @@
 import * as Vue from 'vue'
-import { Component, Inject, Model, Prop, Watch } from '../src/vue-property-decorator'
+import { Provide, Component, Inject, Model, Prop, Watch } from '../src/vue-property-decorator'
 import test from 'ava'
 
 test('@Inject decorator test', t => {
@@ -13,6 +13,8 @@ test('@Inject decorator test', t => {
     }
   })
   class Provider extends Vue {
+		@Provide() three = "@3"
+		@Provide("four") anyVal = "@4"
   }
 
   const provider = new Provider()
@@ -23,11 +25,15 @@ test('@Inject decorator test', t => {
   class Child extends Vue {
     @Inject(s) foo: string
     @Inject() bar: string
+    @Inject() three: string
+    @Inject() four: string
   }
 
   const child = new Child()
   t.is(child.foo, 'one')
   t.is(child.bar, 'two')
+  t.is(child.three, '@3')
+  t.is(child.four, '@4')
 
   @Component({
     parent: child
