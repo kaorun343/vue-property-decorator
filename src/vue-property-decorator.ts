@@ -32,18 +32,16 @@ export function Inject(key?: string | symbol): PropertyDecorator {
  */
 export function Provide(key?: string | symbol): PropertyDecorator {
   return createDecorator((componentOptions, k) => {
-		var provide: any = componentOptions.provide;
-		if('function'!== typeof provide || !provide.managed) {
-			var original = provide;
-			provide = componentOptions.provide = {
-				provide() {
-					var i, rv = Object.create(('function'=== typeof original?original.call(this):original)||null);
-					for(i in provide.managed) rv[provide.managed[i]] = this[i];
-					return rv;
-				}
-			}.provide;
-			provide.managed = {};
-		}
+    let provide: any = componentOptions.provide
+    if (typeof provide !== 'function' || !provide.managed) {
+      const original = componentOptions.provide
+      provide = componentOptions.provide = function (this: any) {
+        let rv = Object.create((typeof original === 'function' ? original.call(this) : original) || null)
+        for (let i in provide.managed) rv[provide.managed[i]] = this[i]
+        return rv
+      }
+      provide.managed = {}
+    }
     provide.managed[k] = key || k
   })
 }
