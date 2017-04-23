@@ -1,5 +1,5 @@
 import * as Vue from 'vue'
-import { Provide, Component, Inject, Model, Prop, Watch } from '../src/vue-property-decorator'
+import { Component, Inject, Model, Prop, Provide, Watch } from '../src/vue-property-decorator'
 import test from 'ava'
 
 test('@Inject decorator test', t => {
@@ -12,38 +12,28 @@ test('@Inject decorator test', t => {
       }
     }
   })
-  class Provider extends Vue {
-		@Provide() three = "@3"
-		@Provide("four") anyVal = "@4"
+  class Parent extends Vue {
   }
 
-  const provider = new Provider()
+  const parent = new Parent()
 
-  @Component({
-    parent: provider
-  })
+  @Component
   class Child extends Vue {
     @Inject(s) foo: string
     @Inject() bar: string
-    @Inject() three: string
-    @Inject() four: string
   }
 
-  const child = new Child()
+  const child = new Child({ parent })
   t.is(child.foo, 'one')
   t.is(child.bar, 'two')
-  t.is(child.three, '@3')
-  t.is(child.four, '@4')
 
-  @Component({
-    parent: child
-  })
+  @Component
   class GrandChild extends Vue {
     @Inject(s) foo: string
     @Inject() bar: string
   }
 
-  const grandChild = new GrandChild()
+  const grandChild = new GrandChild({ parent: child })
   t.is(grandChild.foo, 'one')
   t.is(grandChild.bar, 'two')
 })
@@ -63,20 +53,11 @@ test('@Prop decorator test', t => {
   @Component
   class Test extends Vue {
 
-    @Prop(Number)
-    propA: number
-
-    @Prop({ default: 'propB' })
-    propB: string
-
-    @Prop([Boolean, String])
-    propC: boolean | string
-
-    @Prop({ type: null })
-    propD: any
-
-    @Prop()
-    propE: boolean
+    @Prop(Number) propA: number
+    @Prop({ default: 'propB' }) propB: string
+    @Prop([Boolean, String]) propC: boolean | string
+    @Prop({ type: null }) propD: any
+    @Prop() propE: boolean
   }
 
   const { $options } = new Test()
@@ -92,6 +73,85 @@ test('@Prop decorator test', t => {
   const test = new Test({ propsData: { propA: 10 } })
   t.is(test.propA, 10)
   t.is(test.propB, 'propB')
+})
+
+test('@Provide decorator test', t => {
+  {
+    @Component
+    class Parent extends Vue {
+      @Provide() one = 'one'
+      @Provide('two') twelve = 'two'
+    }
+
+    const parent = new Parent()
+
+    @Component
+    class Child extends Vue {
+      @Inject() one: string
+      @Inject() two: string
+    }
+
+    const child = new Child({ parent })
+
+    t.is(child.one, 'one')
+    t.is(child.two, 'two')
+  }
+
+  {
+    @Component({
+      provide: {
+        zero: 'zero'
+      }
+    })
+    class Parent extends Vue {
+      @Provide() one = 'one'
+      @Provide('two') twelve = 'two'
+    }
+
+    const parent = new Parent()
+
+    @Component
+    class Child extends Vue {
+      @Inject() zero: string
+      @Inject() one: string
+      @Inject() two: string
+    }
+
+    const child = new Child({ parent })
+
+    t.is(child.zero, 'zero')
+    t.is(child.one, 'one')
+    t.is(child.two, 'two')
+  }
+
+  {
+    @Component({
+      provide() {
+        return {
+          zero: 'zero'
+        }
+      }
+    })
+    class Parent extends Vue {
+      @Provide() one = 'one'
+      @Provide('two') twelve = 'two'
+    }
+
+    const parent = new Parent()
+
+    @Component
+    class Child extends Vue {
+      @Inject() zero: string
+      @Inject() one: string
+      @Inject() two: string
+    }
+
+    const child = new Child({ parent })
+
+    t.is(child.zero, 'zero')
+    t.is(child.one, 'one')
+    t.is(child.two, 'two')
+  }
 })
 
 test('@Watch decorator test', t => {
