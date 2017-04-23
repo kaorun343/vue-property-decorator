@@ -26,13 +26,36 @@ export function Inject(key?: string | symbol): PropertyDecorator {
 }
 
 /**
+ * decorator of a provide
+ * @param key key
+ * @return PropertyDecorator | void
+ */
+export function Provide(key?: string | symbol): PropertyDecorator {
+  return createDecorator((componentOptions, k) => {
+		var provide: any = componentOptions.provide;
+		if('function'!== typeof provide || !provide.managed) {
+			var original = provide;
+			provide = componentOptions.provide = {
+				provide() {
+					var i, rv = Object.create(('function'=== typeof original?original.call(this):original)||null);
+					for(i in provide.managed) rv[provide.managed[i]] = this[i];
+					return rv;
+				}
+			}.provide;
+			provide.managed = {};
+		}
+    provide.managed[k] = key || k
+  })
+}
+
+/**
  * decorator of model
  * @param  event event name
  * @return PropertyDecorator
  */
-export function Model(event: string): PropertyDecorator {
+export function Model(event?: string): PropertyDecorator {
   return createDecorator((componentOptions, prop) => {
-    componentOptions.model = { prop, event }
+    componentOptions.model = { prop, event: event || prop }
   })
 }
 
