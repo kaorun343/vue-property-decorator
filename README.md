@@ -14,11 +14,12 @@ npm i -S vue-property-decorator
 
 ## Usage
 
-There are 5 decorators:
+There are 6 decorators:
 
 * `@Inject`
 * `@Model`
 * `@Prop`
+* `@Provide`
 * `@Watch`
 * `@Component` (`export Component from 'vue-class-component'`)
 
@@ -48,6 +49,9 @@ export class MyComponent extends Vue {
 
   @Prop({ type: null })
   propD: any
+
+  @Provide() foo = 'foo'
+  @Provide('bar') baz = 'bar'
 
   @Watch('child')
   onChildChanged(val: string, oldVal: string) { }
@@ -83,6 +87,18 @@ export const MyComponent = Vue.extend({
     propC: [String, Boolean],
     propD: { type: null }
   },
+  data () {
+    return {
+      foo: 'foo',
+      baz: 'bar'
+    }
+  },
+  provide () {
+    return {
+      foo: this.foo,
+      bar: this.baz
+    }
+  }
   methods: {
     onChildChanged(val, oldVal) { },
     onPersonChanged(val, oldVal) { }
