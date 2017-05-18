@@ -90,4 +90,4 @@ export function Watch(path: string, options: WatchOptions = {}): MethodDecorator
   })
 }
 
-export { Component }
+export { Component, Vue }

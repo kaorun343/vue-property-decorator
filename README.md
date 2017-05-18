@@ -24,8 +24,7 @@ There are 6 decorators:
 * `@Component` (`export Component from 'vue-class-component'`)
 
 ```typescript
-import Vue from 'vue'
-import { Component, Inject, Model, Prop, Watch } from 'vue-property-decorator'
+import { Component, Inject, Model, Prop, Vue, Watch } from 'vue-property-decorator'
 
 const s = Symbol('baz')
 
