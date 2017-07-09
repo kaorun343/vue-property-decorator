@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/node": "^7.0.5",
     "ava": "^0.19.1",
-    "typescript": "^2.2.1",
+    "typescript": "^2.4.1",
     "vue": "^2.2.1"
   },
   "typings": "./lib/vue-property-decorator.d.ts",
