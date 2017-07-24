@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "../lib",
     "target": "es5",
-    "module": "commonjs",
+    "module": "umd",
     "moduleResolution": "node",
     "isolatedModules": false,
     "experimentalDecorators": true,
