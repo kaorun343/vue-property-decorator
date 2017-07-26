@@ -15,6 +15,7 @@
   },
   "scripts": {
     "build": "tsc -p src/tsconfig.json",
+    "build:umd": "rollup -c",
     "test": "tsc -p test/tsconfig.json && ava test/decorator.spec.js"
   },
   "files": [
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@types/node": "^7.0.5",
     "ava": "^0.19.1",
+    "rollup": "^0.45.2",
     "typescript": "^2.4.1",
     "vue": "^2.2.1"
   },

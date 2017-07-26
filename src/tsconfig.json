@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "../lib",
     "target": "es5",
-    "module": "umd",
+    "module": "es2015",
     "moduleResolution": "node",
     "isolatedModules": false,
     "experimentalDecorators": true,
