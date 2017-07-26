@@ -2,7 +2,7 @@
   "name": "vue-property-decorator",
   "version": "5.2.0",
   "description": "property decorators for Vue Component",
-  "main": "lib/vue-property-decorator.js",
+  "main": "lib/vue-property-decorator.umd.js",
   "keywords": [
     "vue",
     "typescript",
