@@ -23,7 +23,7 @@ There are 6 decorators:
 * `@Prop`
 * `@Provide`
 * `@Watch`
-* `@Component` (`export Component from 'vue-class-component'`)
+* `@Component` (**exported from** `vue-class-component`)
 
 ```typescript
 import { Component, Inject, Model, Prop, Vue, Watch } from 'vue-property-decorator'
