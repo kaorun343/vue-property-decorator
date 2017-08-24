@@ -46,7 +46,8 @@ test('@Model decorator test', t => {
   }
 
   const { $options } = new Test()
-  t.deepEqual($options.model, { prop: 'checked', event: 'change' })
+	t.deepEqual($options.model, { prop: 'checked', event: 'change' })
+	t.deepEqual($options.props, { checked: { type: Boolean } })
 })
 
 test('@Prop decorator test', t => {
