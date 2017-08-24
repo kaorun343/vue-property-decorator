@@ -80,7 +80,8 @@ export const MyComponent = Vue.extend({
     event: 'change'
   },
   props: {
-    propA: Number,
+    checked: Boolean,
+    propA: Number,
     propB: {
       type: String,
       default: 'default value'
