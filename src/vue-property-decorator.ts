@@ -96,4 +96,29 @@ export function Watch(path: string, options: WatchOptions = {}): MethodDecorator
   })
 }
 
+// Code copy-pasted from Vue/packages/vue-server-renderer/build.js
+var hyphenateRE = /([^-])([A-Z])/g;
+var hyphenate = function (str: string) {
+  return str
+    .replace(hyphenateRE, '$1-$2')
+    .replace(hyphenateRE, '$1-$2')
+    .toLowerCase()
+};
+
+/**
+ * decorator of an event-emitter function
+ * @param  event The name of the event
+ * @return MethodDecorator
+ */
+export function Emit(event?: string): MethodDecorator {
+  return function (target: Vue, key: string, descriptor: any) {
+		key = hyphenate(key);
+		var original = descriptor.value;
+		descriptor.value = function emitter(...args: any[]) {
+			if(false!== original.apply(this, args))
+				this.$emit(event || key, ...args);
+		}
+	}
+}
+
 export { Component, Vue }
