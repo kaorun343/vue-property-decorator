@@ -57,7 +57,7 @@ export function Model(event?: string, options: (PropOptions | Constructor[] | Co
       (options as PropOptions).type = Reflect.getMetadata('design:type', target, key)
     }
     createDecorator((componentOptions, k) => {
-      (componentOptions.props || (componentOptions.props = {}) as any)[k] = options;
+      (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
     	componentOptions.model = { prop: k, event: event || k }
     })(target, key)
   }

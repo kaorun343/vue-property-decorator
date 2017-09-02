@@ -1,6 +1,56 @@
 import * as Vue from 'vue'
-import { Component, Inject, Model, Prop, Provide, Watch } from '../src/vue-property-decorator'
+import { Component, Emit, Inject, Model, Prop, Provide, Watch } from '../src/vue-property-decorator'
 import test from 'ava'
+
+test('@Emit decorator test', t => {
+
+  @Component
+  class Child extends Vue {
+    count = 0
+
+    @Emit('reset') resetCount() {
+      this.count = 0
+    }
+
+    @Emit() increment(n: number) {
+      this.count += n
+    }
+
+    @Emit() canceled() {
+      return false
+    }
+  }
+  const child = new Child()
+
+  let result = {
+    called: false,
+    event: '',
+    arg: 0
+  }
+
+  child.$emit = (event, ...args) => {
+    result.called = true
+    result.event = event
+    result.arg = args[0]
+
+    return child
+  }
+
+  child.resetCount()
+  t.is(result.called, true)
+  t.is(result.event, 'reset')
+  t.is(result.arg, undefined)
+
+  result.called = false
+  child.increment(30)
+  t.is(result.event, 'increment')
+  t.is(result.arg, 30)
+
+  result.called = false
+  child.canceled()
+  t.is(result.called, false)
+
+})
 
 test('@Inject decorator test', t => {
   const s = Symbol()
@@ -46,8 +96,11 @@ test('@Model decorator test', t => {
   }
 
   const { $options } = new Test()
-	t.deepEqual($options.model, { prop: 'checked', event: 'change' })
-	t.deepEqual($options.props, { checked: { type: Boolean } })
+  t.deepEqual($options.model, { prop: 'checked', event: 'change' })
+  const { props } = $options
+  if (!(props instanceof Array)) {
+    t.deepEqual(props!['checked'], { type: Boolean })
+  }
 })
 
 test('@Prop decorator test', t => {
