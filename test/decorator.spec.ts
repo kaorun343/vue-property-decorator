@@ -232,3 +232,23 @@ test('@Watch decorator test', t => {
 
   t.is(num, 1)
 })
+
+test('@Emit decorator test', t => {
+  let emited: any = {};
+
+  @Component
+  class Test extends Vue {
+    @Emit() test1(arg: any) {}
+    @Emit('test2') testTwo(arg: any) {}
+
+  }
+
+	const test = new Test()
+	test.$on('test1', function(arg:any) { emited.test1 = arg; });
+	test.$on('test2', function(arg:any) { emited.test2 = arg; });
+  test.test1(52);
+  test.testTwo(25);
+
+  t.is(emited.test1, 52)
+  t.is(emited.test2, 25)
+})
