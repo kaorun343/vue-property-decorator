@@ -116,4 +116,19 @@ export function Emit(event?: string): MethodDecorator {
 	}
 }
 
+/**
+ * decorator of a computed
+ * @return MethodDecorator
+ */
+export function Computed(): MethodDecorator {
+	return function (target: Vue, key: string, value: PropertyDescriptor) {
+		createDecorator((componentOptions, k) => {
+			(componentOptions.computed || (componentOptions.computed = {}) as any)[k] = {
+				get: value.get,
+				set: value.set
+			}
+		})(target, key)
+	}
+}
+
 export { Component, Vue }

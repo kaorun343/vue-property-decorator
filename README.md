@@ -23,6 +23,7 @@ There are 6 decorators:
 * `@Prop`
 * `@Provide`
 * `@Watch`
+* `@Computed`
 * `@Component` (**exported from** `vue-class-component`)
 
 ```typescript
@@ -59,6 +60,13 @@ export class MyComponent extends Vue {
 
   @Watch('person', { immediate: true, deep: true })
   onPersonChanged(val: Person, oldVal: Person) { }
+
+  @Computed()
+  get computedA() { return 'value of computedA' }
+  @Computed()
+  get computedB() { return _computedB + 1 }
+  set computedB(value) { this._computedB = value - 1 }
+  _computedB
 }
 
 ```
@@ -115,6 +123,21 @@ export const MyComponent = Vue.extend({
       handler: 'onPersonChanged',
       immediate: true,
       deep: true
+    }
+  },
+  computed: {
+    computedA: {
+      get: function () {
+        return 'value of computedA'
+      }
+    },
+    computedB: {
+      get: function () {
+        return _computedB + 1
+      },
+      set: function (value) {
+        this._computedB = value - 1
+      }
     }
   }
 })
