@@ -1,5 +1,5 @@
 import * as Vue from 'vue'
-import { Component, Emit, Inject, Model, Prop, Provide, Watch } from '../src/vue-property-decorator'
+import {Component, Emit, Inject, Model, Prop, Provide, Watch, Computed} from '../src/vue-property-decorator'
 import test from 'ava'
 
 test('@Emit decorator test', t => {
@@ -231,4 +231,34 @@ test('@Watch decorator test', t => {
   test.moreExpression = true
 
   t.is(num, 1)
+})
+
+test('@Computed decorator test', t => {
+  {
+    @Component
+    class Test extends Vue {
+      @Computed() get getProperty() { return 'result of getProperty' }
+    }
+
+    const instance = new Test()
+    const computed = instance.$options.computed as any
+    t.is(computed!.getProperty.get.call(instance), instance.getProperty)
+    t.falsy(computed!.getProperty.set)
+  }
+
+  {
+    @Component
+    class Test extends Vue {
+      @Computed() get getSetProperty() { return this._getSetProperty }
+      set getSetProperty(value: string) { this._getSetProperty = value }
+
+      _getSetProperty: string
+    }
+
+    const instance = new Test()
+    const computed = instance.$options.computed as any
+    computed!.getSetProperty.set.call(instance, 'text')
+    t.is(instance._getSetProperty, 'text')
+    t.is(computed.getSetProperty.get.call(instance), instance.getSetProperty)
+  }
 })
