@@ -16,8 +16,9 @@ npm i -S vue-property-decorator
 
 ## Usage
 
-There are 6 decorators:
+There are 7 decorators:
 
+* `@Emit`
 * `@Inject`
 * `@Model`
 * `@Prop`
@@ -26,12 +27,18 @@ There are 6 decorators:
 * `@Component` (**exported from** `vue-class-component`)
 
 ```typescript
-import { Component, Inject, Model, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator'
 
 const s = Symbol('baz')
 
 @Component
 export class MyComponent extends Vue {
+  
+  @Emit() 
+  addToCount(n: number){ this.count += n }
+  
+  @Emit('reset') 
+  resetCount(){ this.count = 0; }
 
   @Inject() foo: string
   @Inject('bar') bar: string
@@ -100,8 +107,16 @@ export const MyComponent = Vue.extend({
       foo: this.foo,
       bar: this.baz
     }
-  }
+  },
   methods: {
+    addToCount(n){ 
+      this.count += n;
+      this.$emit("add-to-count", n)
+    },
+    resetCount(){
+      this.count = 0;
+      this.$emit("reset")
+    },
     onChildChanged(val, oldVal) { },
     onPersonChanged(val, oldVal) { }
   },
