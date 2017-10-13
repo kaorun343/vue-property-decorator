@@ -22,15 +22,15 @@
     "lib"
   ],
   "devDependencies": {
-    "@types/node": "^7.0.5",
-    "ava": "^0.19.1",
-    "rollup": "^0.45.2",
-    "typescript": "^2.4.1",
-    "vue": "^2.2.1"
+    "@types/node": "^8.0.34",
+    "ava": "^0.22.0",
+    "rollup": "^0.50.0",
+    "typescript": "^2.5.3",
+    "vue": "^2.5.0"
   },
   "typings": "./lib/vue-property-decorator.d.ts",
   "dependencies": {
-    "reflect-metadata": "^0.1.9",
+    "reflect-metadata": "^0.1.10",
     "vue-class-component": "^6.0.0"
   },
   "repository": {
