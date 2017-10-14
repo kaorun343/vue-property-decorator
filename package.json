@@ -16,7 +16,7 @@
   "scripts": {
     "build": "tsc -p src/tsconfig.json",
     "build:umd": "rollup -c",
-    "test": "tsc -p test/tsconfig.json && ava test/decorator.spec.js"
+    "test": "rollup -c test/rollup.config.js && ava test/decorator.spec.js"
   },
   "files": [
     "lib"
@@ -25,6 +25,8 @@
     "@types/node": "^8.0.34",
     "ava": "^0.22.0",
     "rollup": "^0.50.0",
+    "rollup-plugin-commonjs": "^8.2.1",
+    "rollup-plugin-typescript": "^0.8.1",
     "typescript": "^2.5.3",
     "vue": "^2.5.0"
   },

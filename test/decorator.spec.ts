@@ -1,6 +1,7 @@
-import * as Vue from 'vue'
+import Vue from 'vue'
 import { Component, Emit, Inject, Model, Prop, Provide, Watch } from '../src/vue-property-decorator'
-import test from 'ava'
+import { test as Test } from 'ava'
+const test: typeof Test = require('ava').test
 
 test('@Emit decorator test', t => {
 
@@ -110,8 +111,7 @@ test('@Prop decorator test', t => {
     @Prop(Number) propA: number
     @Prop({ default: 'propB' }) propB: string
     @Prop([Boolean, String]) propC: boolean | string
-    @Prop({ type: null }) propD: any
-    @Prop() propE: boolean
+    @Prop() propD: boolean
   }
 
   const { $options } = new Test()
@@ -120,8 +120,7 @@ test('@Prop decorator test', t => {
     t.deepEqual(props!['propA'], { type: Number })
     t.deepEqual(props!['propB'], { type: String, default: 'propB' })
     t.deepEqual(props!['propC'], { type: [Boolean, String] })
-    t.deepEqual(props!['propD'], { type: null })
-    t.deepEqual(props!['propE'], { type: Boolean })
+    t.deepEqual(props!['propD'], { type: Boolean })
   }
 
   const test = new Test({ propsData: { propA: 10 } })
