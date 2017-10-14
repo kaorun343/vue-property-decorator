@@ -6,8 +6,10 @@ import Component, { createDecorator } from 'vue-class-component'
 import 'reflect-metadata'
 
 export type Constructor = {
-  new (...args: any[]): any
+  new(...args: any[]): any
 }
+
+export { Component, Vue }
 
 /**
  * decorator of an inject
@@ -58,7 +60,7 @@ export function Model(event?: string, options: (PropOptions | Constructor[] | Co
     }
     createDecorator((componentOptions, k) => {
       (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
-    	componentOptions.model = { prop: k, event: event || k }
+      componentOptions.model = { prop: k, event: event || k }
     })(target, key)
   }
 }
@@ -107,13 +109,11 @@ const hyphenate = (str: string) => str.replace(hyphenateRE, '-$1').toLowerCase()
  */
 export function Emit(event?: string): MethodDecorator {
   return function (target: Vue, key: string, descriptor: any) {
-		key = hyphenate(key);
-		var original = descriptor.value;
-		descriptor.value = function emitter(...args: any[]) {
-			if(false!== original.apply(this, args))
-				this.$emit(event || key, ...args);
-		}
-	}
+    key = hyphenate(key)
+    const original = descriptor.value
+    descriptor.value = function emitter(...args: any[]) {
+      if (original.apply(this, args) !== false)
+        this.$emit(event || key, ...args);
+    }
+  }
 }
-
-export { Component, Vue }
