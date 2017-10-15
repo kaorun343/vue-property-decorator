@@ -1,9 +1,7 @@
-
 import Vue from 'vue'
 import { Component, Emit, Inject, Model, Prop, Provide, Watch } from '../src/vue-property-decorator'
 import { test as Test } from 'ava'
 const test: typeof Test = require('ava').test
-
 
 test('@Emit decorator test', t => {
 
