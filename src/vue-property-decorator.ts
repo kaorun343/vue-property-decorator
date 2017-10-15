@@ -116,6 +116,11 @@ export function Emit(event?: string): MethodDecorator {
   }
 }
 
+/**
+ * decorator of $off
+ * @param event The name of the event
+ * @param method The name of the method
+ */
 export function Off(event?: string, method?: string): MethodDecorator {
   return function(target: Vue, key: string, descriptor: any) {
     key = hyphenate(key);
@@ -138,6 +143,10 @@ export function Off(event?: string, method?: string): MethodDecorator {
   }
 }
 
+/**
+ * decorator of $on
+ * @param event The name of the event
+ */
 export function On(event?: string): MethodDecorator {
   return function (outTarget: any, key: string, descriptor: any) {
     key = hyphenate(key);
@@ -150,6 +159,10 @@ export function On(event?: string): MethodDecorator {
   };
 }
 
+/**
+ * decorator of $once
+ * @param event The name of the event
+ */
 export function Once(event?: string): MethodDecorator {
   return function (outTarget: any, key: string, descriptor: any) {
     key = hyphenate(key);
@@ -162,6 +175,13 @@ export function Once(event?: string): MethodDecorator {
   };
 }
 
+/**
+ * decorator of $nextTick
+ * 
+ * @export
+ * @param {string} method 
+ * @returns {MethodDecorator} 
+ */
 export function NextTick(method: string): MethodDecorator {
   return function (target: Vue, key: string, descriptor: any) {
     var original = descriptor.value;
