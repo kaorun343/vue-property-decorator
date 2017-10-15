@@ -148,15 +148,17 @@ export function Off(event?: string, method?: string): MethodDecorator {
  * @param event The name of the event
  */
 export function On(event?: string): MethodDecorator {
-  return function (outTarget: any, key: string, descriptor: any) {
-    key = hyphenate(key);
-    outTarget.created = new Proxy(outTarget.created||new Function, {
-      apply: function (target: Function, thisArg: Vue, argumentsList) {
-        target.call(thisArg);
-        thisArg.$on(event || key, descriptor.value);
-      }
-    })
-  };
+  return createDecorator((componentOptions, k)=>{
+    const key = hyphenate(k);
+    if (typeof componentOptions.created !== 'function') {
+      componentOptions.created= function(){};
+    }
+    const original=componentOptions.created;
+    (componentOptions as any).created=function(){
+      original();
+      this.$on(event, componentOptions.methods[k]);
+    };
+  });
 }
 
 /**
@@ -164,15 +166,17 @@ export function On(event?: string): MethodDecorator {
  * @param event The name of the event
  */
 export function Once(event?: string): MethodDecorator {
-  return function (outTarget: any, key: string, descriptor: any) {
-    key = hyphenate(key);
-    outTarget.created = new Proxy(outTarget.created||new Function, {
-      apply: function (target: Function, thisArg: Vue, argumentsList) {
-        target.call(thisArg);
-        thisArg.$once(event || key, descriptor.value);
-      }
-    })
-  };
+  return createDecorator((componentOptions, k)=>{
+    const key = hyphenate(k);
+    if (typeof componentOptions.created !== 'function') {
+      componentOptions.created= function(){};
+    }
+    const original=componentOptions.created;
+    (componentOptions as any).created=function(){
+      original();
+      this.$once(event, componentOptions.methods[k]);
+    };
+  });
 }
 
 /**
