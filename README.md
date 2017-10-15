@@ -33,12 +33,12 @@ const s = Symbol('baz')
 
 @Component
 export class MyComponent extends Vue {
-  
-  @Emit() 
+
+  @Emit()
   addToCount(n: number){ this.count += n }
-  
-  @Emit('reset') 
-  resetCount(){ this.count = 0; }
+
+  @Emit('reset')
+  resetCount(){ this.count = 0 }
 
   @Inject() foo: string
   @Inject('bar') bar: string
@@ -54,9 +54,6 @@ export class MyComponent extends Vue {
 
   @Prop([String, Boolean])
   propC: string | boolean
-
-  @Prop({ type: null })
-  propD: any
 
   @Provide() foo = 'foo'
   @Provide('bar') baz = 'bar'
@@ -94,7 +91,6 @@ export const MyComponent = Vue.extend({
       default: 'default value'
     },
     propC: [String, Boolean],
-    propD: { type: null }
   },
   data () {
     return {
@@ -109,12 +105,12 @@ export const MyComponent = Vue.extend({
     }
   },
   methods: {
-    addToCount(n){ 
-      this.count += n;
+    addToCount(n){
+      this.count += n
       this.$emit("add-to-count", n)
     },
     resetCount(){
-      this.count = 0;
+      this.count = 0
       this.$emit("reset")
     },
     onChildChanged(val, oldVal) { },
@@ -134,6 +130,8 @@ export const MyComponent = Vue.extend({
   }
 })
 ```
+
+## emitDecoratorMetadata
 
 As you can see at `propA` and `propB`, the type can be inferred automatically when it's a simple type. For more complex types like enums you do need to specify it specifically.
 Also this library needs to have `emitDecoratorMetadata` set to `true` for this to work.
