@@ -6,7 +6,7 @@ import Component, { createDecorator } from 'vue-class-component'
 import 'reflect-metadata'
 
 export type Constructor = {
-  new (...args: any[]): any
+  new(...args: any[]): any
 }
 
 /**
@@ -58,7 +58,7 @@ export function Model(event?: string, options: (PropOptions | Constructor[] | Co
     }
     createDecorator((componentOptions, k) => {
       (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
-    	componentOptions.model = { prop: k, event: event || k }
+      componentOptions.model = { prop: k, event: event || k }
     })(target, key)
   }
 }
@@ -107,13 +107,74 @@ const hyphenate = (str: string) => str.replace(hyphenateRE, '-$1').toLowerCase()
  */
 export function Emit(event?: string): MethodDecorator {
   return function (target: Vue, key: string, descriptor: any) {
-		key = hyphenate(key);
-		var original = descriptor.value;
-		descriptor.value = function emitter(...args: any[]) {
-			if(false!== original.apply(this, args))
-				this.$emit(event || key, ...args);
-		}
-	}
+    key = hyphenate(key);
+    var original = descriptor.value;
+    descriptor.value = function emitter(...args: any[]) {
+      if (false !== original.apply(this, args))
+        this.$emit(event || key, ...args);
+    }
+  }
 }
+
+export function Off(event?: string, method?: string): MethodDecorator {
+  return function(target: Vue, key: string, descriptor: any) {
+    key = hyphenate(key);
+    var original = descriptor.value;
+    descriptor.value = function offer(...args: any[]) {
+      if (false !== original.apply(this, args)) {
+        if (method) {
+            if (typeof this[method] === 'function') {
+              this.$off(event||key, this[method]);
+            } else {
+              throw new TypeError('must be a method name');
+            }
+        } else if (event) {
+          this.$off(event||key);
+        } else {
+          this.$off();
+        }
+      }
+    }
+  }
+}
+
+export function On(event?: string): MethodDecorator {
+  return function (outTarget: any, key: string, descriptor: any) {
+    key = hyphenate(key);
+    outTarget.created = new Proxy(outTarget.created||new Function, {
+      apply: function (target: Function, thisArg: Vue, argumentsList) {
+        target.call(thisArg);
+        thisArg.$on(event || key, descriptor.value);
+      }
+    })
+  };
+}
+
+export function Once(event?: string): MethodDecorator {
+  return function (outTarget: any, key: string, descriptor: any) {
+    key = hyphenate(key);
+    outTarget.created = new Proxy(outTarget.created||new Function, {
+      apply: function (target: Function, thisArg: Vue, argumentsList) {
+        target.call(thisArg);
+        thisArg.$once(event || key, descriptor.value);
+      }
+    })
+  };
+}
+
+export function NextTick(method: string): MethodDecorator {
+  return function (target: Vue, key: string, descriptor: any) {
+    var original = descriptor.value;
+    descriptor.value = function emitter(...args: any[]) {
+      if (false !== original.apply(this, args))
+          if (typeof this[method] === 'function') {
+            this.$nextTick(this[method]);
+          } else {
+            throw new TypeError('must be a method name');
+          }
+    }
+  }
+}
+
 
 export { Component, Vue }

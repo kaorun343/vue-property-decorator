@@ -1,5 +1,5 @@
 import * as Vue from 'vue'
-import { Component, Emit, Inject, Model, Prop, Provide, Watch } from '../src/vue-property-decorator'
+import { On,Component, Emit, Inject, Model, Prop, Provide, Watch } from '../src/vue-property-decorator'
 import test from 'ava'
 
 test('@Emit decorator test', t => {
