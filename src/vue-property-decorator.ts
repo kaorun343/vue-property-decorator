@@ -158,7 +158,7 @@ export function On(event?: string): MethodDecorator {
     const original=componentOptions.created;
     (componentOptions as any).created=function(){
       original();
-      this.$on(event, componentOptions.methods[k]);
+      this.$on(event||key, componentOptions.methods[k]);
     };
   });
 }
@@ -176,7 +176,7 @@ export function Once(event?: string): MethodDecorator {
     const original=componentOptions.created;
     (componentOptions as any).created=function(){
       original();
-      this.$once(event, componentOptions.methods[k]);
+      this.$once(event||key, componentOptions.methods[k]);
     };
   });
 }
