@@ -201,6 +201,3 @@ export function NextTick(method: string): MethodDecorator {
     }
   }
 }
-
-
-export { Component, Vue }
