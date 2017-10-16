@@ -117,3 +117,87 @@ export function Emit(event?: string): MethodDecorator {
     }
   }
 }
+
+/**
+ * decorator of $off
+ * @param event The name of the event
+ * @param method The name of the method
+ */
+export function Off(event?: string, method?: string): MethodDecorator {
+  return function(target: Vue, key: string, descriptor: any) {
+    key = hyphenate(key);
+    var original = descriptor.value;
+    descriptor.value = function offer(...args: any[]) {
+      if (false !== original.apply(this, args)) {
+        if (method) {
+            if (typeof this[method] === 'function') {
+              this.$off(event||key, this[method]);
+            } else {
+              throw new TypeError('must be a method name');
+            }
+        } else if (event) {
+          this.$off(event||key);
+        } else {
+          this.$off();
+        }
+      }
+    }
+  }
+}
+
+/**
+ * decorator of $on
+ * @param event The name of the event
+ */
+export function On(event?: string): MethodDecorator {
+  return createDecorator((componentOptions, k)=>{
+    const key = hyphenate(k);
+    if (typeof componentOptions.created !== 'function') {
+      componentOptions.created= function(){};
+    }
+    const original=componentOptions.created;
+    (componentOptions as any).created=function(){
+      original();
+      this.$on(event||key, componentOptions.methods[k]);
+    };
+  });
+}
+
+/**
+ * decorator of $once
+ * @param event The name of the event
+ */
+export function Once(event?: string): MethodDecorator {
+  return createDecorator((componentOptions, k)=>{
+    const key = hyphenate(k);
+    if (typeof componentOptions.created !== 'function') {
+      componentOptions.created= function(){};
+    }
+    const original=componentOptions.created;
+    (componentOptions as any).created=function(){
+      original();
+      this.$once(event||key, componentOptions.methods[k]);
+    };
+  });
+}
+
+/**
+ * decorator of $nextTick
+ * 
+ * @export
+ * @param {string} method 
+ * @returns {MethodDecorator} 
+ */
+export function NextTick(method: string): MethodDecorator {
+  return function (target: Vue, key: string, descriptor: any) {
+    var original = descriptor.value;
+    descriptor.value = function emitter(...args: any[]) {
+      if (false !== original.apply(this, args))
+          if (typeof this[method] === 'function') {
+            this.$nextTick(this[method]);
+          } else {
+            throw new TypeError('must be a method name');
+          }
+    }
+  }
+}
