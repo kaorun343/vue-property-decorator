@@ -158,7 +158,10 @@ export function On(event?: string): MethodDecorator {
     const original=componentOptions.created;
     (componentOptions as any).created=function(){
       original();
-      this.$on(event||key, componentOptions.methods[k]);
+      if (typeof componentOptions.methods !== 'undefined') {
+        this.$on(event||key, componentOptions.methods[k]);
+      }
+
     };
   });
 }
@@ -175,18 +178,20 @@ export function Once(event?: string): MethodDecorator {
     }
     const original=componentOptions.created;
     (componentOptions as any).created=function(){
-      original();
-      this.$once(event||key, componentOptions.methods[k]);
+      original()
+      if (typeof componentOptions.methods !== 'undefined') {
+        this.$once(event || key, componentOptions.methods[k]);
+      }
     };
   });
 }
 
 /**
  * decorator of $nextTick
- * 
+ *
  * @export
- * @param {string} method 
- * @returns {MethodDecorator} 
+ * @param {string} method
+ * @returns {MethodDecorator}
  */
 export function NextTick(method: string): MethodDecorator {
   return function (target: Vue, key: string, descriptor: any) {
