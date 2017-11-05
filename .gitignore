@@ -5,3 +5,4 @@ src/*.js
 test/*.spec.js
 package-lock.json
 .vscode/setting.json
+.idea
