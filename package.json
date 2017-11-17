@@ -22,18 +22,18 @@
     "lib"
   ],
   "devDependencies": {
-    "@types/node": "^8.0.34",
-    "ava": "^0.22.0",
+    "@types/node": "^8.0.47",
+    "ava": "^0.23.0",
     "rollup": "^0.50.0",
-    "rollup-plugin-commonjs": "^8.2.1",
+    "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-typescript": "^0.8.1",
-    "typescript": "^2.5.3",
-    "vue": "^2.5.0"
+    "typescript": "^2.6.1",
+    "vue": "^2.5.3"
   },
   "typings": "./lib/vue-property-decorator.d.ts",
   "dependencies": {
     "reflect-metadata": "^0.1.10",
-    "vue-class-component": "^6.0.0"
+    "vue-class-component": "^6.1.0"
   },
   "repository": {
     "type": "git",
