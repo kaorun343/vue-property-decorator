@@ -155,10 +155,13 @@ export function On(event?: string): MethodDecorator {
     if (typeof componentOptions.created !== 'function') {
       componentOptions.created = function () { }
     }
-    const original = componentOptions.created
-    componentOptions.created = function () {
-      original()
-      this.$on(event || key, componentOptions.methods![k])
+    const original=componentOptions.created;
+    (componentOptions as any).created=function(){
+      original();
+      if (typeof componentOptions.methods !== 'undefined') {
+        this.$on(event||key, componentOptions.methods[k]);
+      }
+
     };
   });
 }
@@ -173,10 +176,12 @@ export function Once(event?: string): MethodDecorator {
     if (typeof componentOptions.created !== 'function') {
       componentOptions.created = function () { }
     }
-    const original = componentOptions.created;
-    (componentOptions as any).created = function () {
-      original();
-      this.$once(event || key, componentOptions.methods![k])
+    const original=componentOptions.created;
+    (componentOptions as any).created=function(){
+      original()
+      if (typeof componentOptions.methods !== 'undefined') {
+        this.$once(event || key, componentOptions.methods[k]);
+      }
     };
   });
 }
