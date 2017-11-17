@@ -113,7 +113,7 @@ export function Emit(event?: string): MethodDecorator {
     const original = descriptor.value
     descriptor.value = function emitter(...args: any[]) {
       if (original.apply(this, args) !== false)
-        this.$emit(event || key, ...args);
+        this.$emit(event || key, ...args)
     }
   }
 }
@@ -126,7 +126,7 @@ export function Emit(event?: string): MethodDecorator {
 export function Off(event?: string, method?: string): MethodDecorator {
   return function (target: Vue, key: string, descriptor: any) {
     key = hyphenate(key)
-    var original = descriptor.value
+    const original = descriptor.value
     descriptor.value = function offer(...args: any[]) {
       if (original.apply(this, args) !== false) {
         if (method) {
@@ -155,15 +155,15 @@ export function On(event?: string): MethodDecorator {
     if (typeof componentOptions.created !== 'function') {
       componentOptions.created = function () { }
     }
-    const original=componentOptions.created;
-    (componentOptions as any).created=function(){
-      original();
+    const original = componentOptions.created
+    componentOptions.created = function () {
+      original()
       if (typeof componentOptions.methods !== 'undefined') {
-        this.$on(event||key, componentOptions.methods[k]);
+        this.$on(event || key, componentOptions.methods[k])
       }
 
-    };
-  });
+    }
+  })
 }
 
 /**
@@ -176,14 +176,14 @@ export function Once(event?: string): MethodDecorator {
     if (typeof componentOptions.created !== 'function') {
       componentOptions.created = function () { }
     }
-    const original=componentOptions.created;
-    (componentOptions as any).created=function(){
+    const original = componentOptions.created
+    componentOptions.created = function () {
       original()
       if (typeof componentOptions.methods !== 'undefined') {
         this.$once(event || key, componentOptions.methods[k]);
       }
-    };
-  });
+    }
+  })
 }
 
 /**
@@ -195,7 +195,7 @@ export function Once(event?: string): MethodDecorator {
  */
 export function NextTick(method: string): MethodDecorator {
   return function (target: Vue, key: string, descriptor: any) {
-    var original = descriptor.value
+    const original = descriptor.value
     descriptor.value = function emitter(...args: any[]) {
       if (original.apply(this, args) !== false)
         if (typeof this[method] === 'function') {
