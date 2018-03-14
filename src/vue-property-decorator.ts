@@ -16,13 +16,14 @@ export { Component, Vue }
  * @param key key
  * @return PropertyDecorator
  */
-export function Inject(key?: string | symbol): PropertyDecorator {
+export function Inject(key?: string | symbol, defaultValue?: any): PropertyDecorator {
   return createDecorator((componentOptions, k) => {
     if (typeof componentOptions.inject === 'undefined') {
       componentOptions.inject = {}
     }
     if (!Array.isArray(componentOptions.inject)) {
-      componentOptions.inject[k] = key || k
+      let options = key && defaultValue !== 'undefined' ? { from: key, default: defaultValue } : key || k
+      componentOptions.inject[k] = options
     }
   })
 }
