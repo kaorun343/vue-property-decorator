@@ -2,6 +2,7 @@
 
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
+import { InjectKey } from 'vue/types/options';
 import Component, { createDecorator } from 'vue-class-component'
 import 'reflect-metadata'
 
@@ -13,17 +14,16 @@ export { Component, Vue }
 
 /**
  * decorator of an inject
- * @param key key
+ * @param from key
  * @return PropertyDecorator
  */
-export function Inject(key?: string | symbol, defaultValue?: any): PropertyDecorator {
-  return createDecorator((componentOptions, k) => {
+export function Inject(options?: { from?: InjectKey, default?: any } | InjectKey): PropertyDecorator {
+  return createDecorator((componentOptions, key) => {
     if (typeof componentOptions.inject === 'undefined') {
       componentOptions.inject = {}
     }
     if (!Array.isArray(componentOptions.inject)) {
-      let options = key && defaultValue !== 'undefined' ? { from: key, default: defaultValue } : key || k
-      componentOptions.inject[k] = options
+      componentOptions.inject[key] = options || key
     }
   })
 }

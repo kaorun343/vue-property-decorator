@@ -72,7 +72,7 @@ test('@Inject decorator test', t => {
   class Child extends Vue {
     @Inject(s) foo: string
     @Inject() bar: string
-    @Inject('optional', 'default') optional: string
+    @Inject({from: 'optional', default: 'default'}) optional: string
   }
 
   const child = new Child({ parent })
@@ -84,7 +84,7 @@ test('@Inject decorator test', t => {
   class GrandChild extends Vue {
     @Inject(s) foo: string
     @Inject() bar: string
-    @Inject('optional', 'default') optional: string
+    @Inject({from: 'optional', default: 'default'}) optional: string
   }
 
   const grandChild = new GrandChild({ parent: child })
