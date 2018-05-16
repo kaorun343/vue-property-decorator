@@ -42,6 +42,7 @@ export class MyComponent extends Vue {
 
   @Inject() foo: string
   @Inject('bar') bar: string
+  @Inject({from: 'optional', default: 'default'}) optional: string
   @Inject(s) baz: string
 
   @Model('change') checked: boolean
@@ -77,6 +78,7 @@ export const MyComponent = Vue.extend({
   inject: {
     foo: 'foo',
     bar: 'bar',
+    'optional': { from: 'optional', default: 'default' },
     [s]: s
   },
   model: {
