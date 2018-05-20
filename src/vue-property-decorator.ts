@@ -2,7 +2,7 @@
 
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
-import { InjectKey } from 'vue/types/options';
+import { InjectKey } from 'vue/types/options'
 import Component, { createDecorator } from 'vue-class-component'
 import 'reflect-metadata'
 
