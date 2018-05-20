@@ -3,6 +3,7 @@
   "version": "6.0.0",
   "description": "property decorators for Vue Component",
   "main": "lib/vue-property-decorator.umd.js",
+  "module": "lib/vue-property-decorator.js",
   "keywords": [
     "vue",
     "typescript",
