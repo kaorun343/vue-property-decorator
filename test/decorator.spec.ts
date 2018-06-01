@@ -72,21 +72,25 @@ test('@Inject decorator test', t => {
   class Child extends Vue {
     @Inject(s) foo: string
     @Inject() bar: string
+    @Inject({from: 'optional', default: 'default'}) optional: string
   }
 
   const child = new Child({ parent })
   t.is(child.foo, 'one')
   t.is(child.bar, 'two')
+  t.is(child.optional, 'default')
 
   @Component
   class GrandChild extends Vue {
     @Inject(s) foo: string
     @Inject() bar: string
+    @Inject({from: 'optional', default: 'default'}) optional: string
   }
 
   const grandChild = new GrandChild({ parent: child })
   t.is(grandChild.foo, 'one')
   t.is(grandChild.bar, 'two')
+  t.is(grandChild.optional, 'default')
 })
 
 test('@Model decorator test', t => {
