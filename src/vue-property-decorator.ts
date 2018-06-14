@@ -2,15 +2,15 @@
 
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
-import { InjectKey } from 'vue/types/options'
-import Component, { createDecorator } from 'vue-class-component'
+import Component, { createDecorator, mixins } from 'vue-class-component'
+import { InjectKey } from 'vue/types/options
 import 'reflect-metadata'
 
 export type Constructor = {
   new(...args: any[]): any
 }
 
-export { Component, Vue }
+export { Component, Vue, mixins as Mixins }
 
 /**
  * decorator of an inject

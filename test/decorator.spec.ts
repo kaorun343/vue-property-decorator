@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Component, Emit, Inject, Model, Prop, Provide, Watch } from '../src/vue-property-decorator'
+import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins } from '../src/vue-property-decorator'
 import { test as Test } from 'ava'
 const test: typeof Test = require('ava').test
 
@@ -234,4 +234,28 @@ test('@Watch decorator test', t => {
   test.moreExpression = true
 
   t.is(num, 1)
+})
+
+
+test('Mixins helper test', t => {
+
+  @Component
+  class MixinA extends Vue {
+
+  }
+
+  @Component
+  class MixinB extends Vue {
+
+  }
+
+  @Component
+  class Test extends Mixins(MixinA, MixinB) {
+      num:number = 2
+  }
+  const { $options } = new Test()
+  const { mixins }:any = $options
+
+  t.is(mixins[0].name , 'MixinA')
+  t.is(mixins[1].name , 'MixinB')
 })
