@@ -4,7 +4,6 @@
 import Vue, { PropOptions, WatchOptions } from 'vue'
 import Component, { createDecorator, mixins } from 'vue-class-component'
 import { InjectKey } from 'vue/types/options'
-import 'reflect-metadata'
 
 export type Constructor = {
   new(...args: any[]): any
@@ -52,18 +51,14 @@ export function Provide(key?: string | symbol): PropertyDecorator {
 /**
  * decorator of model
  * @param  event event name
+ * @param options options
  * @return PropertyDecorator
  */
 export function Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {}): PropertyDecorator {
-  return function (target: Vue, key: string) {
-    if (!Array.isArray(options) && typeof (options as PropOptions).type === 'undefined') {
-      (options as PropOptions).type = Reflect.getMetadata('design:type', target, key)
-    }
-    createDecorator((componentOptions, k) => {
-      (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
-      componentOptions.model = { prop: k, event: event || k }
-    })(target, key)
-  }
+  return createDecorator((componentOptions, k) => {
+    (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
+    componentOptions.model = { prop: k, event: event || k }
+  })
 }
 
 /**
@@ -72,14 +67,9 @@ export function Model(event?: string, options: (PropOptions | Constructor[] | Co
  * @return PropertyDecorator | void
  */
 export function Prop(options: (PropOptions | Constructor[] | Constructor) = {}): PropertyDecorator {
-  return function (target: Vue, key: string) {
-    if (!Array.isArray(options) && typeof (options as PropOptions).type === 'undefined') {
-      (options as PropOptions).type = Reflect.getMetadata('design:type', target, key)
-    }
-    createDecorator((componentOptions, k) => {
-      (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
-    })(target, key)
-  }
+  return createDecorator((componentOptions, k) => {
+    (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
+  })
 }
 
 /**

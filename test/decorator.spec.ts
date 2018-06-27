@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins } from '../src/vue-property-decorator.ts'
+import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins } from '../lib/vue-property-decorator'
 import { test as Test } from 'ava'
 const test: typeof Test = require('ava').test
 
@@ -72,7 +72,7 @@ test('@Inject decorator test', t => {
   class Child extends Vue {
     @Inject(s) foo: string
     @Inject() bar: string
-    @Inject({from: 'optional', default: 'default'}) optional: string
+    @Inject({ from: 'optional', default: 'default' }) optional: string
   }
 
   const child = new Child({ parent })
@@ -84,7 +84,7 @@ test('@Inject decorator test', t => {
   class GrandChild extends Vue {
     @Inject(s) foo: string
     @Inject() bar: string
-    @Inject({from: 'optional', default: 'default'}) optional: string
+    @Inject({ from: 'optional', default: 'default' }) optional: string
   }
 
   const grandChild = new GrandChild({ parent: child })
@@ -96,7 +96,7 @@ test('@Inject decorator test', t => {
 test('@Model decorator test', t => {
   @Component
   class Test extends Vue {
-    @Model('change')
+    @Model('change', Boolean)
     checked: boolean
   }
 
@@ -115,16 +115,14 @@ test('@Prop decorator test', t => {
     @Prop(Number) propA: number
     @Prop({ default: 'propB' }) propB: string
     @Prop([Boolean, String]) propC: boolean | string
-    @Prop() propD: boolean
   }
 
   const { $options } = new Test()
   const { props } = $options
   if (!(props instanceof Array)) {
     t.deepEqual(props!['propA'], { type: Number })
-    t.deepEqual(props!['propB'], { type: String, default: 'propB' })
+    t.deepEqual(props!['propB'], { default: 'propB' })
     t.deepEqual(props!['propC'], { type: [Boolean, String] })
-    t.deepEqual(props!['propD'], { type: Boolean })
   }
 
   const test = new Test({ propsData: { propA: 10 } })
@@ -133,82 +131,24 @@ test('@Prop decorator test', t => {
 })
 
 test('@Provide decorator test', t => {
-  {
-    @Component
-    class Parent extends Vue {
-      @Provide() one = 'one'
-      @Provide('two') twelve = 'two'
-    }
-
-    const parent = new Parent()
-
-    @Component
-    class Child extends Vue {
-      @Inject() one: string
-      @Inject() two: string
-    }
-
-    const child = new Child({ parent })
-
-    t.is(child.one, 'one')
-    t.is(child.two, 'two')
+  @Component
+  class Parent extends Vue {
+    @Provide() one = 'one'
+    @Provide('two') twelve = 'two'
   }
 
-  {
-    @Component({
-      provide: {
-        zero: 'zero'
-      }
-    })
-    class Parent extends Vue {
-      @Provide() one = 'one'
-      @Provide('two') twelve = 'two'
-    }
+  const parent = new Parent()
 
-    const parent = new Parent()
-
-    @Component
-    class Child extends Vue {
-      @Inject() zero: string
-      @Inject() one: string
-      @Inject() two: string
-    }
-
-    const child = new Child({ parent })
-
-    t.is(child.zero, 'zero')
-    t.is(child.one, 'one')
-    t.is(child.two, 'two')
+  @Component
+  class Child extends Vue {
+    @Inject() one: string
+    @Inject() two: string
   }
 
-  {
-    @Component({
-      provide() {
-        return {
-          zero: 'zero'
-        }
-      }
-    })
-    class Parent extends Vue {
-      @Provide() one = 'one'
-      @Provide('two') twelve = 'two'
-    }
+  const child = new Child({ parent })
 
-    const parent = new Parent()
-
-    @Component
-    class Child extends Vue {
-      @Inject() zero: string
-      @Inject() one: string
-      @Inject() two: string
-    }
-
-    const child = new Child({ parent })
-
-    t.is(child.zero, 'zero')
-    t.is(child.one, 'one')
-    t.is(child.two, 'two')
-  }
+  t.is(child.one, 'one')
+  t.is(child.two, 'two')
 })
 
 test('@Watch decorator test', t => {
@@ -241,21 +181,19 @@ test('Mixins helper test', t => {
 
   @Component
   class MixinA extends Vue {
-
+    mixinA = 0
   }
 
   @Component
   class MixinB extends Vue {
-
+    mixinB = 10
   }
 
   @Component
   class Test extends Mixins(MixinA, MixinB) {
-      num:number = 2
   }
-  const { $options } = new Test()
-  const { mixins }:any = $options
+  const test = new Test()
 
-  t.is(mixins[0].name , 'MixinA')
-  t.is(mixins[1].name , 'MixinB')
+  t.is(test.mixinA, 0)
+  t.is(test.mixinB, 10)
 })
