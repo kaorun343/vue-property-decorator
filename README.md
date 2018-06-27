@@ -16,83 +16,195 @@ npm i -S vue-property-decorator
 
 ## Usage
 
-There are 7 decorators:
+There are 8 decorators:
 
 * `@Emit`
 * `@Inject`
+* `@Mixins` (the helper function named `mixins` defined at `vue-class-component`)
 * `@Model`
 * `@Prop`
 * `@Provide`
 * `@Watch`
-* `@Component` (**exported from** `vue-class-component`)
+* `@Component` (**from** `vue-class-component`)
 
-```typescript
-import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator'
+### `@Prop(options: (PropOptions | Constructor[] | Constructor) = {})` decorator
 
-const s = Symbol('baz')
+```ts
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
-export class MyComponent extends Vue {
+export default class YourComponent extends Vue {
+  @Prop(Number) propA!: number
+  @Prop({ default: 'default value' }) propB!: string
+  @Prop([String, Boolean]) propC: string | boolean
+}
+```
 
-  @Emit()
-  addToCount(n: number){ this.count += n }
+is equivalent to
 
-  @Emit('reset')
-  resetCount(){ this.count = 0 }
+```js
+export default {
+  props: {
+    propA: {
+      type: Number
+    },
+    propB: {
+      default: 'default value'
+    },
+    propC: {
+      type: [String, Boolean]
+    },
+  }
+}
+```
 
-  @Inject() foo: string
-  @Inject('bar') bar: string
-  @Inject({from: 'optional', default: 'default'}) optional: string
-  @Inject(s) baz: string
+**Note that:**
 
-  @Model('change') checked: boolean
+* `reflect-metada` isn't used in this library and setting `emitDecoratorMetadata` to `true` means nothing.
+* Each prop's default value need to be defined as same as the example code shown in above.
 
-  @Prop()
-  propA: number
+### `@Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
 
-  @Prop({ default: 'default value' })
-  propB: string
+```ts
+import { Vue, Component, Model } from 'vue-property-decorator'
 
-  @Prop([String, Boolean])
-  propC: string | boolean
+@Component
+export default class YourComponent extends Vue {
+  @Model('change', { type: Boolean }) checked!: boolean
+}
+```
 
-  @Provide() foo = 'foo'
-  @Provide('bar') baz = 'bar'
+is equivalent to
 
+```js
+export default {
+  props: {
+    checked: {
+      type: Boolean
+    },
+    model: {
+      prop: 'checked',
+      event: 'change'
+    }
+  }
+}
+```
+
+### `@Watch(path: string, options: WatchOptions = {})` decorator
+
+```ts
+import { Vue, Component, Watch } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
   @Watch('child')
   onChildChanged(val: string, oldVal: string) { }
 
   @Watch('person', { immediate: true, deep: true })
   onPersonChanged(val: Person, oldVal: Person) { }
 }
-
 ```
 
 is equivalent to
 
 ```js
-const s = Symbol('baz')
+export default {
+  watch: {
+    'child': {
+      handler: 'onChildChanged',
+      immediate: false,
+      deep: false
+    },
+    'person': {
+      handler: 'onPersonChanged',
+      immediate: true,
+      deep: true
+    }
+  },
+  methods: {
+    onChildChanged(val, oldVal) { },
+    onPersonChanged(val, oldVal) { }
+  }
+}
+```
+
+### `@Emit(event?: string)` decorator
+
+The functions decorated by `@Emit` `$emit` their arguments after they ran.
+
+```ts
+import { Vue, Component, Emit } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
+  count = 0
+
+  @Emit()
+  addToCount(n: number) {
+    this.count += n
+  }
+
+  @Emit('reset')
+  resetCount() {
+    this.count = 0
+  }
+}
+```
+
+is equivalent to
+
+```js
+export default {
+  data() {
+    return {
+      count: 0
+    }
+  },
+  methods: {
+    addToCount(n) {
+      this.count += n
+      this.$emit('add-to-count', n)
+    },
+    resetCount() {
+      this.count = 0
+      this.$emit('reset')
+    }
+  }
+}
+```
+
+### `@Provide(key?: string | symbol)` / `@Inject(options?: { from?: InjectKey, default?: any } | InjectKey)` decorator
+
+```ts
+import { Component, Inject, Provide, Vue } from 'vue-property-decorator'
+
+const symbol = Symbol('baz')
+
+@Component
+export class MyComponent extends Vue {
+  @Inject() foo!: string
+  @Inject('bar') bar!: string
+  @Inject({ from: 'optional', default: 'default' }) optional!: string
+  @Inject(symbol) baz!: string
+
+
+  @Provide() foo = 'foo'
+  @Provide('bar') baz = 'bar'
+}
+```
+
+is equivalent to
+
+```js
+const symbol = Symbol('baz')
 
 export const MyComponent = Vue.extend({
-  name: 'MyComponent',
+
   inject: {
     foo: 'foo',
     bar: 'bar',
     'optional': { from: 'optional', default: 'default' },
-    [s]: s
-  },
-  model: {
-    prop: 'checked',
-    event: 'change'
-  },
-  props: {
-    checked: Boolean,
-    propA: Number,
-    propB: {
-      type: String,
-      default: 'default value'
-    },
-    propC: [String, Boolean],
+    [symbol]: symbol
   },
   data () {
     return {
@@ -105,38 +217,9 @@ export const MyComponent = Vue.extend({
       foo: this.foo,
       bar: this.baz
     }
-  },
-  methods: {
-    addToCount(n){
-      this.count += n
-      this.$emit("add-to-count", n)
-    },
-    resetCount(){
-      this.count = 0
-      this.$emit("reset")
-    },
-    onChildChanged(val, oldVal) { },
-    onPersonChanged(val, oldVal) { }
-  },
-  watch: {
-    'child': {
-      handler: 'onChildChanged',
-      immediate: false,
-      deep: false
-    },
-    'person': {
-      handler: 'onPersonChanged',
-      immediate: true,
-      deep: true
-    }
   }
 })
 ```
-
-## emitDecoratorMetadata
-
-As you can see at `propA` and `propB`, the type can be inferred automatically when it's a simple type. For more complex types like enums you do need to specify it specifically.
-Also this library needs to have `emitDecoratorMetadata` set to `true` for this to work.
 
 ## See also
 
