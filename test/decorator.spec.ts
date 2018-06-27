@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins } from '../src/vue-property-decorator'
+import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins } from '../src/vue-property-decorator.ts'
 import { test as Test } from 'ava'
 const test: typeof Test = require('ava').test
 

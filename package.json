@@ -37,7 +37,7 @@
   "typings": "./lib/vue-property-decorator.d.ts",
   "dependencies": {
     "reflect-metadata": "^0.1.10",
-    "vue-class-component": "^6.1.0"
+    "vue-class-component": "^6.2.0"
   },
   "repository": {
     "type": "git",
