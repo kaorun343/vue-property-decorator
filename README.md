@@ -78,15 +78,15 @@ is equivalent to
 
 ```js
 export default {
+  model: {
+    prop: 'checked',
+    event: 'change'
+  },
   props: {
     checked: {
       type: Boolean
     },
-    model: {
-      prop: 'checked',
-      event: 'change'
-    }
-  }
+  },
 }
 ```
 
