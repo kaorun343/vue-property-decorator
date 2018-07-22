@@ -93,6 +93,36 @@ test('@Inject decorator test', t => {
   t.is(grandChild.optional, 'default')
 })
 
+test('@Inject decroator test with @Prop decorator', t => {
+  @Component({
+    provide() {
+      return {
+        bar: 'two'
+      }
+    }
+  })
+  class Parent extends Vue {
+  }
+
+  const parent = new Parent()
+
+  @Component
+  class Child extends Vue {
+    @Inject() bar: string
+
+    @Prop({
+      default() {
+        return this.bar
+      }
+    })
+    myFoo: string
+  }
+
+  const child = new Child({ parent })
+
+  t.is(child.myFoo, 'two')
+})
+
 test('@Model decorator test', t => {
   @Component
   class Test extends Vue {
