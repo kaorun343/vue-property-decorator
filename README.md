@@ -4,7 +4,7 @@
 
 This library is designed for using with TypeScript, not for plain JavaScript.
 
-This library fully depends on [vue-class-component](https://github.com/vuejs/vue-class-component).
+This library fully depends on [vue-class-component](https://github.com/vuejs/vue-class-component), so please read about its README before using this.
 
 ## License
 
