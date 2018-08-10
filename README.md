@@ -2,8 +2,6 @@
 
 [![npm](https://img.shields.io/npm/v/vue-property-decorator.svg)](https://www.npmjs.com/package/vue-property-decorator)
 
-This library is designed for using with TypeScript, not for plain JavaScript.
-
 This library fully depends on [vue-class-component](https://github.com/vuejs/vue-class-component), so please read its README before using this library.
 
 ## License
