@@ -20,7 +20,7 @@ There are 8 decorators:
 
 * `@Emit`
 * `@Inject`
-* `@Mixins` (the helper function named `mixins` defined at `vue-class-component`)
+* `Mixins` (the helper function named `mixins` defined at `vue-class-component`)
 * `@Model`
 * `@Prop`
 * `@Provide`
