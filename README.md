@@ -26,6 +26,7 @@ There are 7 decorators and 1 function (Mixin):
 * `@Watch`
 * `@Component` (**from** `vue-class-component`)
 * `Mixins` (the helper function named `mixins` defined at `vue-class-component`)
+* `Debounce` (Decorator for deferred function execution)
 
 ### `@Prop(options: (PropOptions | Constructor[] | Constructor) = {})` decorator
 
@@ -219,6 +220,26 @@ export const MyComponent = Vue.extend({
     }
   }
 })
+```
+
+### `Debounce(debounce: number, immediate: boolean = false)` decorator
+
+```ts
+import { Vue, Component, Debounce } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
+  test: boolean = false
+
+  @Debounce(2000)
+  debounceMethod() {
+    this.test = true
+  }
+
+  private created() {
+    this.debounceMethod() // called after 2000 milliseconds
+  }
+}
 ```
 
 ## See also
