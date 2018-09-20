@@ -1,23 +1,35 @@
 import Vue from 'vue'
-import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins } from '../lib/vue-property-decorator'
+import {
+  Component,
+  Emit,
+  Inject,
+  Model,
+  Prop,
+  Provide,
+  Watch,
+  Mixins,
+  Debounce
+} from '../lib/vue-property-decorator'
 import { test as Test } from 'ava'
 const test: typeof Test = require('ava').test
 
 test('@Emit decorator test', t => {
-
   @Component
   class Child extends Vue {
     count = 0
 
-    @Emit('reset') resetCount() {
+    @Emit('reset')
+    resetCount() {
       this.count = 0
     }
 
-    @Emit() increment(n: number) {
+    @Emit()
+    increment(n: number) {
       this.count += n
     }
 
-    @Emit() canceled() {
+    @Emit()
+    canceled() {
       return false
     }
   }
@@ -50,7 +62,6 @@ test('@Emit decorator test', t => {
   result.called = false
   child.canceled()
   t.is(result.called, false)
-
 })
 
 test('@Inject decorator test', t => {
@@ -63,16 +74,18 @@ test('@Inject decorator test', t => {
       }
     }
   })
-  class Parent extends Vue {
-  }
+  class Parent extends Vue {}
 
   const parent = new Parent()
 
   @Component
   class Child extends Vue {
-    @Inject(s) foo: string
-    @Inject() bar: string
-    @Inject({ from: 'optional', default: 'default' }) optional: string
+    @Inject(s)
+    foo: string
+    @Inject()
+    bar: string
+    @Inject({ from: 'optional', default: 'default' })
+    optional: string
   }
 
   const child = new Child({ parent })
@@ -82,9 +95,12 @@ test('@Inject decorator test', t => {
 
   @Component
   class GrandChild extends Vue {
-    @Inject(s) foo: string
-    @Inject() bar: string
-    @Inject({ from: 'optional', default: 'default' }) optional: string
+    @Inject(s)
+    foo: string
+    @Inject()
+    bar: string
+    @Inject({ from: 'optional', default: 'default' })
+    optional: string
   }
 
   const grandChild = new GrandChild({ parent: child })
@@ -101,14 +117,14 @@ test('@Inject decroator test with @Prop decorator', t => {
       }
     }
   })
-  class Parent extends Vue {
-  }
+  class Parent extends Vue {}
 
   const parent = new Parent()
 
   @Component
   class Child extends Vue {
-    @Inject() bar: string
+    @Inject()
+    bar: string
 
     @Prop({
       default() {
@@ -141,10 +157,12 @@ test('@Model decorator test', t => {
 test('@Prop decorator test', t => {
   @Component
   class Test extends Vue {
-
-    @Prop(Number) propA: number
-    @Prop({ default: 'propB' }) propB: string
-    @Prop([Boolean, String]) propC: boolean | string
+    @Prop(Number)
+    propA: number
+    @Prop({ default: 'propB' })
+    propB: string
+    @Prop([Boolean, String])
+    propC: boolean | string
   }
 
   const { $options } = new Test()
@@ -163,16 +181,20 @@ test('@Prop decorator test', t => {
 test('@Provide decorator test', t => {
   @Component
   class Parent extends Vue {
-    @Provide() one = 'one'
-    @Provide('two') twelve = 'two'
+    @Provide()
+    one = 'one'
+    @Provide('two')
+    twelve = 'two'
   }
 
   const parent = new Parent()
 
   @Component
   class Child extends Vue {
-    @Inject() one: string
-    @Inject() two: string
+    @Inject()
+    one: string
+    @Inject()
+    two: string
   }
 
   const child = new Child({ parent })
@@ -206,9 +228,7 @@ test('@Watch decorator test', t => {
   t.is(num, 1)
 })
 
-
 test('Mixins helper test', t => {
-
   @Component
   class MixinA extends Vue {
     mixinA = 0
@@ -220,10 +240,37 @@ test('Mixins helper test', t => {
   }
 
   @Component
-  class Test extends Mixins(MixinA, MixinB) {
-  }
+  class Test extends Mixins(MixinA, MixinB) {}
   const test = new Test()
 
   t.is(test.mixinA, 0)
   t.is(test.mixinB, 10)
+})
+
+test('Debounce decorator test', async t => {
+  function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
+
+  @Component
+  class DebounceComponent extends Vue {
+    testField: boolean = false
+
+    @Debounce(2000)
+    debounceMethod() {
+      this.testField = true
+    }
+  }
+
+  const test = new DebounceComponent()
+
+  test.debounceMethod()
+  let i = 0
+  while (i <= 1500) {
+    t.is(test.testField, false)
+    i += 500
+    await sleep(500)
+  }
+  await sleep(100) // 2100ms (smoothen the error of the timer on 100ms)
+  t.is(test.testField, true)
 })
