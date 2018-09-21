@@ -62,11 +62,22 @@ export function Model(event?: string, options: (PropOptions | Constructor[] | Co
 }
 
 /**
+ *  ```
+ *  @Prop msg;
+ *  @Prop({type: Number}) count;
+ *  ```
  * decorator of a prop
  * @param  options the options for the prop
  * @return PropertyDecorator | void
  */
-export function Prop(options: (PropOptions | Constructor[] | Constructor) = {}): PropertyDecorator {
+export function Prop(options: (PropOptions | Constructor[] | Constructor)): PropertyDecorator {
+  if (options instanceof Vue) {
+    const def = {type: String};
+    createDecorator((componentOptions, k) => {
+      (componentOptions.props || (componentOptions.props = {}) as any)[k] = def;
+    }).apply(this, [...arguments]);
+  }
+  
   return createDecorator((componentOptions, k) => {
     (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
   })
