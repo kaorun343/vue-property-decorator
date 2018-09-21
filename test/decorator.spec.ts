@@ -23,7 +23,12 @@ test('@Emit decorator test', t => {
   }
   const child = new Child()
 
-  let result = {
+  let result: {
+    called: boolean,
+    event: string,
+    arg: any,
+    [key: string]: any
+  } = {
     called: false,
     event: '',
     arg: 0
@@ -49,7 +54,7 @@ test('@Emit decorator test', t => {
 
   result.called = false
   child.canceled()
-  t.is(result.called, false)
+  t.is(result.arg, false)
 
 })
 

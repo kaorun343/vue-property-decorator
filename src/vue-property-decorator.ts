@@ -103,8 +103,9 @@ export function Emit(event?: string): MethodDecorator {
     key = hyphenate(key)
     const original = descriptor.value
     descriptor.value = function emitter(...args: any[]) {
-      if (original.apply(this, args) !== false)
-        this.$emit(event || key, ...args)
+      const returnValue: any = original.apply(this, args)
+      if (returnValue !== undefined) args.unshift(returnValue)
+      this.$emit(event || key, ...args)
     }
   }
 }
