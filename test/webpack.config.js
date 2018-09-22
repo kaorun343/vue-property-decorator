@@ -9,6 +9,9 @@ module.exports = {
     path: path.resolve(`${__dirname}`),
     filename: 'decorator.spec.js'
   },
+  resolve: {
+    extensions: ['.ts', '.js']
+  },
   module: {
     rules: [{
       test: /\.ts$/,
