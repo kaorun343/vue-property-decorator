@@ -109,3 +109,12 @@ export function Emit(event?: string): MethodDecorator {
     }
   }
 }
+
+/**
+ * decorator of an computed function
+ * @type {VueDecorator}
+ */
+export const NoCache = createDecorator((options, key) => {
+  options.computed[key].cache = false
+});
+
