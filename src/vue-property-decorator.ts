@@ -76,6 +76,7 @@ export function Prop(options: (PropOptions | Constructor[] | Constructor)): Prop
     createDecorator((componentOptions, k) => {
       (componentOptions.props || (componentOptions.props = {}) as any)[k] = def;
     }).apply(this, [...arguments]);
+    return;
   }
   
   return createDecorator((componentOptions, k) => {
