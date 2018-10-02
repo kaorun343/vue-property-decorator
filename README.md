@@ -149,6 +149,20 @@ export default class YourComponent extends Vue {
   resetCount() {
     this.count = 0
   }
+
+  @Emit()
+  returnValue() {
+    return 10
+  }
+
+  @Emit()
+  promise() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(20)
+      }, 0)
+    })
+  }
 }
 ```
 
@@ -169,6 +183,20 @@ export default {
     resetCount() {
       this.count = 0
       this.$emit('reset')
+    },
+    returnValue() {
+      this.$emit('return-value', 10)
+    },
+    promise() {
+      const promise = new Promise(resolve => {
+        setTimeout(() => {
+          resolve(20)
+        }, 0)
+      })
+
+      promise.then(value => {
+        this.$emit('promise', value)
+      })
     }
   }
 }
