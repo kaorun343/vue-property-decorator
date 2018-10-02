@@ -3,7 +3,7 @@ import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins } from '..
 import { test as Test } from 'ava'
 const test: typeof Test = require('ava').test
 
-test('@Emit decorator test', t => {
+test('@Emit decorator test', async t => {
 
   @Component
   class Child extends Vue {
@@ -19,6 +19,10 @@ test('@Emit decorator test', t => {
 
     @Emit() canceled() {
       return false
+    }
+
+    @Emit() promise() {
+      return Promise.resolve(1)
     }
   }
   const child = new Child()
@@ -46,16 +50,20 @@ test('@Emit decorator test', t => {
   t.is(result.called, true)
   t.is(result.event, 'reset')
   t.is(result.arg, undefined)
-
   result.called = false
+
   child.increment(30)
   t.is(result.event, 'increment')
   t.is(result.arg, 30)
-
   result.called = false
+
   child.canceled()
   t.is(result.arg, false)
+  result.called = false
 
+  await child.promise()
+  t.is(result.arg, 1)
+  result.called = false
 })
 
 test('@Inject decorator test', t => {
