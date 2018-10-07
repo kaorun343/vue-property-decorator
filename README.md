@@ -131,7 +131,9 @@ export default {
 
 ### `@Emit(event?: string)` decorator
 
-The functions decorated by `@Emit` `$emit` their arguments after they ran.
+The functions decorated by `@Emit` `$emit` their return value followed by their original arguments. If the return value is a promise, it is resolved before being emitted.
+
+If the name of the event is not supplied via the `event` argument, the function name is used instead. In that case, the camelCase name will be converted to kebab-case.
 
 ```ts
 import { Vue, Component, Emit } from 'vue-property-decorator'
