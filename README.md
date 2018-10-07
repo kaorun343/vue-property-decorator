@@ -131,7 +131,7 @@ export default {
 
 ### `@Emit(event?: string)` decorator
 
-The functions decorated by `@Emit` `$emit` their arguments after they ran.
+The functions decorated by `@Emit` `$emit` their return value followed by their original arguments. If the return value is a promise, it is resolved before being emitted.
 
 ```ts
 import { Vue, Component, Emit } from 'vue-property-decorator'
@@ -143,16 +143,19 @@ export default class YourComponent extends Vue {
   @Emit()
   addToCount(n: number) {
     this.count += n
+    // this.$emit('addToCount', n)
   }
 
   @Emit('reset')
   resetCount() {
     this.count = 0
+    // this.$emit('reset')
   }
 
   @Emit()
   returnValue() {
     return 10
+    // this.$emit('returnValue', 10)
   }
 
   @Emit()
@@ -162,6 +165,9 @@ export default class YourComponent extends Vue {
         resolve(20)
       }, 0)
     })
+    // .then(n => {
+    //    this.$emit('promise', n)
+    // })
   }
 }
 ```
