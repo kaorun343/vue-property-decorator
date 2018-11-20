@@ -61,7 +61,7 @@ export default {
 
 **Note that:**
 
-* `reflect-metada` isn't used in this library and setting `emitDecoratorMetadata` to `true` means nothing.
+* `reflect-metadata` isn't used in this library and setting `emitDecoratorMetadata` to `true` means nothing.
 * Each prop's default value need to be defined as same as the example code shown in above.
 
 ### `@Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
