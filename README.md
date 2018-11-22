@@ -25,8 +25,8 @@ There are 7 decorators and 1 function (Mixin):
 * `@Prop`
 * `@Provide`
 * `@Watch`
-* `@Component` (**from** `vue-class-component`)
-* `Mixins` (the helper function named `mixins` defined at `vue-class-component`)
+* `@Component` (**from** [vue-class-component](https://github.com/vuejs/vue-class-component))
+* `Mixins` (the helper function named `mixins` defined at [vue-class-component](https://github.com/vuejs/vue-class-component))
 
 ### `@Prop(options: (PropOptions | Constructor[] | Constructor) = {})` decorator
 
@@ -61,7 +61,7 @@ export default {
 
 **Note that:**
 
-* `reflect-metadata` isn't used in this library and setting `emitDecoratorMetadata` to `true` means nothing.
+* [reflect-metadata](https://github.com/rbuckton/reflect-metadata) isn't used in this library and setting `emitDecoratorMetadata` to `true` means nothing.
 * Each prop's default value need to be defined as same as the example code shown in above.
 
 ### `@Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
