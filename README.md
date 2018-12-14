@@ -37,7 +37,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 export default class YourComponent extends Vue {
   @Prop(Number) propA!: number
   @Prop({ default: 'default value' }) propB!: string
-  @Prop([String, Boolean]) propC: string | boolean
+  @Prop([String, Boolean]) propC!: string | boolean
 }
 ```
 
