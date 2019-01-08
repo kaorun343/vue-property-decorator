@@ -25,8 +25,8 @@ There are 7 decorators and 1 function (Mixin):
 * `@Prop`
 * `@Provide`
 * `@Watch`
-* `@Component` (**from** [vue-class-component](https://github.com/vuejs/vue-class-component))
-* `Mixins` (the helper function named `mixins` defined at [vue-class-component](https://github.com/vuejs/vue-class-component))
+* `@Component` (**provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
+* `Mixins` (the helper function named `mixins` **provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 
 ### `@Prop(options: (PropOptions | Constructor[] | Constructor) = {})` decorator
 
