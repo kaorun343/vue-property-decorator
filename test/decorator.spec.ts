@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue, { WatchOptionsWithHandler, WatchOptions } from 'vue'
 import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins } from '../src/vue-property-decorator'
 import { test as Test } from 'ava'
 const test: typeof Test = require('ava').test
@@ -195,30 +195,48 @@ test('@Provide decorator test', t => {
 })
 
 test('@Watch decorator test', t => {
-  let num = 0
+  let method1 = 0
+  let method2 = 0
 
   @Component
   class Test extends Vue {
+    expression = false
     moreExpression = false
 
     @Watch('expression')
     @Watch('moreExpression', { immediate: true })
     method() {
-      num = 1
+      method1 = 1
+    }
+
+    @Watch('moreExpression', { immediate: true })
+    anotherMethod() {
+      method2 = 2
     }
   }
 
   const { $options } = new Test()
-  t.is(($options.watch!['expression'] as any).handler, 'method')
-  t.is(($options.watch!['moreExpression'] as any).immediate, true)
+  const watch = $options.watch as any
+
+  t.is(Array.isArray(watch['expression']), true)
+  t.is(Array.isArray(watch['moreExpression']), true)
+
+  t.is((watch['expression'] as any)[0].handler, 'method')
+
+  const moreExpression = watch['moreExpression'] as any[]
+  t.is(Array.isArray(moreExpression), true)
+  t.is(moreExpression.length, 2)
+  t.is(moreExpression[0].handler, 'method')
+  t.is(moreExpression[1].handler, 'anotherMethod')
+  t.is(moreExpression[0].immediate, true)
 
   const test = new Test()
 
   test.moreExpression = true
 
-  t.is(num, 1)
+  t.is(method1, 1, 'method1 should be 1')
+  t.is(method2, 2, 'method2 should be 2')
 })
-
 
 test('Mixins helper test', t => {
 

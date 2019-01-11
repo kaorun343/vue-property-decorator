@@ -3,7 +3,7 @@
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
 import Component, { createDecorator, mixins } from 'vue-class-component'
-import { InjectKey } from 'vue/types/options'
+import { InjectKey, WatchHandler } from 'vue/types/options'
 
 export type Constructor = {
   new(...args: any[]): any
@@ -85,7 +85,16 @@ export function Watch(path: string, options: WatchOptions = {}): MethodDecorator
     if (typeof componentOptions.watch !== 'object') {
       componentOptions.watch = Object.create(null)
     }
-    (componentOptions.watch as any)[path] = { handler, deep, immediate }
+
+    const watch: any = componentOptions.watch
+
+    if (typeof watch[path] === 'object' && !Array.isArray(watch[path])) {
+      watch[path] = [watch[path]]
+    } else if (typeof watch[path] === 'undefined') {
+      watch[path] = []
+    }
+
+    watch[path].push({ handler, deep, immediate })
   })
 }
 
