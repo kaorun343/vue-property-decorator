@@ -102,7 +102,10 @@ export default class YourComponent extends Vue {
   onChildChanged(val: string, oldVal: string) { }
 
   @Watch('person', { immediate: true, deep: true })
-  onPersonChanged(val: Person, oldVal: Person) { }
+  onPersonChanged1(val: Person, oldVal: Person) { }
+
+  @Watch('person')
+  onChildChanged2(val: Person, oldVal: Person) { }
 }
 ```
 
@@ -111,20 +114,30 @@ is equivalent to
 ```js
 export default {
   watch: {
-    'child': {
-      handler: 'onChildChanged',
-      immediate: false,
-      deep: false
-    },
-    'person': {
-      handler: 'onPersonChanged',
-      immediate: true,
-      deep: true
-    }
+    'child': [
+      {
+        handler: 'onChildChanged',
+        immediate: false,
+        deep: false
+      }
+    ],
+    'person': [
+      {
+        handler: 'onPersonChanged1',
+        immediate: true,
+        deep: true
+      },
+      {
+        handler: 'onPersonChanged2',
+        immediate: false,
+        deep: false
+      }
+    ]
   },
   methods: {
     onChildChanged(val, oldVal) { },
-    onPersonChanged(val, oldVal) { }
+    onPersonChanged1(val, oldVal) { }
+    onPersonChanged2(val, oldVal) { }
   }
 }
 ```
