@@ -19,16 +19,16 @@ npm i -S vue-property-decorator
 
 There are 7 decorators and 1 function (Mixin):
 
-* `@Emit`
-* `@Inject`
-* `@Model`
-* `@Prop`
-* `@Provide`
-* `@Watch`
+* [`@Emit`](#Emit)
+* [`@Inject`](#Provide)
+* [`@Model`](#Model)
+* [`@Prop`](#Prop)
+* [`@Provide`](#Provide)
+* [`@Watch`](#Watch)
 * `@Component` (**provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 * `Mixins` (the helper function named `mixins` **provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 
-### `@Prop(options: (PropOptions | Constructor[] | Constructor) = {})` decorator
+### <a id="Prop"></a> `@Prop(options: (PropOptions | Constructor[] | Constructor) = {})` decorator
 
 ```ts
 import { Vue, Component, Prop } from 'vue-property-decorator'
@@ -64,7 +64,7 @@ export default {
 * [reflect-metadata](https://github.com/rbuckton/reflect-metadata) isn't used in this library and setting `emitDecoratorMetadata` to `true` means nothing.
 * Each prop's default value need to be defined as same as the example code shown in above.
 
-### `@Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
+### <a id="Model"></a> `@Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
 
 ```ts
 import { Vue, Component, Model } from 'vue-property-decorator'
@@ -91,7 +91,7 @@ export default {
 }
 ```
 
-### `@Watch(path: string, options: WatchOptions = {})` decorator
+### <a id="Watch"></a> `@Watch(path: string, options: WatchOptions = {})` decorator
 
 ```ts
 import { Vue, Component, Watch } from 'vue-property-decorator'
@@ -142,7 +142,7 @@ export default {
 }
 ```
 
-### `@Emit(event?: string)` decorator
+### <a id="Emit"></a> `@Emit(event?: string)` decorator
 
 The functions decorated by `@Emit` `$emit` their return value followed by their original arguments. If the return value is a promise, it is resolved before being emitted.
 
@@ -217,7 +217,7 @@ export default {
 }
 ```
 
-### `@Provide(key?: string | symbol)` / `@Inject(options?: { from?: InjectKey, default?: any } | InjectKey)` decorator
+### <a id="Provide"></a> `@Provide(key?: string | symbol)` / `@Inject(options?: { from?: InjectKey, default?: any } | InjectKey)` decorator
 
 ```ts
 import { Component, Inject, Provide, Vue } from 'vue-property-decorator'
