@@ -105,7 +105,7 @@ export default class YourComponent extends Vue {
   onPersonChanged1(val: Person, oldVal: Person) { }
 
   @Watch('person')
-  onChildChanged2(val: Person, oldVal: Person) { }
+  onPersonChanged2(val: Person, oldVal: Person) { }
 }
 ```
 
