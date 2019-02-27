@@ -35,9 +35,9 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class YourComponent extends Vue {
-  @Prop(Number) propA!: number
-  @Prop({ default: 'default value' }) propB!: string
-  @Prop([String, Boolean]) propC!: string | boolean
+  @Prop(Number) readonly propA!: number
+  @Prop({ default: 'default value' }) readonly propB!: string
+  @Prop([String, Boolean]) readonly propC!: string | boolean
 }
 ```
 
@@ -71,7 +71,7 @@ import { Vue, Component, Model } from 'vue-property-decorator'
 
 @Component
 export default class YourComponent extends Vue {
-  @Model('change', { type: Boolean }) checked!: boolean
+  @Model('change', { type: Boolean }) readonly checked!: boolean
 }
 ```
 
@@ -226,10 +226,10 @@ const symbol = Symbol('baz')
 
 @Component
 export class MyComponent extends Vue {
-  @Inject() foo!: string
-  @Inject('bar') bar!: string
-  @Inject({ from: 'optional', default: 'default' }) optional!: string
-  @Inject(symbol) baz!: string
+  @Inject() readonly foo!: string
+  @Inject('bar') readonly bar!: string
+  @Inject({ from: 'optional', default: 'default' }) readonly optional!: string
+  @Inject(symbol) readonly baz!: string
 
 
   @Provide() foo = 'foo'
