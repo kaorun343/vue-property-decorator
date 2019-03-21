@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import 'reflect-metadata'
 import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins } from '../src/vue-property-decorator'
 import test from 'ava'
 
@@ -157,14 +158,16 @@ test('@Prop decorator test', t => {
     @Prop(Number) propA: number
     @Prop({ default: 'propB' }) propB: string
     @Prop([Boolean, String]) propC: boolean | string
+    @Prop() propD: Boolean
   }
 
   const { $options } = new Test()
   const { props } = $options
   if (!(props instanceof Array)) {
     t.deepEqual(props!['propA'], { type: Number })
-    t.deepEqual(props!['propB'], { default: 'propB' })
+    t.deepEqual(props!['propB'], { type: String, default: 'propB' })
     t.deepEqual(props!['propC'], { type: [Boolean, String] })
+    t.deepEqual(props!['propD'], { type: Boolean })
   }
 
   const test = new Test({ propsData: { propA: 10 } })

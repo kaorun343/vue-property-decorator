@@ -1,5 +1,5 @@
 /** vue-property-decorator verson 8.0.0 MIT LICENSE copyright 2018 kaorun343 */
-
+/// <reference types='reflect-metadata'/>
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
 import Component, { createDecorator, mixins } from 'vue-class-component'
@@ -61,15 +61,26 @@ export function Model(event?: string, options: (PropOptions | Constructor[] | Co
   })
 }
 
+/** @see {@link https://github.com/vuejs/vue-class-component/blob/master/src/reflect.ts} */
+const reflectMetadataIsSupported = typeof Reflect !== 'undefined' && typeof Reflect.getMetadata !== 'undefined'
+
 /**
  * decorator of a prop
  * @param  options the options for the prop
  * @return PropertyDecorator | void
  */
 export function Prop(options: (PropOptions | Constructor[] | Constructor) = {}): PropertyDecorator {
-  return createDecorator((componentOptions, k) => {
-    (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
-  })
+  return (target: Vue, key: string) => {
+    if (reflectMetadataIsSupported) {
+      if (!Array.isArray(options) && typeof options !== 'function' && typeof options.type === 'undefined') {
+        options.type = Reflect.getMetadata('design:type', target, key)
+      }
+    }
+
+    createDecorator((componentOptions, k) => {
+      (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
+    })(target, key)
+  }
 }
 
 /**
