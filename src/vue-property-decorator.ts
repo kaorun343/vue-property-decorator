@@ -48,6 +48,17 @@ export function Provide(key?: string | symbol): PropertyDecorator {
   })
 }
 
+/** @see {@link https://github.com/vuejs/vue-class-component/blob/master/src/reflect.ts} */
+const reflectMetadataIsSupported = typeof Reflect !== 'undefined' && typeof Reflect.getMetadata !== 'undefined'
+
+function applyMetadata(options: (PropOptions | Constructor[] | Constructor), target: Vue, key: string) {
+  if (reflectMetadataIsSupported) {
+    if (!Array.isArray(options) && typeof options !== 'function' && typeof options.type === 'undefined') {
+      options.type = Reflect.getMetadata('design:type', target, key)
+    }
+  }
+}
+
 /**
  * decorator of model
  * @param  event event name
@@ -55,14 +66,14 @@ export function Provide(key?: string | symbol): PropertyDecorator {
  * @return PropertyDecorator
  */
 export function Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {}): PropertyDecorator {
-  return createDecorator((componentOptions, k) => {
-    (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
-    componentOptions.model = { prop: k, event: event || k }
-  })
+  return (target: Vue, key: string) => {
+    applyMetadata(options, target, key)
+    createDecorator((componentOptions, k) => {
+      (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
+      componentOptions.model = { prop: k, event: event || k }
+    })(target, key)
+  }
 }
-
-/** @see {@link https://github.com/vuejs/vue-class-component/blob/master/src/reflect.ts} */
-const reflectMetadataIsSupported = typeof Reflect !== 'undefined' && typeof Reflect.getMetadata !== 'undefined'
 
 /**
  * decorator of a prop
@@ -71,12 +82,7 @@ const reflectMetadataIsSupported = typeof Reflect !== 'undefined' && typeof Refl
  */
 export function Prop(options: (PropOptions | Constructor[] | Constructor) = {}): PropertyDecorator {
   return (target: Vue, key: string) => {
-    if (reflectMetadataIsSupported) {
-      if (!Array.isArray(options) && typeof options !== 'function' && typeof options.type === 'undefined') {
-        options.type = Reflect.getMetadata('design:type', target, key)
-      }
-    }
-
+    applyMetadata(options, target, key)
     createDecorator((componentOptions, k) => {
       (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
     })(target, key)
