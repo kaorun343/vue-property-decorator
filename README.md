@@ -61,8 +61,14 @@ export default {
 
 **Note that:**
 
-* [reflect-metadata](https://github.com/rbuckton/reflect-metadata) isn't used in this library and setting `emitDecoratorMetadata` to `true` means nothing.
-* Each prop's default value need to be defined as same as the example code shown in above.
+## If you'd like to set `type` property of each prop value from its type definition, you can use [reflect-metadata](https://github.com/rbuckton/reflect-metadata).
+
+1. Set `emitDecoratorMetadata` to `true`.
+2. Import `reflect-metadata` **before** importing `vue-property-decorator` (importing `reflect-metadata` is needed just once.)
+
+## Each prop's default value need to be defined as same as the example code shown in above.
+
+It's **not** supported to define each `default` property like `@Prop() prop = 'default value` .
 
 ### <a id="Model"></a> `@Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
 
@@ -90,6 +96,8 @@ export default {
   },
 }
 ```
+
+`@Model` property can also set `type` property from its type definition via `reflect-metadata` .
 
 ### <a id="Watch"></a> `@Watch(path: string, options: WatchOptions = {})` decorator
 
