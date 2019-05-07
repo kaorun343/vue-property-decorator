@@ -143,6 +143,8 @@ export function Emit(event?: string): MethodDecorator {
       } else {
         emit(returnValue)
       }
+
+      return returnValue
     }
   }
 }
