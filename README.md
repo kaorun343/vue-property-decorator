@@ -68,7 +68,7 @@ export default {
 
 ## Each prop's default value need to be defined as same as the example code shown in above.
 
-It's **not** supported to define each `default` property like `@Prop() prop = 'default value` .
+It's **not** supported to define each `default` property like `@Prop() prop = 'default value'` .
 
 ### <a id="Model"></a> `@Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
 
