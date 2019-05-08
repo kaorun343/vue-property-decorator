@@ -179,6 +179,11 @@ export default class YourComponent extends Vue {
   }
 
   @Emit()
+  onInputChange(e) {
+    return e.target.value
+  }
+
+  @Emit()
   promise() {
     return new Promise(resolve => {
       setTimeout(() => {
@@ -209,6 +214,9 @@ export default {
     },
     returnValue() {
       this.$emit('return-value', 10)
+    },
+    onInputChange(e) {
+      this.$emit('on-input-change', e.target.value, e)
     },
     promise() {
       const promise = new Promise(resolve => {
