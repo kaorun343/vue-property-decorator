@@ -144,7 +144,7 @@ export default {
   },
   methods: {
     onChildChanged(val, oldVal) { },
-    onPersonChanged1(val, oldVal) { }
+    onPersonChanged1(val, oldVal) { },
     onPersonChanged2(val, oldVal) { }
   }
 }
