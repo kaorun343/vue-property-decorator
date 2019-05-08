@@ -1,4 +1,4 @@
-/** vue-property-decorator verson 8.1.0 MIT LICENSE copyright 2018 kaorun343 */
+/** vue-property-decorator verson 8.1.1 MIT LICENSE copyright 2018 kaorun343 */
 /// <reference types='reflect-metadata'/>
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
