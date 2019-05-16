@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import 'reflect-metadata'
-import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins } from '../src/vue-property-decorator'
+import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins, PropSync } from '../src/vue-property-decorator'
 import test from 'ava'
 
 test('@Emit decorator test', async t => {
@@ -173,6 +173,50 @@ test('@Prop decorator test', t => {
   const test = new Test({ propsData: { propA: 10 } })
   t.is(test.propA, 10)
   t.is(test.propB, 'propB')
+})
+
+
+test('@PropSync decorator test', t => {
+  @Component
+  class Test extends Vue {
+    @PropSync('name') syncedName: string
+
+    changeName(newName: string) {
+      this.syncedName = newName
+    }
+  }
+
+  const { $options } = new Test()
+  const { props } = $options
+  if (!(props instanceof Array)) {
+    t.deepEqual(props!['name'], { type: String })
+  }
+
+  const test = new Test({ propsData: { name: 'John' } })
+  let result: {
+    called: boolean,
+    event: string,
+    arg: any,
+    [key: string]: any
+  } = {
+    called: false,
+    event: '',
+    arg: 0
+  }
+
+  test.$emit = (event, ...args) => {
+    result.called = true
+    result.event = event
+    result.arg = args[0]
+
+    return test
+  }
+
+  t.is(test.syncedName, 'John')
+  test.changeName('Ola')
+  t.is(result.called, true)
+  t.is(result.event, 'update:name')
+  t.is(result.arg, 'Ola')
 })
 
 test('@Provide decorator test', t => {

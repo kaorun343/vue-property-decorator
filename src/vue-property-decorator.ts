@@ -90,6 +90,32 @@ export function Prop(options: (PropOptions | Constructor[] | Constructor) = {}):
 }
 
 /**
+ * decorator of a synced prop
+ * @param propName the name to interface with from outside, must be different from decorated property
+ * @param options the options for the synced prop
+ * @return PropertyDecorator | void
+ */
+export function PropSync(propName: string, options: (PropOptions | Constructor[] | Constructor) = {}): PropertyDecorator {
+  // @ts-ignore
+  return (target: Vue, key: string) => {
+    applyMetadata(options, target, key)
+    createDecorator((componentOptions, k) => {
+      (componentOptions.props || (componentOptions.props = {} as any))[propName] = options
+      ;(componentOptions.computed || (componentOptions.computed = {}))[k] = {
+        get() {
+          return this[propName]
+        },
+        set(value) {
+          // @ts-ignore
+          this.$emit(`update:${propName}`, value)
+        }
+      }
+    })(target, key)
+  }
+}
+
+
+/**
  * decorator of a watch function
  * @param  path the path or the expression to observe
  * @param  WatchOption

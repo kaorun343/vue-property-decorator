@@ -23,6 +23,7 @@ There are 7 decorators and 1 function (Mixin):
 * [`@Inject`](#Provide)
 * [`@Model`](#Model)
 * [`@Prop`](#Prop)
+* [`@PropSync`](#PropSync)
 * [`@Provide`](#Provide)
 * [`@Watch`](#Watch)
 * `@Component` (**provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
@@ -69,6 +70,41 @@ export default {
 ## Each prop's default value need to be defined as same as the example code shown in above.
 
 It's **not** supported to define each `default` property like `@Prop() prop = 'default value'` .
+
+### <a id="PropSync"></a> `@PropSync(propName: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
+
+```ts
+import { Vue, Component, Prop } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
+  @Prop('name', { type: String }) syncedName!: string
+}
+```
+
+is equivalent to
+
+```js
+export default {
+  props: {
+    name: {
+      type: String
+    },
+  },
+  computed: {
+    syncedName: {
+      get() {
+        return this.name
+      },
+      set(value) {
+        this.$emit('update:name', value)
+      }
+    }
+  }
+}
+```
+
+Other than that it works just like [`@Prop`](#Prop) other than it takes the propName as an argument of the decorator, in addition to it creates a computed getter and setter behind the scenes. This way you can interface with the property as it was a regular data property whilst making it as easy as appending the `.sync` modifier in the parent component.
 
 ### <a id="Model"></a> `@Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
 
