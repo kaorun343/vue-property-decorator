@@ -11,6 +11,9 @@ export type Constructor = {
 
 export { Component, Vue, mixins as Mixins }
 
+/** Used for keying reactive provide/inject properties */
+const reactiveInjectKey = '__reactiveInject__';
+
 /**
  * decorator of an inject
  * @param from key
@@ -28,6 +31,28 @@ export function Inject(options?: { from?: InjectKey, default?: any } | InjectKey
 }
 
 /**
+ * decorator of a reactive inject
+ * @param from key
+ * @return PropertyDecorator
+ */
+export function InjectReactive(options?: { from?: InjectKey, default?: any } | InjectKey): PropertyDecorator {
+  return createDecorator((componentOptions, key) => {
+    if (typeof componentOptions.inject === 'undefined') {
+      componentOptions.inject = {}
+    }
+    if (!Array.isArray(componentOptions.inject)) {
+      const fromKey = !!options ? (options as any).from || options : key;
+      const defaultVal = !!options && (options as any).default || undefined;
+      if (!componentOptions.computed) componentOptions.computed = {}
+      componentOptions.computed![key] = function () {
+        return this[reactiveInjectKey][fromKey] || defaultVal
+      }
+      componentOptions.inject[reactiveInjectKey] = '__reactiveInject__'
+    }
+  })
+}
+
+/**
  * decorator of a provide
  * @param key key
  * @return PropertyDecorator | void
@@ -40,6 +65,33 @@ export function Provide(key?: string | symbol): PropertyDecorator {
       provide = componentOptions.provide = function (this: any) {
         let rv = Object.create((typeof original === 'function' ? original.call(this) : original) || null)
         for (let i in provide.managed) rv[provide.managed[i]] = this[i]
+        return rv
+      }
+      provide.managed = {}
+    }
+    provide.managed[k] = key || k
+  })
+}
+
+/**
+ * decorator of a reactive provide
+ * @param key key
+ * @return PropertyDecorator | void
+ */
+export function ProvideReactive(key?: string | symbol): PropertyDecorator {
+  return createDecorator((componentOptions, k) => {
+    let provide: any = componentOptions.provide
+    if (typeof provide !== 'function' || !provide.managed) {
+      const original = componentOptions.provide
+      provide = componentOptions.provide = function (this: any) {
+        let rv = Object.create((typeof original === 'function' ? original.call(this) : original) || null)
+        rv[reactiveInjectKey] = {}
+        for (let i in provide.managed) {
+          Object.defineProperty(rv[reactiveInjectKey], provide.managed[i], {
+            enumerable: true,
+            get: () => this[i]
+          })
+        }
         return rv
       }
       provide.managed = {}

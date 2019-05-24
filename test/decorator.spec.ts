@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import 'reflect-metadata'
-import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins } from '../src/vue-property-decorator'
+import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins, ProvideReactive, InjectReactive } from '../src/vue-property-decorator'
 import test from 'ava'
 
 test('@Emit decorator test', async t => {
@@ -106,6 +106,49 @@ test('@Inject decorator test', t => {
   t.is(grandChild.optional, 'default')
 })
 
+test('@InjectReactive decorator test', t => {
+  const s = Symbol()
+  @Component
+  class Parent extends Vue {
+    @ProvideReactive(s) baz = 'one';
+    @ProvideReactive() bar = 'two';
+  }
+
+  const parent = new Parent()
+
+  @Component
+  class Child extends Vue {
+    @InjectReactive(s) foo: string
+    @InjectReactive() bar: string
+    @InjectReactive({ from: 'optional', default: 'default' }) optional: string
+  }
+
+  const child = new Child({ parent })
+  t.is(child.foo, 'one')
+  t.is(child.bar, 'two')
+  t.is(child.optional, 'default')
+
+  parent.baz = 'qwerty'
+
+  t.is(child.foo, 'qwerty')
+
+  @Component
+  class GrandChild extends Vue {
+    @InjectReactive(s) foo: string
+    @InjectReactive() bar: string
+    @InjectReactive({ from: 'optional', default: 'default' }) optional: string
+  }
+
+  const grandChild = new GrandChild({ parent: child })
+  t.is(grandChild.foo, 'qwerty')
+  t.is(grandChild.bar, 'two')
+  t.is(grandChild.optional, 'default')
+
+  parent.bar = 'abcde'
+
+  t.is(grandChild.bar, 'abcde')
+})
+
 test('@Inject decroator test with @Prop decorator', t => {
   @Component({
     provide() {
@@ -194,6 +237,33 @@ test('@Provide decorator test', t => {
 
   t.is(child.one, 'one')
   t.is(child.two, 'two')
+})
+
+test('@ProvideReactive decorator test', t => {
+  @Component
+  class Parent extends Vue {
+    @ProvideReactive() one = 'one'
+    @ProvideReactive('two') twelve = 'two'
+  }
+
+  const parent = new Parent()
+
+  @Component
+  class Child extends Vue {
+    @InjectReactive() one: string
+    @InjectReactive() two: string
+  }
+
+  const child = new Child({ parent })
+
+  t.is(child.one, 'one')
+  t.is(child.two, 'two')
+
+  parent.one = 'three'
+  parent.twelve = 'four'
+
+  t.is(child.one, 'three')
+  t.is(child.two, 'four')
 })
 
 test('@Watch decorator test', t => {
