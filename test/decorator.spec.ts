@@ -110,8 +110,8 @@ test('@InjectReactive decorator test', t => {
   const s = Symbol()
   @Component
   class Parent extends Vue {
-    @ProvideReactive(s) baz = 'one';
-    @ProvideReactive() bar = 'two';
+    @ProvideReactive(s) baz = 'one'
+    @ProvideReactive() bar = 'two'
   }
 
   const parent = new Parent()
@@ -149,7 +149,7 @@ test('@InjectReactive decorator test', t => {
   t.is(grandChild.bar, 'abcde')
 })
 
-test('@Inject decroator test with @Prop decorator', t => {
+test('@Inject decorator test with @Prop decorator', t => {
   @Component({
     provide() {
       return {
@@ -177,6 +177,38 @@ test('@Inject decroator test with @Prop decorator', t => {
   const child = new Child({ parent })
 
   t.is(child.myFoo, 'two')
+})
+
+test('@InjectReactive decorator test with @Prop decorator', t => {
+  @Component
+  class Parent extends Vue {
+    @ProvideReactive() bar = 'two'
+  }
+
+  const parent = new Parent()
+
+  @Component
+  class Child extends Vue {
+    @InjectReactive({ from: 'bar' }) reactive: string
+    @Inject({ from: 'bar' }) static: string
+
+    @Prop({
+      default() {
+        return this.static
+      }
+    })
+    myFoo: string
+  }
+
+  const child = new Child({ parent })
+
+  t.is(child.myFoo, 'two')
+
+  parent.bar = 'qwerty'
+
+  t.is(child.myFoo, 'two')
+  t.is(child.static, 'two')
+  t.is(child.reactive, 'qwerty')
 })
 
 test('@Model decorator test', t => {

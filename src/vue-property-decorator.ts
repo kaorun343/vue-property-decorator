@@ -87,6 +87,7 @@ export function ProvideReactive(key?: string | symbol): PropertyDecorator {
         let rv = Object.create((typeof original === 'function' ? original.call(this) : original) || null)
         rv[reactiveInjectKey] = {}
         for (let i in provide.managed) {
+          rv[provide.managed[i]] = this[i] // Duplicates the behavior of `@Provide`
           Object.defineProperty(rv[reactiveInjectKey], provide.managed[i], {
             enumerable: true,
             get: () => this[i]
