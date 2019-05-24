@@ -47,7 +47,7 @@ export function InjectReactive(options?: { from?: InjectKey, default?: any } | I
       componentOptions.computed![key] = function () {
         return this[reactiveInjectKey][fromKey] || defaultVal
       }
-      componentOptions.inject[reactiveInjectKey] = '__reactiveInject__'
+      componentOptions.inject[reactiveInjectKey] = reactiveInjectKey
     }
   })
 }
