@@ -228,6 +228,23 @@ export function Emit(event?: string): MethodDecorator {
   }
 }
 
+/**
+ * decorator of a ref prop
+ * @param refKey the ref key defined in template
+ */
+export function Ref(refKey?: string) {
+  return createDecorator((options, key) => {
+    options.computed = options.computed || {};
+    options.computed[key] = {
+      cache: false,
+      get(this: Vue) {
+        return this.$refs[refKey || key];
+      },
+    };
+  });
+}
+
+
 function isPromise(obj: any): obj is Promise<any> {
   return obj instanceof Promise || (obj && typeof obj.then === 'function')
 }
