@@ -19,15 +19,21 @@ npm i -S vue-property-decorator
 
 There are 7 decorators and 1 function (Mixin):
 
-* [`@Emit`](#Emit)
-* [`@Inject`](#Provide)
-* [`@Model`](#Model)
 * [`@Prop`](#Prop)
 * [`@PropSync`](#PropSync)
 * [`@Provide`](#Provide)
+* [`@Model`](#Model)
 * [`@Watch`](#Watch)
+* [`@Inject`](#Provide)
+* [`@Provide`](#Provide)
+* [`@Emit`](#Emit)
 * `@Component` (**provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 * `Mixins` (the helper function named `mixins` **provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
+
+
+## See also
+
+[vuex-class](https://github.com/ktsn/vuex-class/)
 
 ### <a id="Prop"></a> `@Prop(options: (PropOptions | Constructor[] | Constructor) = {})` decorator
 
@@ -36,9 +42,9 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class YourComponent extends Vue {
-  @Prop(Number) readonly propA!: number
+  @Prop(Number) readonly propA!: number | undefined
   @Prop({ default: 'default value' }) readonly propB!: string
-  @Prop([String, Boolean]) readonly propC!: string | boolean
+  @Prop([String, Boolean]) readonly propC!: string | boolean | undefined
 }
 ```
 
@@ -186,6 +192,54 @@ export default {
 }
 ```
 
+### <a id="Provide"></a> `@Provide(key?: string | symbol)` / `@Inject(options?: { from?: InjectKey, default?: any } | InjectKey)` decorator
+
+```ts
+import { Component, Inject, Provide, Vue } from 'vue-property-decorator'
+
+const symbol = Symbol('baz')
+
+@Component
+export class MyComponent extends Vue {
+  @Inject() readonly foo!: string
+  @Inject('bar') readonly bar!: string
+  @Inject({ from: 'optional', default: 'default' }) readonly optional!: string
+  @Inject(symbol) readonly baz!: string
+
+
+  @Provide() foo = 'foo'
+  @Provide('bar') baz = 'bar'
+}
+```
+
+is equivalent to
+
+```js
+const symbol = Symbol('baz')
+
+export const MyComponent = Vue.extend({
+
+  inject: {
+    foo: 'foo',
+    bar: 'bar',
+    'optional': { from: 'optional', default: 'default' },
+    [symbol]: symbol
+  },
+  data () {
+    return {
+      foo: 'foo',
+      baz: 'bar'
+    }
+  },
+  provide () {
+    return {
+      foo: this.foo,
+      bar: this.baz
+    }
+  }
+})
+```
+
 ### <a id="Emit"></a> `@Emit(event?: string)` decorator
 
 The functions decorated by `@Emit` `$emit` their return value followed by their original arguments. If the return value is a promise, it is resolved before being emitted.
@@ -268,55 +322,3 @@ export default {
   }
 }
 ```
-
-### <a id="Provide"></a> `@Provide(key?: string | symbol)` / `@Inject(options?: { from?: InjectKey, default?: any } | InjectKey)` decorator
-
-```ts
-import { Component, Inject, Provide, Vue } from 'vue-property-decorator'
-
-const symbol = Symbol('baz')
-
-@Component
-export class MyComponent extends Vue {
-  @Inject() readonly foo!: string
-  @Inject('bar') readonly bar!: string
-  @Inject({ from: 'optional', default: 'default' }) readonly optional!: string
-  @Inject(symbol) readonly baz!: string
-
-
-  @Provide() foo = 'foo'
-  @Provide('bar') baz = 'bar'
-}
-```
-
-is equivalent to
-
-```js
-const symbol = Symbol('baz')
-
-export const MyComponent = Vue.extend({
-
-  inject: {
-    foo: 'foo',
-    bar: 'bar',
-    'optional': { from: 'optional', default: 'default' },
-    [symbol]: symbol
-  },
-  data () {
-    return {
-      foo: 'foo',
-      baz: 'bar'
-    }
-  },
-  provide () {
-    return {
-      foo: this.foo,
-      bar: this.baz
-    }
-  }
-})
-```
-
-## See also
-
-[vuex-class](https://github.com/ktsn/vuex-class/)
