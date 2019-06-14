@@ -194,6 +194,28 @@ export function Watch(path: string, options: WatchOptions = {}): MethodDecorator
   })
 }
 
+/**
+ * decorator of filter function
+ * @param name the filter name
+ * @return MethodDecorator
+ */
+export function Filter(name?: string): MethodDecorator {
+  return createDecorator((componentOptions, handler) => {
+    if (typeof componentOptions.filters !== 'object') {
+      componentOptions.filters = {}
+    }
+
+    const filters: any = componentOptions.filters
+    const methods: any = componentOptions.methods
+
+    if (!name) {
+      name = handler
+    }
+
+    filters[name] = methods[handler]
+  })
+}
+
 // Code copied from Vue/src/shared/util.js
 const hyphenateRE = /\B([A-Z])/g
 const hyphenate = (str: string) => str.replace(hyphenateRE, '-$1').toLowerCase()

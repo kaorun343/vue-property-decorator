@@ -27,6 +27,7 @@ There are 7 decorators and 1 function (Mixin):
 * [`@Inject`](#Provide)
 * [`@Provide`](#Provide)
 * [`@Emit`](#Emit)
+* [`@Filter`](#Filter)
 * `@Component` (**provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 * `Mixins` (the helper function named `mixins` **provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 
@@ -318,6 +319,44 @@ export default {
       promise.then(value => {
         this.$emit('promise', value)
       })
+    }
+  }
+}
+```
+
+### <a id="Filter"></a> `@Filter(name?: string)` decorator
+
+The functions decorated by `@Filter` are available as `filters` inside the Vue component.
+
+If the name of the filter is not supplied via the `name` argument, the function name is used instead. 
+
+```ts
+import { Vue, Component, Filter } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
+  @Filter('filterA')
+  filterAMethod(value: string) {
+    return value + ' A';
+  }
+
+  @Filter()
+  filterB(value: string) {
+    return value + ' B';
+  }
+}
+```
+
+is equivalent to
+
+```js
+export default {
+  filters: {
+    filterA(value) {
+      return value + ' A';
+    },
+    filterB(value) {
+      return value + ' B';
     }
   }
 }

@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import 'reflect-metadata'
-import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins } from '../src/vue-property-decorator'
-import { Component, Emit, Inject, InjectReactive, Model, Prop, PropSync, Provide, ProvideReactive, Watch, Mixins } from '../src/vue-property-decorator'
+import { Component, Emit, Filter, Inject, InjectReactive, Model, Prop, PropSync, Provide, ProvideReactive, Watch, Mixins } from '../src/vue-property-decorator'
 import test from 'ava'
 
 test('@Emit decorator test', async t => {
@@ -406,4 +405,28 @@ test('Mixins helper test', t => {
 
   t.is(test.mixinA, 0)
   t.is(test.mixinB, 10)
+})
+
+test('@Filter decorator test', t => {
+  @Component
+  class Test extends Vue {
+    @Filter('test')
+    method(value: string) {
+      return value + ' test';
+    }
+
+    @Filter()
+    test2(value: string) {
+      return value + ' test2';
+    }
+  }
+
+  const { $options } = new Test()
+  const filters = $options.filters as any
+
+  t.is(filters.test !== 'undefined', true, 'filter test exists')
+  t.is((filters['test'] as any)('test'), 'test test', 'filter text should return "test test"')
+  
+  t.is(filters.test2 !== 'undefined', true, 'filter test2 exists')
+  t.is((filters['test2'] as any)('test'), 'test test2', 'filter text2 should return "test test2"')
 })
