@@ -19,7 +19,7 @@ const reactiveInjectKey = '__reactiveInject__';
  * @param from key
  * @return PropertyDecorator
  */
-export function Inject(options?: { from?: InjectKey, default?: any } | InjectKey): PropertyDecorator {
+export function Inject(options?: { from?: InjectKey, default?: any } | InjectKey) {
   return createDecorator((componentOptions, key) => {
     if (typeof componentOptions.inject === 'undefined') {
       componentOptions.inject = {}
@@ -35,7 +35,7 @@ export function Inject(options?: { from?: InjectKey, default?: any } | InjectKey
  * @param from key
  * @return PropertyDecorator
  */
-export function InjectReactive(options?: { from?: InjectKey, default?: any } | InjectKey): PropertyDecorator {
+export function InjectReactive(options?: { from?: InjectKey, default?: any } | InjectKey) {
   return createDecorator((componentOptions, key) => {
     if (typeof componentOptions.inject === 'undefined') {
       componentOptions.inject = {}
@@ -45,7 +45,7 @@ export function InjectReactive(options?: { from?: InjectKey, default?: any } | I
       const defaultVal = !!options && (options as any).default || undefined;
       if (!componentOptions.computed) componentOptions.computed = {}
       componentOptions.computed![key] = function () {
-        return this[reactiveInjectKey][fromKey] || defaultVal
+        return (this as any)[reactiveInjectKey][fromKey] || defaultVal
       }
       componentOptions.inject[reactiveInjectKey] = reactiveInjectKey
     }
@@ -57,7 +57,7 @@ export function InjectReactive(options?: { from?: InjectKey, default?: any } | I
  * @param key key
  * @return PropertyDecorator | void
  */
-export function Provide(key?: string | symbol): PropertyDecorator {
+export function Provide(key?: string | symbol) {
   return createDecorator((componentOptions, k) => {
     let provide: any = componentOptions.provide
     if (typeof provide !== 'function' || !provide.managed) {
@@ -78,7 +78,7 @@ export function Provide(key?: string | symbol): PropertyDecorator {
  * @param key key
  * @return PropertyDecorator | void
  */
-export function ProvideReactive(key?: string | symbol): PropertyDecorator {
+export function ProvideReactive(key?: string | symbol) {
   return createDecorator((componentOptions, k) => {
     let provide: any = componentOptions.provide
     if (typeof provide !== 'function' || !provide.managed) {
@@ -118,7 +118,7 @@ function applyMetadata(options: (PropOptions | Constructor[] | Constructor), tar
  * @param options options
  * @return PropertyDecorator
  */
-export function Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {}): PropertyDecorator {
+export function Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {}) {
   return (target: Vue, key: string) => {
     applyMetadata(options, target, key)
     createDecorator((componentOptions, k) => {
@@ -133,7 +133,7 @@ export function Model(event?: string, options: (PropOptions | Constructor[] | Co
  * @param  options the options for the prop
  * @return PropertyDecorator | void
  */
-export function Prop(options: (PropOptions | Constructor[] | Constructor) = {}): PropertyDecorator {
+export function Prop(options: (PropOptions | Constructor[] | Constructor) = {}) {
   return (target: Vue, key: string) => {
     applyMetadata(options, target, key)
     createDecorator((componentOptions, k) => {
@@ -156,7 +156,7 @@ export function PropSync(propName: string, options: (PropOptions | Constructor[]
       (componentOptions.props || (componentOptions.props = {} as any))[propName] = options
         ; (componentOptions.computed || (componentOptions.computed = {}))[k] = {
           get() {
-            return this[propName]
+            return (this as any)[propName]
           },
           set(value) {
             // @ts-ignore
@@ -174,7 +174,7 @@ export function PropSync(propName: string, options: (PropOptions | Constructor[]
  * @param  WatchOption
  * @return MethodDecorator
  */
-export function Watch(path: string, options: WatchOptions = {}): MethodDecorator {
+export function Watch(path: string, options: WatchOptions = {}) {
   const { deep = false, immediate = false } = options
 
   return createDecorator((componentOptions, handler) => {
@@ -203,7 +203,7 @@ const hyphenate = (str: string) => str.replace(hyphenateRE, '-$1').toLowerCase()
  * @param  event The name of the event
  * @return MethodDecorator
  */
-export function Emit(event?: string): MethodDecorator {
+export function Emit(event?: string) {
   return function (_target: Vue, key: string, descriptor: any) {
     key = hyphenate(key)
     const original = descriptor.value
