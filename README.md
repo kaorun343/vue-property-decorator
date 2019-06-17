@@ -322,3 +322,38 @@ export default {
   }
 }
 ```
+
+### <a id="Ref"></a> `@Ref(refKey?: string)` decorator
+
+```ts
+import { Vue, Component, Ref } from 'vue-property-decorator'
+
+import AnotherComponent from '@/path/to/another-component.vue'
+
+@Component
+export default class YourComponent extends Vue {
+  @Ref() readonly anotherComponent!: AnotherComponent
+  @Ref('aButton') readonly button!: HTMLButtonElement
+}
+```
+
+is equivalent to
+
+```js
+export default {
+  computed() {
+    anotherComponent: {
+      cache: false,
+      get() {
+        return this.$refs.anotherComponent as AnotherComponent
+      }
+    },
+    button: {
+      cache: false,
+      get() {
+        return this.$refs.aButton as HTMLButtonElement
+      }
+    }
+  }
+}
+```

@@ -1,7 +1,19 @@
 import Vue from 'vue'
 import 'reflect-metadata'
-import { Component, Emit, Inject, Model, Prop, Provide, Watch, Mixins } from '../src/vue-property-decorator'
-import { Component, Emit, Inject, InjectReactive, Model, Prop, PropSync, Provide, ProvideReactive, Watch, Mixins } from '../src/vue-property-decorator'
+import {
+  Component,
+  Emit,
+  Inject,
+  Model,
+  Prop,
+  PropSync,
+  Provide,
+  Watch,
+  Mixins,
+  ProvideReactive,
+  InjectReactive,
+  Ref
+} from '../src/vue-property-decorator'
 import test from 'ava'
 
 test('@Emit decorator test', async t => {
@@ -385,6 +397,29 @@ test('@Watch decorator test', t => {
 
   t.is(method1, 1, 'method1 should be 1')
   t.is(method2, 2, 'method2 should be 2')
+})
+
+test('@Ref decorator test', t => {
+  @Component
+  class Test extends Vue {
+    @Ref() prop1: any;
+    @Ref('ref2') prop2: any;
+  }
+
+  const test = new Test()
+  const { $options } = test
+  const computed = $options.computed as any
+
+  test.$refs.prop1 = 'ref1' as any
+  test.$refs.ref2 = 'ref2' as any
+
+  t.is(computed.prop1.cache, false)
+  t.is(typeof computed.prop1.get, 'function')
+  t.is(test.prop1, 'ref1')
+
+  t.is(computed.prop2.cache, false)
+  t.is(typeof computed.prop2.get, 'function')
+  t.is(test.prop2, 'ref2')
 })
 
 test('Mixins helper test', t => {
