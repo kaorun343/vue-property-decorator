@@ -21,7 +21,6 @@ There are 7 decorators and 1 function (Mixin):
 
 * [`@Prop`](#Prop)
 * [`@PropSync`](#PropSync)
-* [`@Provide`](#Provide)
 * [`@Model`](#Model)
 * [`@Watch`](#Watch)
 * [`@Inject`](#Provide)
