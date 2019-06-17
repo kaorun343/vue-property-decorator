@@ -68,7 +68,7 @@ export function Provide(key?: string | symbol) {
       provide = componentOptions.provide = function(this: any) {
         let rv = Object.create(
           (typeof original === 'function' ? original.call(this) : original) ||
-            null
+            null,
         )
         for (let i in provide.managed) rv[provide.managed[i]] = this[i]
         return rv
@@ -92,14 +92,14 @@ export function ProvideReactive(key?: string | symbol) {
       provide = componentOptions.provide = function(this: any) {
         let rv = Object.create(
           (typeof original === 'function' ? original.call(this) : original) ||
-            null
+            null,
         )
         rv[reactiveInjectKey] = {}
         for (let i in provide.managed) {
           rv[provide.managed[i]] = this[i] // Duplicates the behavior of `@Provide`
           Object.defineProperty(rv[reactiveInjectKey], provide.managed[i], {
             enumerable: true,
-            get: () => this[i]
+            get: () => this[i],
           })
         }
         return rv
@@ -117,7 +117,7 @@ const reflectMetadataIsSupported =
 function applyMetadata(
   options: PropOptions | Constructor[] | Constructor,
   target: Vue,
-  key: string
+  key: string,
 ) {
   if (reflectMetadataIsSupported) {
     if (
@@ -138,7 +138,7 @@ function applyMetadata(
  */
 export function Model(
   event?: string,
-  options: PropOptions | Constructor[] | Constructor = {}
+  options: PropOptions | Constructor[] | Constructor = {},
 ) {
   return (target: Vue, key: string) => {
     applyMetadata(options, target, key)
@@ -175,7 +175,7 @@ export function Prop(options: PropOptions | Constructor[] | Constructor = {}) {
  */
 export function PropSync(
   propName: string,
-  options: PropOptions | Constructor[] | Constructor = {}
+  options: PropOptions | Constructor[] | Constructor = {},
 ): PropertyDecorator {
   // @ts-ignore
   return (target: Vue, key: string) => {
@@ -191,7 +191,7 @@ export function PropSync(
         set(value) {
           // @ts-ignore
           this.$emit(`update:${propName}`, value)
-        }
+        },
       }
     })(target, key)
   }
@@ -268,7 +268,7 @@ export function Ref(refKey?: string) {
       cache: false,
       get(this: Vue) {
         return this.$refs[refKey || key]
-      }
+      },
     }
   })
 }
