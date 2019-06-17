@@ -7,3 +7,4 @@ package-lock.json
 .vscode/setting.json
 .idea
 yarn-error.log
+coverage
