@@ -3,7 +3,7 @@
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
 import Component, { createDecorator, mixins } from 'vue-class-component'
-import { InjectKey, WatchHandler } from 'vue/types/options'
+import { InjectKey } from 'vue/types/options'
 
 export type Constructor = {
   new(...args: any[]): any
@@ -154,15 +154,15 @@ export function PropSync(propName: string, options: (PropOptions | Constructor[]
     applyMetadata(options, target, key)
     createDecorator((componentOptions, k) => {
       (componentOptions.props || (componentOptions.props = {} as any))[propName] = options
-      ;(componentOptions.computed || (componentOptions.computed = {}))[k] = {
-        get() {
-          return this[propName]
-        },
-        set(value) {
-          // @ts-ignore
-          this.$emit(`update:${propName}`, value)
+        ; (componentOptions.computed || (componentOptions.computed = {}))[k] = {
+          get() {
+            return this[propName]
+          },
+          set(value) {
+            // @ts-ignore
+            this.$emit(`update:${propName}`, value)
+          }
         }
-      }
     })(target, key)
   }
 }
