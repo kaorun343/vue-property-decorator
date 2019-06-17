@@ -5,12 +5,10 @@ export default {
     format: 'umd',
     name: 'VuePropertyDecorator',
     globals: {
-      'vue': 'Vue',
-      'vue-class-component': 'VueClassComponent'
+      vue: 'Vue',
+      'vue-class-component': 'VueClassComponent',
     },
     exports: 'named',
   },
-  external: [
-    'vue', 'vue-class-component', 'reflect-metadata'
-  ],
+  external: ['vue', 'vue-class-component', 'reflect-metadata'],
 }

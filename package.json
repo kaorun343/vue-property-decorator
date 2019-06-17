@@ -15,7 +15,7 @@
     "test": "test"
   },
   "scripts": {
-    "build": "tsc -p src/tsconfig.json && rollup -c",
+    "build": "tsc --declaration src/vue-property-decorator.ts --outDir lib && rollup -c",
     "test": "jest"
   },
   "files": [
@@ -28,8 +28,8 @@
     "reflect-metadata": "^0.1.13",
     "rollup": "^1.15.6",
     "rollup-plugin-commonjs": "^10.0.0",
-    "rollup-plugin-typescript": "^1.0.1",
     "ts-jest": "^24.0.2",
+    "tslib": "^1.10.0",
     "typescript": "^3.5.2"
   },
   "typings": "./lib/vue-property-decorator.d.ts",
