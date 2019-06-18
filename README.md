@@ -41,9 +41,9 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class YourComponent extends Vue {
-  @Prop(Number) readonly propA!: number | undefined
+  @Prop(Number) readonly propA: number | undefined
   @Prop({ default: 'default value' }) readonly propB!: string
-  @Prop([String, Boolean]) readonly propC!: string | boolean | undefined
+  @Prop([String, Boolean]) readonly propC: string | boolean | undefined
 }
 ```
 
@@ -60,7 +60,7 @@ export default {
     },
     propC: {
       type: [String, Boolean]
-    },
+    }
   }
 }
 ```
@@ -94,7 +94,7 @@ export default {
   props: {
     name: {
       type: String
-    },
+    }
   },
   computed: {
     syncedName: {
@@ -133,8 +133,8 @@ export default {
   props: {
     checked: {
       type: Boolean
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -148,13 +148,13 @@ import { Vue, Component, Watch } from 'vue-property-decorator'
 @Component
 export default class YourComponent extends Vue {
   @Watch('child')
-  onChildChanged(val: string, oldVal: string) { }
+  onChildChanged(val: string, oldVal: string) {}
 
   @Watch('person', { immediate: true, deep: true })
-  onPersonChanged1(val: Person, oldVal: Person) { }
+  onPersonChanged1(val: Person, oldVal: Person) {}
 
   @Watch('person')
-  onPersonChanged2(val: Person, oldVal: Person) { }
+  onPersonChanged2(val: Person, oldVal: Person) {}
 }
 ```
 
@@ -163,14 +163,14 @@ is equivalent to
 ```js
 export default {
   watch: {
-    'child': [
+    child: [
       {
         handler: 'onChildChanged',
         immediate: false,
         deep: false
       }
     ],
-    'person': [
+    person: [
       {
         handler: 'onPersonChanged1',
         immediate: true,
@@ -184,9 +184,9 @@ export default {
     ]
   },
   methods: {
-    onChildChanged(val, oldVal) { },
-    onPersonChanged1(val, oldVal) { },
-    onPersonChanged2(val, oldVal) { }
+    onChildChanged(val, oldVal) {},
+    onPersonChanged1(val, oldVal) {},
+    onPersonChanged2(val, oldVal) {}
   }
 }
 ```
@@ -205,7 +205,6 @@ export class MyComponent extends Vue {
   @Inject({ from: 'optional', default: 'default' }) readonly optional!: string
   @Inject(symbol) readonly baz!: string
 
-
   @Provide() foo = 'foo'
   @Provide('bar') baz = 'bar'
 }
@@ -217,26 +216,44 @@ is equivalent to
 const symbol = Symbol('baz')
 
 export const MyComponent = Vue.extend({
-
   inject: {
     foo: 'foo',
     bar: 'bar',
-    'optional': { from: 'optional', default: 'default' },
+    optional: { from: 'optional', default: 'default' },
     [symbol]: symbol
   },
-  data () {
+  data() {
     return {
       foo: 'foo',
       baz: 'bar'
     }
   },
-  provide () {
+  provide() {
     return {
       foo: this.foo,
       bar: this.baz
     }
   }
 })
+```
+
+### <a id="ProvideReactive"></a> `@ProvideReactive(key?: string | symbol)` / `@InjectReactive(options?: { from?: InjectKey, default?: any } | InjectKey)` decorator
+
+These decorators are reactive version of `@Provide` and `@Inject`. If a provided value is modified by parent component, then the child component can catch this modification.
+
+```ts
+const key = Symbol()
+@Component
+class ParentComponent extends Vue {
+  @ProvideReactive() one = 'value'
+  @ProvideReactive(key) two = 'value'
+}
+
+@Component
+class ChildComponent extends Vue {
+  @InjectReactive() one!: string
+  @InjectReactive(key) two!: string
+}
 ```
 
 ### <a id="Emit"></a> `@Emit(event?: string)` decorator

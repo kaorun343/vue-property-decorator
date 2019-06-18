@@ -1,4 +1,4 @@
-/** vue-property-decorator verson 8.1.1 MIT LICENSE copyright 2018 kaorun343 */
+/** vue-property-decorator verson 8.2.1 MIT LICENSE copyright 2019 kaorun343 */
 /// <reference types='reflect-metadata'/>
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
@@ -6,20 +6,22 @@ import Component, { createDecorator, mixins } from 'vue-class-component'
 import { InjectKey } from 'vue/types/options'
 
 export type Constructor = {
-  new(...args: any[]): any
+  new (...args: any[]): any
 }
 
 export { Component, Vue, mixins as Mixins }
 
 /** Used for keying reactive provide/inject properties */
-const reactiveInjectKey = '__reactiveInject__';
+const reactiveInjectKey = '__reactiveInject__'
+
+type InjectOptions = { from?: InjectKey; default?: any }
 
 /**
  * decorator of an inject
  * @param from key
  * @return PropertyDecorator
  */
-export function Inject(options?: { from?: InjectKey, default?: any } | InjectKey): PropertyDecorator {
+export function Inject(options?: InjectOptions | InjectKey) {
   return createDecorator((componentOptions, key) => {
     if (typeof componentOptions.inject === 'undefined') {
       componentOptions.inject = {}
@@ -35,17 +37,18 @@ export function Inject(options?: { from?: InjectKey, default?: any } | InjectKey
  * @param from key
  * @return PropertyDecorator
  */
-export function InjectReactive(options?: { from?: InjectKey, default?: any } | InjectKey): PropertyDecorator {
+export function InjectReactive(options?: InjectOptions | InjectKey) {
   return createDecorator((componentOptions, key) => {
     if (typeof componentOptions.inject === 'undefined') {
       componentOptions.inject = {}
     }
     if (!Array.isArray(componentOptions.inject)) {
-      const fromKey = !!options ? (options as any).from || options : key;
-      const defaultVal = !!options && (options as any).default || undefined;
+      const fromKey = !!options ? (options as any).from || options : key
+      const defaultVal = (!!options && (options as any).default) || undefined
       if (!componentOptions.computed) componentOptions.computed = {}
-      componentOptions.computed![key] = function () {
-        return this[reactiveInjectKey][fromKey] || defaultVal
+      componentOptions.computed![key] = function() {
+        const obj = (this as any)[reactiveInjectKey]
+        return obj ? obj[fromKey] : defaultVal
       }
       componentOptions.inject[reactiveInjectKey] = reactiveInjectKey
     }
@@ -57,13 +60,16 @@ export function InjectReactive(options?: { from?: InjectKey, default?: any } | I
  * @param key key
  * @return PropertyDecorator | void
  */
-export function Provide(key?: string | symbol): PropertyDecorator {
+export function Provide(key?: string | symbol) {
   return createDecorator((componentOptions, k) => {
     let provide: any = componentOptions.provide
     if (typeof provide !== 'function' || !provide.managed) {
       const original = componentOptions.provide
-      provide = componentOptions.provide = function (this: any) {
-        let rv = Object.create((typeof original === 'function' ? original.call(this) : original) || null)
+      provide = componentOptions.provide = function(this: any) {
+        let rv = Object.create(
+          (typeof original === 'function' ? original.call(this) : original) ||
+            null,
+        )
         for (let i in provide.managed) rv[provide.managed[i]] = this[i]
         return rv
       }
@@ -78,19 +84,22 @@ export function Provide(key?: string | symbol): PropertyDecorator {
  * @param key key
  * @return PropertyDecorator | void
  */
-export function ProvideReactive(key?: string | symbol): PropertyDecorator {
+export function ProvideReactive(key?: string | symbol) {
   return createDecorator((componentOptions, k) => {
     let provide: any = componentOptions.provide
     if (typeof provide !== 'function' || !provide.managed) {
       const original = componentOptions.provide
-      provide = componentOptions.provide = function (this: any) {
-        let rv = Object.create((typeof original === 'function' ? original.call(this) : original) || null)
+      provide = componentOptions.provide = function(this: any) {
+        let rv = Object.create(
+          (typeof original === 'function' ? original.call(this) : original) ||
+            null,
+        )
         rv[reactiveInjectKey] = {}
         for (let i in provide.managed) {
           rv[provide.managed[i]] = this[i] // Duplicates the behavior of `@Provide`
           Object.defineProperty(rv[reactiveInjectKey], provide.managed[i], {
             enumerable: true,
-            get: () => this[i]
+            get: () => this[i],
           })
         }
         return rv
@@ -102,11 +111,20 @@ export function ProvideReactive(key?: string | symbol): PropertyDecorator {
 }
 
 /** @see {@link https://github.com/vuejs/vue-class-component/blob/master/src/reflect.ts} */
-const reflectMetadataIsSupported = typeof Reflect !== 'undefined' && typeof Reflect.getMetadata !== 'undefined'
+const reflectMetadataIsSupported =
+  typeof Reflect !== 'undefined' && typeof Reflect.getMetadata !== 'undefined'
 
-function applyMetadata(options: (PropOptions | Constructor[] | Constructor), target: Vue, key: string) {
+function applyMetadata(
+  options: PropOptions | Constructor[] | Constructor,
+  target: Vue,
+  key: string,
+) {
   if (reflectMetadataIsSupported) {
-    if (!Array.isArray(options) && typeof options !== 'function' && typeof options.type === 'undefined') {
+    if (
+      !Array.isArray(options) &&
+      typeof options !== 'function' &&
+      typeof options.type === 'undefined'
+    ) {
       options.type = Reflect.getMetadata('design:type', target, key)
     }
   }
@@ -118,11 +136,16 @@ function applyMetadata(options: (PropOptions | Constructor[] | Constructor), tar
  * @param options options
  * @return PropertyDecorator
  */
-export function Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {}): PropertyDecorator {
+export function Model(
+  event?: string,
+  options: PropOptions | Constructor[] | Constructor = {},
+) {
   return (target: Vue, key: string) => {
     applyMetadata(options, target, key)
     createDecorator((componentOptions, k) => {
-      (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
+      ;(componentOptions.props || ((componentOptions.props = {}) as any))[
+        k
+      ] = options
       componentOptions.model = { prop: k, event: event || k }
     })(target, key)
   }
@@ -133,11 +156,13 @@ export function Model(event?: string, options: (PropOptions | Constructor[] | Co
  * @param  options the options for the prop
  * @return PropertyDecorator | void
  */
-export function Prop(options: (PropOptions | Constructor[] | Constructor) = {}): PropertyDecorator {
+export function Prop(options: PropOptions | Constructor[] | Constructor = {}) {
   return (target: Vue, key: string) => {
     applyMetadata(options, target, key)
     createDecorator((componentOptions, k) => {
-      (componentOptions.props || (componentOptions.props = {}) as any)[k] = options
+      ;(componentOptions.props || ((componentOptions.props = {}) as any))[
+        k
+      ] = options
     })(target, key)
   }
 }
@@ -148,25 +173,29 @@ export function Prop(options: (PropOptions | Constructor[] | Constructor) = {}):
  * @param options the options for the synced prop
  * @return PropertyDecorator | void
  */
-export function PropSync(propName: string, options: (PropOptions | Constructor[] | Constructor) = {}): PropertyDecorator {
+export function PropSync(
+  propName: string,
+  options: PropOptions | Constructor[] | Constructor = {},
+): PropertyDecorator {
   // @ts-ignore
   return (target: Vue, key: string) => {
     applyMetadata(options, target, key)
     createDecorator((componentOptions, k) => {
-      (componentOptions.props || (componentOptions.props = {} as any))[propName] = options
-        ; (componentOptions.computed || (componentOptions.computed = {}))[k] = {
-          get() {
-            return this[propName]
-          },
-          set(value) {
-            // @ts-ignore
-            this.$emit(`update:${propName}`, value)
-          }
-        }
+      ;(componentOptions.props || (componentOptions.props = {} as any))[
+        propName
+      ] = options
+      ;(componentOptions.computed || (componentOptions.computed = {}))[k] = {
+        get() {
+          return (this as any)[propName]
+        },
+        set(value) {
+          // @ts-ignore
+          this.$emit(`update:${propName}`, value)
+        },
+      }
     })(target, key)
   }
 }
-
 
 /**
  * decorator of a watch function
@@ -174,7 +203,7 @@ export function PropSync(propName: string, options: (PropOptions | Constructor[]
  * @param  WatchOption
  * @return MethodDecorator
  */
-export function Watch(path: string, options: WatchOptions = {}): MethodDecorator {
+export function Watch(path: string, options: WatchOptions = {}) {
   const { deep = false, immediate = false } = options
 
   return createDecorator((componentOptions, handler) => {
@@ -203,8 +232,8 @@ const hyphenate = (str: string) => str.replace(hyphenateRE, '-$1').toLowerCase()
  * @param  event The name of the event
  * @return MethodDecorator
  */
-export function Emit(event?: string): MethodDecorator {
-  return function (_target: Vue, key: string, descriptor: any) {
+export function Emit(event?: string) {
+  return function(_target: Vue, key: string, descriptor: any) {
     key = hyphenate(key)
     const original = descriptor.value
     descriptor.value = function emitter(...args: any[]) {
@@ -234,16 +263,15 @@ export function Emit(event?: string): MethodDecorator {
  */
 export function Ref(refKey?: string) {
   return createDecorator((options, key) => {
-    options.computed = options.computed || {};
+    options.computed = options.computed || {}
     options.computed[key] = {
       cache: false,
       get(this: Vue) {
-        return this.$refs[refKey || key];
+        return this.$refs[refKey || key]
       },
-    };
-  });
+    }
+  })
 }
-
 
 function isPromise(obj: any): obj is Promise<any> {
   return obj instanceof Promise || (obj && typeof obj.then === 'function')

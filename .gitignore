@@ -2,8 +2,9 @@ lib
 node_modules
 npm-debug.log
 src/*.js
-test/*.spec.js
+tests/*.spec.js
 package-lock.json
 .vscode/setting.json
 .idea
 yarn-error.log
+coverage
