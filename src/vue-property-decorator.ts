@@ -50,7 +50,7 @@ export function InjectReactive(options?: InjectOptions | InjectKey) {
         const obj = (this as any)[reactiveInjectKey]
         return obj ? obj[fromKey] : defaultVal
       }
-      componentOptions.inject[reactiveInjectKey] = reactiveInjectKey
+      componentOptions.inject[reactiveInjectKey] = {key: reactiveInjectKey, default: defaultVal}
     }
   })
 }
