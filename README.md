@@ -24,6 +24,7 @@ There are 7 decorators and 1 function (Mixin):
 - [`@Provide`](#Provide)
 - [`@Model`](#Model)
 - [`@Watch`](#Watch)
+- [`@WatchMatch`](#WatchMatch)
 - [`@Inject`](#Provide)
 - [`@Provide`](#Provide)
 - [`@Emit`](#Emit)
@@ -190,6 +191,77 @@ export default {
   }
 }
 ```
+
+### <a id="WatchMatch"></a> `@WatchMatch(options: WatchOptions = {})` decorator
+
+Similar to [@Watch](#Wathc). It matches the property name in **camel case** using the pattern `/watch(\w+)`, extracs property name and adds a watch handler. As the name suggests, you can only use this decorator to add only **one** watch handler to **one** property.
+
+```ts
+import { Vue, Component, Watch, WatchMatch } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
+  child1: string;
+  child2: string;
+  child3: string;
+  
+  @WatchMatch
+  watchChild1(val: string, oldVal: string) {}
+
+  @WatchMatch({ immediate: true, deep: true })
+  watchChild2(val: string, oldVal: string) {}
+  
+  // @Watch and @WatchMatch
+  @Watch('child2')
+  @WatchMatch 
+  watchChild3(val: string, oldVal: string) {
+    // execute this function whether child2 or child3 have changed
+  }
+  
+}
+```
+
+is equivalent to
+
+```ts
+export default {
+  watch: {
+    child1: [
+      {
+        handler: 'watchChild1',
+        immediate: false,
+        deep: false
+      }
+    ],
+    child2: [
+      {
+        handler: 'watchChild2',
+        immediate: true,
+        deep: true
+      },
+      {
+        handler: 'watchChild3',
+        immediate: false,
+        deep: false
+      }
+    ],
+    child3: [
+      {
+        handler: 'watchChild3',
+        immediate: false,
+        deep: false
+      }
+    ]
+  },
+  methods: {
+    watchChild1(val, oldVal) {},
+    watchChild2(val, oldVal) {},
+    watchChild3(val, oldVal) {}
+  }
+}
+```
+
+
 
 ### <a id="Provide"></a> `@Provide(key?: string | symbol)` / `@Inject(options?: { from?: InjectKey, default?: any } | InjectKey)` decorator
 
