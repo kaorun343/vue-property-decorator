@@ -205,8 +205,39 @@ export function PropSync(
  */
 export function Watch(path: string, options: WatchOptions = {}) {
   const { deep = false, immediate = false } = options
-
   return createDecorator((componentOptions, handler) => {
+    if (typeof componentOptions.watch !== 'object') {
+      componentOptions.watch = Object.create(null)
+    }
+
+    const watch: any = componentOptions.watch
+
+    if (typeof watch[path] === 'object' && !Array.isArray(watch[path])) {
+      watch[path] = [watch[path]]
+    } else if (typeof watch[path] === 'undefined') {
+      watch[path] = []
+    }
+
+    watch[path].push({ handler, deep, immediate })
+  })
+}
+
+/**
+ * decorator of a watch function. It matches property name from function name
+ * using regex /watch(w+)/
+ * E.g. "watchIsTest" creates a watcher for a component property called "isTest"
+ * @param  WatchOptions
+ * @return MethodDecorator
+ */
+export function WatchMatch(options: WatchOptions = {}) {
+  const { deep = false, immediate = false } = options
+  return createDecorator((componentOptions, handler) => {
+    let pathMatch = handler.match(/watch(\w+)/)
+    if (!pathMatch) return
+
+    let path = pathMatch[1] // extract path
+    path = path[0].toLowerCase() + path.slice(1) // camel case
+
     if (typeof componentOptions.watch !== 'object') {
       componentOptions.watch = Object.create(null)
     }
