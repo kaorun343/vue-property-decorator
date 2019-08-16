@@ -79,7 +79,7 @@ It's **not** supported to define each `default` property like `@Prop() prop = 'd
 ### <a id="PropSync"></a> `@PropSync(propName: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
 
 ```ts
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, PropSync } from 'vue-property-decorator'
 
 @Component
 export default class YourComponent extends Vue {
