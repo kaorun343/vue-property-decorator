@@ -17,16 +17,18 @@ npm i -S vue-property-decorator
 
 ## Usage
 
-There are 7 decorators and 1 function (Mixin):
+There are several decorators and 1 function (Mixin):
 
 - [`@Prop`](#Prop)
 - [`@PropSync`](#PropSync)
-- [`@Provide`](#Provide)
 - [`@Model`](#Model)
 - [`@Watch`](#Watch)
-- [`@Inject`](#Provide)
 - [`@Provide`](#Provide)
+- [`@Inject`](#Provide)
+- [`@ProvideReactive`](#ProvideReactive)
+- [`@InjectReactive`](#ProvideReactive)
 - [`@Emit`](#Emit)
+- [`@Ref`](#Ref)
 - `@Component` (**provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 - `Mixins` (the helper function named `mixins` **provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 
