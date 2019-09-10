@@ -72,7 +72,7 @@ export function Provide(key?: string | symbol, opts: { type?: 'reactive' | 'meth
         )
         rv[reactiveInjectKey] = {}
         for (let i in provide.managed) {
-          let opts = provide.manage[i]
+          let opts = provide.managed[i]
           let val = this[i]
           if (opts.type == "reactive") {
             Object.defineProperty(rv[reactiveInjectKey], opts.as, {
