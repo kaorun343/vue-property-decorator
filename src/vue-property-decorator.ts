@@ -60,31 +60,7 @@ export function InjectReactive(options?: InjectOptions | InjectKey) {
  * @param key key
  * @return PropertyDecorator | void
  */
-export function Provide(key?: string | symbol) {
-  return createDecorator((componentOptions, k) => {
-    let provide: any = componentOptions.provide
-    if (typeof provide !== 'function' || !provide.managed) {
-      const original = componentOptions.provide
-      provide = componentOptions.provide = function(this: any) {
-        let rv = Object.create(
-          (typeof original === 'function' ? original.call(this) : original) ||
-            null,
-        )
-        for (let i in provide.managed) rv[provide.managed[i]] = this[i]
-        return rv
-      }
-      provide.managed = {}
-    }
-    provide.managed[k] = key || k
-  })
-}
-
-/**
- * decorator of a reactive provide
- * @param key key
- * @return PropertyDecorator | void
- */
-export function ProvideReactive(key?: string | symbol) {
+export function Provide(key?: string | symbol, { type?:'reactive'|'method'|'default' }) {
   return createDecorator((componentOptions, k) => {
     let provide: any = componentOptions.provide
     if (typeof provide !== 'function' || !provide.managed) {
@@ -96,18 +72,42 @@ export function ProvideReactive(key?: string | symbol) {
         )
         rv[reactiveInjectKey] = {}
         for (let i in provide.managed) {
-          rv[provide.managed[i]] = this[i] // Duplicates the behavior of `@Provide`
-          Object.defineProperty(rv[reactiveInjectKey], provide.managed[i], {
-            enumerable: true,
-            get: () => this[i],
-          })
+          let opts = provide.manage[i]
+          let val = this[i]
+          if (type == "reactive") {
+            Object.defineProperty(rv[reactiveInjectKey], opts.as, {
+              enumerable: true,
+              get: () => this[i],
+            })
+          }else if (type == "method") {
+            val = function(){ return this[i] }
+          }
+          rv[opts.childkey] = val
         }
         return rv
       }
       provide.managed = {}
     }
-    provide.managed[k] = key || k
+    provide.managed[k] = { as: key || k, type: type }
   })
+}
+
+/**
+ * decorator of a reactive provide
+ * @param key key
+ * @return PropertyDecorator | void
+ */
+export function ProvideReactive(key?: string | symbol) {
+  return Provide( key, { type: "reactive" })
+}
+
+/**
+ * decorator of a reactive provide
+ * @param key key
+ * @return PropertyDecorator | void
+ */
+export function ProvideMethod(key?: string | symbol) {
+  return Provide( key, { type: "method" })
 }
 
 /** @see {@link https://github.com/vuejs/vue-class-component/blob/master/src/reflect.ts} */
