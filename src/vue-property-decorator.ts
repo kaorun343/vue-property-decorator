@@ -60,7 +60,7 @@ export function InjectReactive(options?: InjectOptions | InjectKey) {
  * @param key key
  * @return PropertyDecorator | void
  */
-export function Provide(key?: string | symbol, { type?:'reactive'|'method'|'default' }) {
+export function Provide(key?: string | symbol, opts: { type?: 'reactive' | 'method' | 'default' } = {}) {
   return createDecorator((componentOptions, k) => {
     let provide: any = componentOptions.provide
     if (typeof provide !== 'function' || !provide.managed) {
@@ -80,7 +80,7 @@ export function Provide(key?: string | symbol, { type?:'reactive'|'method'|'defa
               get: () => this[i],
             })
           }else if (type == "method") {
-            val = function(){ return this[i] }
+            val = function(this: any){ return this[i] }
           }
           rv[opts.childkey] = val
         }
@@ -88,7 +88,7 @@ export function Provide(key?: string | symbol, { type?:'reactive'|'method'|'defa
       }
       provide.managed = {}
     }
-    provide.managed[k] = { as: key || k, type: type }
+    provide.managed[k] = { as: key || k, type: opts.type || 'default' }
   })
 }
 
