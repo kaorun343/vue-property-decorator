@@ -2,7 +2,8 @@ import Vue from 'vue'
 import {
   Component,
   ProvideReactive,
-  InjectReactive
+  InjectReactive,
+  Provide
 } from '../src/vue-property-decorator'
 
 describe(ProvideReactive, () => {
@@ -38,6 +39,27 @@ describe(ProvideReactive, () => {
       })
     })
   })
+
+
+  describe('is compatible with @Provide()', () => {
+    @Component
+    class ParentComponent extends Vue {
+      @Provide('first') first = 'whatever'
+      @ProvideReactive() one = 'one'
+    }
+    @Component
+    class ChildComponent extends Vue {
+      @InjectReactive() one!: string
+    }
+
+    const parent = new ParentComponent()
+    const component = new ChildComponent({ parent })
+
+    test('provides value', () => {
+      expect(component.one).toBe('one')
+    })
+  })
+
 
   describe('when key is given', () => {
     const key = 'KEY'
