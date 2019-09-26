@@ -100,7 +100,7 @@ export function ProvideReactive(key?: string | symbol) {
             : original
         rv = Object.create(rv || null)
         // set reactive services (propagates previous services if necessary)
-        rv[reactiveInjectKey] = rv[reactiveInjectKey] || this[reactiveInjectKey] || {}
+        rv[reactiveInjectKey] = this[reactiveInjectKey] || {}
         for (let i in provide.managedReactive) {
           rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
           Object.defineProperty(rv[reactiveInjectKey], provide.managedReactive[i], {
