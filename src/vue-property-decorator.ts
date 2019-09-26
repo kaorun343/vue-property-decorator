@@ -87,14 +87,20 @@ export function Provide(key?: string | symbol) {
 export function ProvideReactive(key?: string | symbol) {
   return createDecorator((componentOptions, k) => {
     let provide: any = componentOptions.provide
+    // inject parent reactive services (if any)
+    if (!Array.isArray(componentOptions.inject)) {
+      componentOptions.inject = componentOptions.inject || {};
+      componentOptions.inject[reactiveInjectKey] = { from: reactiveInjectKey, default: {}};
+    }
     if (typeof provide !== 'function' || !provide.managedReactive) {
       const original: any = componentOptions.provide
       provide = componentOptions.provide = function(this: any) {
-        let rv = Object.create(
-          (typeof original === 'function' ? original.call(this) : original) ||
-            null,
-        )
-        rv[reactiveInjectKey] = {}
+        let rv = typeof original === 'function'
+            ? original.call(this)
+            : original
+        rv = Object.create(rv || null)
+        // set reactive services (propagates previous services if necessary)
+        rv[reactiveInjectKey] = rv[reactiveInjectKey] || this[reactiveInjectKey] || {}
         for (let i in provide.managedReactive) {
           rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
           Object.defineProperty(rv[reactiveInjectKey], provide.managedReactive[i], {
