@@ -22,6 +22,31 @@ describe(Provide, () => {
     })
   })
 
+  describe('does not override parent dependencies', () => {
+    @Component
+    class ParentComponent extends Vue {
+      @Provide() root = 'root'
+    }
+    @Component
+    class NodeComponent extends Vue {
+      @Provide() node = 'node'
+    }
+    @Component
+    class ChildComponent extends Vue {
+      @Inject() root!: string
+      @Inject() node!: string
+    }
+
+    const parent = new ParentComponent()
+    const node = new NodeComponent({ parent })
+    const component = new ChildComponent({ parent: node  })
+
+    test('provides value', () => {
+      expect(component.node).toBe('node')
+      expect(component.root).toBe('root')
+    })
+  })
+
   describe('when key is given', () => {
     const key = 'KEY'
     const value = 'VALUE'

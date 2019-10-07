@@ -81,6 +81,38 @@ describe(ProvideReactive, () => {
   })
 
 
+  describe('does not override parent reactive dependencies', () => {
+    @Component
+    class ParentComponent extends Vue {
+      @ProvideReactive() root = 'root'
+    }
+    @Component
+    class NodeComponent extends Vue {
+      @ProvideReactive() node = 'node'
+    }
+    @Component
+    class ChildComponent extends Vue {
+      @InjectReactive() root!: string
+      @InjectReactive() node!: string
+    }
+
+    const parent = new ParentComponent()
+    const node = new NodeComponent({ parent })
+    const component = new ChildComponent({ parent: node  })
+
+    test('provides value', () => {
+      expect(component.node).toBe('node')
+      expect(component.root).toBe('root') // <== this one used to throw
+
+      // check that they update correctly
+      parent.root = 'new root'
+      node.node = 'new node'
+      expect(component.root).toBe('new root')
+      expect(component.node).toBe('new node')
+    })
+  })
+
+
   describe('when key is given', () => {
     const key = 'KEY'
     const value = 'VALUE'
