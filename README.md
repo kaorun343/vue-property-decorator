@@ -74,6 +74,16 @@ export default {
 1. Set `emitDecoratorMetadata` to `true`.
 2. Import `reflect-metadata` **before** importing `vue-property-decorator` (importing `reflect-metadata` is needed just once.)
 
+```ts
+import 'reflect-metadata'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+
+@Component
+export default class MyComponent extends Vue {
+  @Prop() age!: number
+}
+```
+
 ## Each prop's default value need to be defined as same as the example code shown in above.
 
 It's **not** supported to define each `default` property like `@Prop() prop = 'default value'` .
