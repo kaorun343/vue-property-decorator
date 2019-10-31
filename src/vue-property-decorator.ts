@@ -279,6 +279,20 @@ export function Ref(refKey?: string) {
   })
 }
 
+export function VModel(propsArgs: PropOptions = {}) {
+  return createDecorator((componentOptions, key) => {
+    ;(componentOptions.props || (componentOptions.props = {}))['value'] = propsArgs
+    ;(componentOptions.computed || (componentOptions.computed = {}))[key] = {
+      get() {
+        return this.value
+      },
+      set(value: any) {
+        this.$emit('input', value)
+      },
+    }
+  })
+}
+
 function isPromise(obj: any): obj is Promise<any> {
   return obj instanceof Promise || (obj && typeof obj.then === 'function')
 }
