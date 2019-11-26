@@ -69,7 +69,7 @@ export default {
 
 **Note that:**
 
-## If you'd like to set `type` property of each prop value from its type definition, you can use [reflect-metadata](https://github.com/rbuckton/reflect-metadata).
+## Include [reflect-metadata](https://github.com/rbuckton/reflect-metadata) in project imports to set `type` property for each prop value in its type definition.
 
 1. Set `emitDecoratorMetadata` to `true`.
 2. Import `reflect-metadata` **before** importing `vue-property-decorator` (importing `reflect-metadata` is needed just once.)
