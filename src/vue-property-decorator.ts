@@ -255,8 +255,19 @@ export function Emit(event?: string) {
     const original = descriptor.value
     descriptor.value = function emitter(...args: any[]) {
       const emit = (returnValue: any) => {
-        if (returnValue !== undefined) args.unshift(returnValue)
-        this.$emit(event || key, ...args)
+        const emitName = event || (propertyKey as string);
+        
+         if (returnValue === undefined) {
+          if (args.length === 0) {
+            this.$emit(emitName);
+          } else if (args.length === 1) {
+            this.$emit(emitName, args[0]);
+          } else {
+            this.$emit(emitName, args);
+          }
+        } else {
+          this.$emit(emitName, returnValue);
+        }
       }
 
       const returnValue: any = original.apply(this, args)
