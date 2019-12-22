@@ -255,7 +255,7 @@ export function Emit(event?: string) {
     const original = descriptor.value
     descriptor.value = function emitter(...args: any[]) {
       const emit = (returnValue: any) => {
-        const emitName = event || (propertyKey as string);
+        const emitName = event || key;
         
          if (returnValue === undefined) {
           if (args.length === 0) {
