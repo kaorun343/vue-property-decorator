@@ -142,7 +142,10 @@ function applyMetadata(
       typeof options !== 'function' &&
       typeof options.type === 'undefined'
     ) {
-      options.type = Reflect.getMetadata('design:type', target, key)
+      const type = Reflect.getMetadata('design:type', target, key)
+      if (type !== Object) {
+        options.type = type
+      }
     }
   }
 }
