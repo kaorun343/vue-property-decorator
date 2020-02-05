@@ -1,4 +1,4 @@
-/** vue-property-decorator verson 8.2.2 MIT LICENSE copyright 2019 kaorun343 */
+/** vue-property-decorator verson 8.4.0 MIT LICENSE copyright 2019 kaorun343 */
 /// <reference types='reflect-metadata'/>
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
@@ -56,41 +56,40 @@ export function InjectReactive(options?: InjectOptions | InjectKey) {
 }
 
 interface provideObj {
-    managed?: {[k: string]: any};
-    managedReactive?: {[k: string]: any};
+  managed?: { [k: string]: any }
+  managedReactive?: { [k: string]: any }
 }
-type provideFunc = ((this: any) => Object) & provideObj;
+type provideFunc = ((this: any) => Object) & provideObj
 
-
-function produceProvide (original: any) {
-    let provide: provideFunc = function(this: any) {
-        let rv = typeof original === 'function'
-            ? original.call(this)
-            : original
-        rv = Object.create(rv || null)
-        // set reactive services (propagates previous services if necessary)
-        rv[reactiveInjectKey] = this[reactiveInjectKey] || {}
-        for (let i in provide.managed) {
-            rv[provide.managed[i]] = this[i]
-        }
-        for (let i in provide.managedReactive) {
-            rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
-            Object.defineProperty(rv[reactiveInjectKey], provide.managedReactive[i], {
-              enumerable: true,
-              get: () => this[i],
-            })
-          }
-        return rv;
+function produceProvide(original: any) {
+  let provide: provideFunc = function(this: any) {
+    let rv = typeof original === 'function' ? original.call(this) : original
+    rv = Object.create(rv || null)
+    // set reactive services (propagates previous services if necessary)
+    rv[reactiveInjectKey] = this[reactiveInjectKey] || {}
+    for (let i in provide.managed) {
+      rv[provide.managed[i]] = this[i]
     }
-    provide.managed = {};
-    provide.managedReactive = {};
-    return provide;
+    for (let i in provide.managedReactive) {
+      rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
+      Object.defineProperty(rv[reactiveInjectKey], provide.managedReactive[i], {
+        enumerable: true,
+        get: () => this[i],
+      })
+    }
+    return rv
+  }
+  provide.managed = {}
+  provide.managedReactive = {}
+  return provide
 }
 
 function needToProduceProvide(original: any) {
-    return typeof original !== 'function' || (!original.managed && !original.managedReactive);
+  return (
+    typeof original !== 'function' ||
+    (!original.managed && !original.managedReactive)
+  )
 }
-
 
 /**
  * decorator of a provide
@@ -117,8 +116,11 @@ export function ProvideReactive(key?: string | symbol) {
     let provide: any = componentOptions.provide
     // inject parent reactive services (if any)
     if (!Array.isArray(componentOptions.inject)) {
-      componentOptions.inject = componentOptions.inject || {};
-      componentOptions.inject[reactiveInjectKey] = { from: reactiveInjectKey, default: {}};
+      componentOptions.inject = componentOptions.inject || {}
+      componentOptions.inject[reactiveInjectKey] = {
+        from: reactiveInjectKey,
+        default: {},
+      }
     }
     if (needToProduceProvide(provide)) {
       provide = componentOptions.provide = produceProvide(provide)

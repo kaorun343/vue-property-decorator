@@ -1,6 +1,6 @@
 {
   "name": "vue-property-decorator",
-  "version": "8.3.0",
+  "version": "8.4.0",
   "description": "property decorators for Vue Component",
   "main": "lib/vue-property-decorator.umd.js",
   "module": "lib/vue-property-decorator.js",
