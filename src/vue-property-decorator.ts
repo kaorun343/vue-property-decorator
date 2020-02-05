@@ -255,13 +255,24 @@ const hyphenate = (str: string) => str.replace(hyphenateRE, '-$1').toLowerCase()
  * @return MethodDecorator
  */
 export function Emit(event?: string) {
-  return function(_target: Vue, key: string, descriptor: any) {
-    key = hyphenate(key)
+  return function(_target: Vue, propertyKey: string, descriptor: any) {
+    const key = hyphenate(propertyKey)
     const original = descriptor.value
     descriptor.value = function emitter(...args: any[]) {
       const emit = (returnValue: any) => {
-        if (returnValue !== undefined) args.unshift(returnValue)
-        this.$emit(event || key, ...args)
+        const emitName = event || key;
+        
+         if (returnValue === undefined) {
+          if (args.length === 0) {
+            this.$emit(emitName);
+          } else if (args.length === 1) {
+            this.$emit(emitName, args[0]);
+          } else {
+            this.$emit(emitName, args);
+          }
+        } else {
+          this.$emit(emitName, returnValue);
+        }
       }
 
       const returnValue: any = original.apply(this, args)
