@@ -35,6 +35,9 @@
   "dependencies": {
     "vue-class-component": "^7.1.0"
   },
+  "peerDependencies": {
+    "vue": "*"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kaorun343/vue-property-decorator.git"
