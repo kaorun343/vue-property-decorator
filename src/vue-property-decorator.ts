@@ -1,4 +1,4 @@
-/** vue-property-decorator verson 8.4.0 MIT LICENSE copyright 2019 kaorun343 */
+/** vue-property-decorator verson 8.4.1 MIT LICENSE copyright 2019 kaorun343 */
 /// <reference types='reflect-metadata'/>
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
@@ -73,11 +73,15 @@ function produceProvide(original: any) {
     for (let i in provide.managedReactive) {
       rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
       if (!rv[reactiveInjectKey].hasOwnProperty(provide.managedReactive[i])) {
-            Object.defineProperty(rv[reactiveInjectKey], provide.managedReactive[i], {
-                enumerable: true,
-                get: () => this[i],
-            })
-        }
+        Object.defineProperty(
+          rv[reactiveInjectKey],
+          provide.managedReactive[i],
+          {
+            enumerable: true,
+            get: () => this[i],
+          },
+        )
+      }
     }
     return rv
   }
@@ -262,18 +266,18 @@ export function Emit(event?: string) {
     const original = descriptor.value
     descriptor.value = function emitter(...args: any[]) {
       const emit = (returnValue: any) => {
-        const emitName = event || key;
-        
-         if (returnValue === undefined) {
+        const emitName = event || key
+
+        if (returnValue === undefined) {
           if (args.length === 0) {
-            this.$emit(emitName);
+            this.$emit(emitName)
           } else if (args.length === 1) {
-            this.$emit(emitName, args[0]);
+            this.$emit(emitName, args[0])
           } else {
-            this.$emit(emitName, args);
+            this.$emit(emitName, args)
           }
         } else {
-          this.$emit(emitName, returnValue);
+          this.$emit(emitName, returnValue)
         }
       }
 
