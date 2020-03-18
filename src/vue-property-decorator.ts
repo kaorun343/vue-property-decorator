@@ -274,10 +274,16 @@ export function Emit(event?: string) {
           } else if (args.length === 1) {
             this.$emit(emitName, args[0])
           } else {
-            this.$emit(emitName, args)
+            this.$emit(emitName, ...args)
           }
         } else {
-          this.$emit(emitName, returnValue)
+          if (args.length === 0) {
+            this.$emit(emitName, returnValue)
+          } else if (args.length === 1) {
+            this.$emit(emitName, returnValue, args[0])
+          } else {
+            this.$emit(emitName, returnValue, ...args)
+          }
         }
       }
 
