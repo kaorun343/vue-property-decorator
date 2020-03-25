@@ -29,6 +29,10 @@ There are several decorators and 1 function (Mixin):
 - [`@InjectReactive`](#ProvideReactive)
 - [`@Emit`](#Emit)
 - [`@Ref`](#Ref)
+- [`@State`](#State)
+- [`@Getter`](#Getter)
+- [`@Mutation`](#Mutation)
+- [`@Action`](#Action)
 - `@Component` (**provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 - `Mixins` (the helper function named `mixins` **provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 
@@ -369,7 +373,7 @@ is equivalent to
 
 ```js
 export default {
-  computed() {
+  computed: {
     anotherComponent: {
       cache: false,
       get() {
@@ -382,6 +386,136 @@ export default {
         return this.$refs.aButton as HTMLButtonElement
       }
     }
+  }
+}
+```
+
+### <a id="State"></a> `@State(options?: string | Function | {namespace?: string, selector?: string | Function})` decorator
+##### Require `Vuex`
+
+```ts
+import { Vue, Component, State } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
+  @State() readonly count!: number
+
+  @State('count') readonly counter!: number
+
+  @State((state) => state.todo.items) readonly todoItems!: any[]
+
+  @State({ namespace: 'todoModule' })
+  readonly items!: any[]
+
+  @State({ namespace: 'todoModule', selector: 'items' })
+  readonly moduleItems!: any[]
+
+  @State({ namespace: 'todoModule', selector: (state) => state.items })
+  readonly moduleItems!: any[]
+
+}
+```
+
+is equivalent to
+
+```js
+export default {
+  computed: {
+    ...mapState(['count']),
+    ...mapState({ counter: 'count' }),
+    ...mapState({ todoItems: (state) => state.todo.items }),
+    ...mapState('todoModule', ['items']),
+    ...mapState('todoModule', { moduleItems: 'items' }),
+    ...mapState('todoModule', { moduleItems: (state) => state.items }),
+  }
+}
+```
+
+### <a id="Getter"></a> `@Getter(options?: string | {namespace?: string, name?: string})` decorator
+##### Require `Vuex`
+
+```ts
+import { Vue, Component, Getter } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
+  @Getter() readonly getCount!: () => number
+  @Getter('getItems') readonly getTodoItems!: () => number
+  @Getter({ namespace: 'todoModule' }) readonly getToDoModuleItems!: () => number
+  @Getter({ namespace: 'todoModule', name: 'getToDoModuleCount' }) readonly getTodoCount!: () => number
+
+}
+```
+
+is equivalent to
+
+```js
+export default {
+  computed: {
+    ...mapGetters(['getCount']),
+    ...mapGetters({getTodoItems: 'getItems'}),
+    ...mapGetters('todoModule', ['getToDoModuleItems']),
+    ...mapGetters('todoModule', {getTodoCount: 'getToDoModuleCount'}),
+  }
+}
+```
+
+### <a id="Mutation"></a> `@Mutation(options?: string | {namespace?: string, name?: string})` decorator
+##### Require `Vuex`
+
+```ts
+import { Vue, Component, Mutation } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
+  @Mutation() readonly increment!: () => void
+  @Mutation('decrement') readonly decrease!: () => void
+  @Mutation({ namespace: 'todoModule' }) readonly cleanItems!: () => void
+  @Mutation({ namespace: 'todoModule', name: 'shuffleItems' }) readonly rearrangeItems!: () => void
+
+}
+```
+
+is equivalent to
+
+```js
+export default {
+  computed: {
+    ...mapMutations(['increment']),
+    ...mapMutations({decrease: 'decrement'}),
+    ...mapMutations('todoModule', ['cleanItems']),
+    ...mapMutations('todoModule', {rearrangeItems: 'shuffleItems'}),
+
+  }
+}
+```
+
+### <a id="Action"></a> `@Action(options?: string | {namespace?: string, name?: string})` decorator
+##### Require `Vuex`
+
+```ts
+import { Vue, Component, Action } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
+  @Action() readonly incrementAsync!: () => void
+  @Action('decrementAsync') readonly decrease!: () => void
+  @Action({ namespace: 'todoModule' }) readonly cleanItemsAsync!: () => void
+  @Action({ namespace: 'todoModule', name: 'shuffleItemsAsync' }) readonly rearrangeItems!: () => void
+
+}
+```
+
+is equivalent to
+
+```js
+export default {
+  computed: {
+    ...mapActions(['incrementAsync']),
+    ...mapActions({decrease: 'decrementAsync'}),
+    ...mapActions('todoModule', ['cleanItemsAsync']),
+    ...mapActions('todoModule', {rearrangeItems: 'shuffleItemsAsync'}),
+
   }
 }
 ```

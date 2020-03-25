@@ -1,9 +1,10 @@
 /** vue-property-decorator verson 8.4.1 MIT LICENSE copyright 2019 kaorun343 */
+
 /// <reference types='reflect-metadata'/>
 'use strict'
-import Vue, { PropOptions, WatchOptions } from 'vue'
-import Component, { createDecorator, mixins } from 'vue-class-component'
-import { InjectKey } from 'vue/types/options'
+import Vue, {PropOptions, WatchOptions} from 'vue'
+import Component, {createDecorator, mixins} from 'vue-class-component'
+import {InjectKey} from 'vue/types/options'
 
 export type Constructor = {
   new (...args: any[]): any
@@ -15,6 +16,7 @@ export { Component, Vue, mixins as Mixins }
 const reactiveInjectKey = '__reactiveInject__'
 
 type InjectOptions = { from?: InjectKey; default?: any }
+type StoreSelector = (this: Vue, state: any, getters: any) => any
 
 /**
  * decorator of an inject
@@ -308,6 +310,106 @@ export function Ref(refKey?: string) {
       get(this: Vue) {
         return this.$refs[refKey || key]
       },
+    }
+  })
+}
+
+/**
+ * decorator for mapState
+ * @param options
+ */
+export function State(options?: string | StoreSelector | {namespace?: string, selector?: string | StoreSelector}) {
+  return createDecorator(($options, key) => {
+    const {mapState} = require('vuex');
+    let namespace: string | undefined = undefined;
+    let functionSelector: StoreSelector | undefined = 'function' === typeof options ? options : undefined;
+    let stringSelector: string = 'string' === typeof options ? options : key;
+
+    $options.computed = $options.computed || {};
+
+    if ('object' === typeof options) {
+      if (options.namespace) {
+        namespace = options.namespace;
+      }
+
+      if ('string' === typeof options.selector) {
+        stringSelector = options.selector
+      }
+
+      if ('function' === typeof options.selector) {
+        functionSelector = options.selector
+      }
+    }
+
+    if (namespace) {
+      if (functionSelector) {
+        $options.computed[key] = mapState(namespace, {[key]: functionSelector})[key];
+      } else {
+        $options.computed[key] = mapState(namespace, [stringSelector])[stringSelector];
+      }
+    } else {
+      if (functionSelector) {
+        $options.computed[key] = mapState({[key]: functionSelector})[key];
+      } else {
+        $options.computed[key] = mapState([stringSelector])[stringSelector];
+      }
+    }
+  })
+}
+
+/**
+ * decorator for mapGetters
+ * @param options
+ */
+export function Getter(options?: string | {namespace?: string, name?: string}) {
+  return createDecorator(($options, key) => {
+    const {mapGetters} = require('vuex');
+    const name: string = 'string' === typeof options ? options : 'object' === typeof options ? options.name || key : key;
+
+    $options.computed = $options.computed || {};
+
+    if ('object' === typeof options  && options.namespace) {
+      $options.computed[key] = mapGetters(options.namespace, [name])[name];
+    } else {
+      $options.computed[key] = mapGetters([name])[name];
+    }
+  })
+}
+
+/**
+ * decorator for mapMutations
+ * @param options
+ */
+export function Mutation(options?: string | {namespace?: string, name?: string}) {
+  return createDecorator(($options, key) => {
+    const {mapMutations} = require('vuex');
+    const name: string = 'string' === typeof options ? options : 'object' === typeof options ? options.name || key : key;
+
+    $options.methods = $options.methods || {};
+
+    if ('object' === typeof options  && options.namespace) {
+      $options.methods[key] = mapMutations(options.namespace, [name])[name];
+    } else {
+      $options.methods[key] = mapMutations([name])[name];
+    }
+  })
+}
+
+/**
+ * decorator for mapActions
+ * @param options
+ */
+export function Action(options?: string | {namespace?: string, name?: string}) {
+  return createDecorator(($options, key) => {
+    const {mapActions} = require('vuex');
+    const name: string = 'string' === typeof options ? options : 'object' === typeof options ? options.name || key : key;
+
+    $options.methods = $options.methods || {};
+
+    if ('object' === typeof options  && options.namespace) {
+      $options.methods[key] = mapActions(options.namespace, [name])[name];
+    } else {
+      $options.methods[key] = mapActions([name])[name];
     }
   })
 }
