@@ -3,7 +3,7 @@
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
 import Component, { createDecorator, mixins } from 'vue-class-component'
-import { InjectKey } from 'vue/types/options'
+import { InjectKey, ComponentOptions } from 'vue/types/options'
 
 export type Constructor = {
   new (...args: any[]): any
@@ -97,6 +97,17 @@ function needToProduceProvide(original: any) {
   )
 }
 
+function inheritInjected(componentOptions: ComponentOptions<Vue>) {
+    // inject parent reactive services (if any)
+    if (!Array.isArray(componentOptions.inject)) {
+        componentOptions.inject = componentOptions.inject || {}
+        componentOptions.inject[reactiveInjectKey] = {
+          from: reactiveInjectKey,
+          default: {},
+        }
+    }
+}
+
 /**
  * decorator of a provide
  * @param key key
@@ -105,6 +116,7 @@ function needToProduceProvide(original: any) {
 export function Provide(key?: string | symbol) {
   return createDecorator((componentOptions, k) => {
     let provide: any = componentOptions.provide
+    inheritInjected(componentOptions)
     if (needToProduceProvide(provide)) {
       provide = componentOptions.provide = produceProvide(provide)
     }
@@ -120,14 +132,7 @@ export function Provide(key?: string | symbol) {
 export function ProvideReactive(key?: string | symbol) {
   return createDecorator((componentOptions, k) => {
     let provide: any = componentOptions.provide
-    // inject parent reactive services (if any)
-    if (!Array.isArray(componentOptions.inject)) {
-      componentOptions.inject = componentOptions.inject || {}
-      componentOptions.inject[reactiveInjectKey] = {
-        from: reactiveInjectKey,
-        default: {},
-      }
-    }
+    inheritInjected(componentOptions)
     if (needToProduceProvide(provide)) {
       provide = componentOptions.provide = produceProvide(provide)
     }
