@@ -66,22 +66,20 @@ function produceProvide(original: any) {
     let rv = typeof original === 'function' ? original.call(this) : original
     rv = Object.create(rv || null)
     // set reactive services (propagates previous services if necessary)
-    rv[reactiveInjectKey] = this[reactiveInjectKey] || {}
+    rv[reactiveInjectKey] = Object.create(this[reactiveInjectKey] || {})
     for (let i in provide.managed) {
       rv[provide.managed[i]] = this[i]
     }
     for (let i in provide.managedReactive) {
-      rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
-      if (!rv[reactiveInjectKey].hasOwnProperty(provide.managedReactive[i])) {
+        rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
         Object.defineProperty(
-          rv[reactiveInjectKey],
-          provide.managedReactive[i],
-          {
+            rv[reactiveInjectKey],
+            provide.managedReactive[i],
+            {
             enumerable: true,
             get: () => this[i],
-          },
+            },
         )
-      }
     }
     return rv
   }
