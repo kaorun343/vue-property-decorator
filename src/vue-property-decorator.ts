@@ -280,7 +280,8 @@ export function Emit(event?: string) {
             this.$emit(emitName, args)
           }
         } else {
-          this.$emit(emitName, returnValue)
+            args.unshift(returnValue);
+            this.$emit(emitName, ...args)
         }
       }
 
