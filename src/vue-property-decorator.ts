@@ -1,4 +1,4 @@
-/** vue-property-decorator verson 8.4.1 MIT LICENSE copyright 2019 kaorun343 */
+/** vue-property-decorator verson 8.4.2 MIT LICENSE copyright 2019 kaorun343 */
 /// <reference types='reflect-metadata'/>
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
@@ -46,7 +46,7 @@ export function InjectReactive(options?: InjectOptions | InjectKey) {
       const fromKey = !!options ? (options as any).from || options : key
       const defaultVal = (!!options && (options as any).default) || undefined
       if (!componentOptions.computed) componentOptions.computed = {}
-      componentOptions.computed![key] = function() {
+      componentOptions.computed![key] = function () {
         const obj = (this as any)[reactiveInjectKey]
         return obj ? obj[fromKey] : defaultVal
       }
@@ -62,7 +62,7 @@ interface provideObj {
 type provideFunc = ((this: any) => Object) & provideObj
 
 function produceProvide(original: any) {
-  let provide: provideFunc = function(this: any) {
+  let provide: provideFunc = function (this: any) {
     let rv = typeof original === 'function' ? original.call(this) : original
     rv = Object.create(rv || null)
     // set reactive services (propagates previous services if necessary)
@@ -261,7 +261,7 @@ const hyphenate = (str: string) => str.replace(hyphenateRE, '-$1').toLowerCase()
  * @return MethodDecorator
  */
 export function Emit(event?: string) {
-  return function(_target: Vue, propertyKey: string, descriptor: any) {
+  return function (_target: Vue, propertyKey: string, descriptor: any) {
     const key = hyphenate(propertyKey)
     const original = descriptor.value
     descriptor.value = function emitter(...args: any[]) {
@@ -290,7 +290,7 @@ export function Emit(event?: string) {
       const returnValue: any = original.apply(this, args)
 
       if (isPromise(returnValue)) {
-        returnValue.then(returnValue => {
+        returnValue.then((returnValue) => {
           emit(returnValue)
         })
       } else {
