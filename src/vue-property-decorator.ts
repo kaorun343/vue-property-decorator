@@ -71,15 +71,15 @@ function produceProvide(original: any) {
       rv[provide.managed[i]] = this[i]
     }
     for (let i in provide.managedReactive) {
-        rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
-        Object.defineProperty(
-            rv[reactiveInjectKey],
-            provide.managedReactive[i],
-            {
-            enumerable: true,
-            get: () => this[i],
-            },
-        )
+      rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
+      Object.defineProperty(
+          rv[reactiveInjectKey],
+          provide.managedReactive[i],
+          {
+          enumerable: true,
+          get: () => this[i],
+          },
+      )
     }
     return rv
   }
@@ -280,8 +280,8 @@ export function Emit(event?: string) {
             this.$emit(emitName, args)
           }
         } else {
-            args.unshift(returnValue);
-            this.$emit(emitName, ...args)
+          args.unshift(returnValue);
+          this.$emit(emitName, ...args)
         }
       }
 
