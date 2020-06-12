@@ -290,9 +290,7 @@ export function Emit(event?: string) {
       const returnValue: any = original.apply(this, args)
 
       if (isPromise(returnValue)) {
-        returnValue.then((returnValue) => {
-          emit(returnValue)
-        })
+        returnValue.then(emit)
       } else {
         emit(returnValue)
       }
