@@ -72,16 +72,10 @@ function produceProvide(original: any) {
     }
     for (let i in provide.managedReactive) {
       rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
-      if (!rv[reactiveInjectKey].hasOwnProperty(provide.managedReactive[i])) {
-        Object.defineProperty(
-          rv[reactiveInjectKey],
-          provide.managedReactive[i],
-          {
-            enumerable: true,
-            get: () => this[i],
-          },
-        )
-      }
+      Object.defineProperty(rv[reactiveInjectKey], provide.managedReactive[i], {
+        enumerable: true,
+        get: () => this[i],
+      })
     }
     return rv
   }
