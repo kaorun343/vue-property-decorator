@@ -55,15 +55,15 @@ is equivalent to
 export default {
   props: {
     propA: {
-      type: Number
+      type: Number,
     },
     propB: {
-      default: 'default value'
+      default: 'default value',
     },
     propC: {
-      type: [String, Boolean]
-    }
-  }
+      type: [String, Boolean],
+    },
+  },
 }
 ```
 
@@ -105,8 +105,8 @@ is equivalent to
 export default {
   props: {
     name: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
     syncedName: {
@@ -115,9 +115,9 @@ export default {
       },
       set(value) {
         this.$emit('update:name', value)
-      }
-    }
-  }
+      },
+    },
+  },
 }
 ```
 
@@ -140,13 +140,13 @@ is equivalent to
 export default {
   model: {
     prop: 'checked',
-    event: 'change'
+    event: 'change',
   },
   props: {
     checked: {
-      type: Boolean
-    }
-  }
+      type: Boolean,
+    },
+  },
 }
 ```
 
@@ -179,27 +179,27 @@ export default {
       {
         handler: 'onChildChanged',
         immediate: false,
-        deep: false
-      }
+        deep: false,
+      },
     ],
     person: [
       {
         handler: 'onPersonChanged1',
         immediate: true,
-        deep: true
+        deep: true,
       },
       {
         handler: 'onPersonChanged2',
         immediate: false,
-        deep: false
-      }
-    ]
+        deep: false,
+      },
+    ],
   },
   methods: {
     onChildChanged(val, oldVal) {},
     onPersonChanged1(val, oldVal) {},
-    onPersonChanged2(val, oldVal) {}
-  }
+    onPersonChanged2(val, oldVal) {},
+  },
 }
 ```
 
@@ -232,20 +232,20 @@ export const MyComponent = Vue.extend({
     foo: 'foo',
     bar: 'bar',
     optional: { from: 'optional', default: 'default' },
-    [symbol]: symbol
+    baz: symbol,
   },
   data() {
     return {
       foo: 'foo',
-      baz: 'bar'
+      baz: 'bar',
     }
   },
   provide() {
     return {
       foo: this.foo,
-      bar: this.baz
+      bar: this.baz,
     }
-  }
+  },
 })
 ```
 
@@ -303,7 +303,7 @@ export default class YourComponent extends Vue {
 
   @Emit()
   promise() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         resolve(20)
       }, 0)
@@ -318,7 +318,7 @@ is equivalent to
 export default {
   data() {
     return {
-      count: 0
+      count: 0,
     }
   },
   methods: {
@@ -337,17 +337,17 @@ export default {
       this.$emit('on-input-change', e.target.value, e)
     },
     promise() {
-      const promise = new Promise(resolve => {
+      const promise = new Promise((resolve) => {
         setTimeout(() => {
           resolve(20)
         }, 0)
       })
 
-      promise.then(value => {
+      promise.then((value) => {
         this.$emit('promise', value)
       })
-    }
-  }
+    },
+  },
 }
 ```
 
