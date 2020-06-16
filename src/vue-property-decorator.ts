@@ -73,12 +73,12 @@ function produceProvide(original: any) {
     for (let i in provide.managedReactive) {
       rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
       Object.defineProperty(
-          rv[reactiveInjectKey],
-          provide.managedReactive[i],
-          {
-          enumerable: true,
-          get: () => this[i],
-          },
+        rv[reactiveInjectKey],
+        provide.managedReactive[i],
+        {
+        enumerable: true,
+        get: () => this[i],
+        },
       )
     }
     return rv
@@ -96,14 +96,14 @@ function needToProduceProvide(original: any) {
 }
 
 function inheritInjected(componentOptions: ComponentOptions<Vue>) {
-    // inject parent reactive services (if any)
-    if (!Array.isArray(componentOptions.inject)) {
-        componentOptions.inject = componentOptions.inject || {}
-        componentOptions.inject[reactiveInjectKey] = {
-          from: reactiveInjectKey,
-          default: {},
-        }
+  // inject parent reactive services (if any)
+  if (!Array.isArray(componentOptions.inject)) {
+    componentOptions.inject = componentOptions.inject || {}
+    componentOptions.inject[reactiveInjectKey] = {
+      from: reactiveInjectKey,
+      default: {},
     }
+  }
 }
 
 /**

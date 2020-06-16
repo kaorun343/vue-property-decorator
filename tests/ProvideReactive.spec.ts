@@ -145,5 +145,77 @@ describe(ProvideReactive, () => {
         expect(component.one).toBe(newValue)
       })
     })
+
+    describe('multiple provider chains', () => {
+      const key = 'KEY'
+      const value1 = 'VALUE_1'
+      const value2 = 'VALUE_2'
+
+      @Component
+      class ParentChain1 extends Vue {
+        @ProvideReactive(key) provided = value1
+      }
+
+      @Component
+      class ChildChain1 extends Vue {
+        @InjectReactive(key) injected!: string
+      }
+
+      @Component
+      class ParentChain2 extends Vue {
+        @ProvideReactive(key) provided = value2
+      }
+
+      @Component
+      class ChildChain2 extends Vue {
+        @InjectReactive(key) injected!: string
+      }
+      const parent1 = new ParentChain1()
+      const child1 = new ChildChain1({ parent: parent1 })
+      const parent2 = new ParentChain2()
+      const child2 = new ChildChain2( { parent: parent2})
+
+      test('respect values in chains', () => {
+        expect(child1.injected).toBe(value1)
+        expect(child2.injected).toBe(value2)
+      })
+
+    })
+
+    describe('middle component participating in provider chain', () => {
+      const rootKey = Symbol()
+      const middleKey = Symbol()
+      const rootValue = 'ROOT_VALUE'
+      const middleValue = 'MIDDLE_VALUE'
+  
+      @Component
+      class RootComponent extends Vue {
+        @ProvideReactive(rootKey) baz = rootValue
+      }
+  
+      const root = new RootComponent()
+  
+      @Component
+      class MiddleComponent extends Vue {
+        @ProvideReactive(middleKey) foo = middleValue
+      }
+  
+      @Component
+      class ChildComponent extends Vue {
+        @InjectReactive(rootKey) baz!: string
+        @InjectReactive(middleKey) foo!: string
+      }
+  
+      const middle = new MiddleComponent({ parent: root })
+      const child = new ChildComponent({ parent: middle })
+  
+      test('provided values from the chain', () => {
+        expect(child.baz).toBe(rootValue)
+        expect(child.foo).toBe(middleValue)
+      })
+  
+    })
+
+
   })
 })
