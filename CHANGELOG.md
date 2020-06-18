@@ -1,5 +1,9 @@
 Changelog
 
+# v9.0.0
+
+- Move `vue-class-component` to `peerDependencies`
+
 # v8.5.1
 
 - Move `vue-class-component` to `dependencies`
