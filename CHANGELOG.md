@@ -1,5 +1,9 @@
 Changelog
 
+# v8.5.1
+
+- Move `vue-class-component` to `dependencies`
+
 # v8.5.0
 
 - Revert #299
