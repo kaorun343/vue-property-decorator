@@ -385,3 +385,37 @@ export default {
   }
 }
 ```
+
+### <a id="Computed"></a> `@Computed(computedKey?: string)` decorator
+
+```html
+<div>{{myValue}}</div>
+```
+
+```ts
+import { Vue, Component, Computed } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
+  !myValue:string
+  @Computed('myValue')
+  myValueComputed(){
+    return 'foo'
+  }
+  bar(){
+    console.log(this.myValue)
+  }
+}
+```
+
+is equivalent to
+
+```js
+export default {
+  computed() {
+    myValue(){
+      return 'foo'
+    }
+  }
+}
+```

@@ -313,3 +313,14 @@ export function Ref(refKey?: string) {
 function isPromise(obj: any): obj is Promise<any> {
   return obj instanceof Promise || (obj && typeof obj.then === 'function')
 }
+
+/**
+ * decorator of a computed value
+ * @param computedKey the computed key defined in template
+ */
+export function Computed(computedKey: string) {
+  return createDecorator(function (options: any, handler: string) {
+      options.computed = options.computed || {};
+      options.computed[computedKey] = function () { return this[handler].apply(this) };
+  });
+}
