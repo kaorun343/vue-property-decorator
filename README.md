@@ -397,7 +397,7 @@ import { Vue, Component, Computed } from 'vue-property-decorator'
 
 @Component
 export default class YourComponent extends Vue {
-  !myValue:string
+  myValue!:string
   @Computed('myValue')
   myValueComputed(){
     return 'foo'
