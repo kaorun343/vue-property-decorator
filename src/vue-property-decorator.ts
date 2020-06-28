@@ -3,7 +3,7 @@
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
 import Component, { createDecorator, mixins } from 'vue-class-component'
-import { InjectKey } from 'vue/types/options'
+import { InjectKey, ComponentOptions } from 'vue/types/options'
 
 export type Constructor = {
   new (...args: any[]): any
@@ -66,16 +66,20 @@ function produceProvide(original: any) {
     let rv = typeof original === 'function' ? original.call(this) : original
     rv = Object.create(rv || null)
     // set reactive services (propagates previous services if necessary)
-    rv[reactiveInjectKey] = this[reactiveInjectKey] || {}
+    rv[reactiveInjectKey] = Object.create(this[reactiveInjectKey] || {})
     for (let i in provide.managed) {
       rv[provide.managed[i]] = this[i]
     }
     for (let i in provide.managedReactive) {
       rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
-      Object.defineProperty(rv[reactiveInjectKey], provide.managedReactive[i], {
+      Object.defineProperty(
+        rv[reactiveInjectKey],
+        provide.managedReactive[i],
+        {
         enumerable: true,
         get: () => this[i],
-      })
+        },
+      )
     }
     return rv
   }
@@ -91,6 +95,17 @@ function needToProduceProvide(original: any) {
   )
 }
 
+function inheritInjected(componentOptions: ComponentOptions<Vue>) {
+  // inject parent reactive services (if any)
+  if (!Array.isArray(componentOptions.inject)) {
+    componentOptions.inject = componentOptions.inject || {}
+    componentOptions.inject[reactiveInjectKey] = {
+      from: reactiveInjectKey,
+      default: {},
+    }
+  }
+}
+
 /**
  * decorator of a provide
  * @param key key
@@ -99,6 +114,7 @@ function needToProduceProvide(original: any) {
 export function Provide(key?: string | symbol) {
   return createDecorator((componentOptions, k) => {
     let provide: any = componentOptions.provide
+    inheritInjected(componentOptions)
     if (needToProduceProvide(provide)) {
       provide = componentOptions.provide = produceProvide(provide)
     }
@@ -114,14 +130,7 @@ export function Provide(key?: string | symbol) {
 export function ProvideReactive(key?: string | symbol) {
   return createDecorator((componentOptions, k) => {
     let provide: any = componentOptions.provide
-    // inject parent reactive services (if any)
-    if (!Array.isArray(componentOptions.inject)) {
-      componentOptions.inject = componentOptions.inject || {}
-      componentOptions.inject[reactiveInjectKey] = {
-        from: reactiveInjectKey,
-        default: {},
-      }
-    }
+    inheritInjected(componentOptions)
     if (needToProduceProvide(provide)) {
       provide = componentOptions.provide = produceProvide(provide)
     }
@@ -271,13 +280,8 @@ export function Emit(event?: string) {
             this.$emit(emitName, ...args)
           }
         } else {
-          if (args.length === 0) {
-            this.$emit(emitName, returnValue)
-          } else if (args.length === 1) {
-            this.$emit(emitName, returnValue, args[0])
-          } else {
-            this.$emit(emitName, returnValue, ...args)
-          }
+          args.unshift(returnValue);
+          this.$emit(emitName, ...args)
         }
       }
 
