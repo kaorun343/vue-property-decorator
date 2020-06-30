@@ -77,6 +77,7 @@ function produceProvide(original: any) {
         provide.managedReactive[i],
         {
         enumerable: true,
+        configurable: true,
         get: () => this[i],
         },
       )
