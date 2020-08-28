@@ -254,6 +254,34 @@ export function Watch(path: string, options: WatchOptions = {}) {
   })
 }
 
+/**
+ * decorator of a watch function for elements of an array
+ * @param  paths the paths or the expression to observe
+ * @param  WatchOption
+ * @return MethodDecorator
+ */
+export function WatchPaths(paths: string[], options: WatchOptions = {}) {
+  const { deep = false, immediate = false } = options;
+
+  return createDecorator((componentOptions, handler) => {
+      if(typeof componentOptions.watch !== 'object') {
+          componentOptions.watch = Object.create(null);
+      }
+
+      const watch: any = componentOptions.watch;
+
+      paths.forEach(path => {
+        if(typeof watch[path] === 'object' && !Array.isArray(watch[path])){
+            watch[path] = [watch[path]];
+        }else if(typeof watch[path] === 'undefined') {
+          watch[path] = [];
+        }
+
+        watch[path].push({handler, deep, immediate});
+      });
+  });
+}
+
 // Code copied from Vue/src/shared/util.js
 const hyphenateRE = /\B([A-Z])/g
 const hyphenate = (str: string) => str.replace(hyphenateRE, '-$1').toLowerCase()
