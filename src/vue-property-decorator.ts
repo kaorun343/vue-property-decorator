@@ -228,14 +228,18 @@ export function PropSync(
   }
 }
 
+type SupportSyncWatchOptions = WatchOptions & {
+  sync?: boolean
+}
+
 /**
  * decorator of a watch function
  * @param  path the path or the expression to observe
- * @param  WatchOption
+ * @param  WatchOption & { sync?: boolean } support watch sync mode.
  * @return MethodDecorator
  */
-export function Watch(path: string, options: WatchOptions = {}) {
-  const { deep = false, immediate = false } = options
+export function Watch(path: string, options: SupportSyncWatchOptions = {}) {
+  const { deep = false, immediate = false, sync = false } = options
 
   return createDecorator((componentOptions, handler) => {
     if (typeof componentOptions.watch !== 'object') {
@@ -250,7 +254,7 @@ export function Watch(path: string, options: WatchOptions = {}) {
       watch[path] = []
     }
 
-    watch[path].push({ handler, deep, immediate })
+    watch[path].push({ handler, deep, immediate, sync })
   })
 }
 
