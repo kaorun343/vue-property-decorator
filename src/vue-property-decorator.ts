@@ -1,4 +1,4 @@
-/** vue-property-decorator verson 9.0.0 MIT LICENSE copyright 2020 kaorun343 */
+/** vue-property-decorator verson 9.0.1 MIT LICENSE copyright 2020 kaorun343 */
 /// <reference types='reflect-metadata'/>
 'use strict'
 import Vue, { PropOptions, WatchOptions } from 'vue'
@@ -72,14 +72,10 @@ function produceProvide(original: any) {
     }
     for (let i in provide.managedReactive) {
       rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
-      Object.defineProperty(
-        rv[reactiveInjectKey],
-        provide.managedReactive[i],
-        {
+      Object.defineProperty(rv[reactiveInjectKey], provide.managedReactive[i], {
         enumerable: true,
         get: () => this[i],
-        },
-      )
+      })
     }
     return rv
   }
@@ -280,7 +276,7 @@ export function Emit(event?: string) {
             this.$emit(emitName, ...args)
           }
         } else {
-          args.unshift(returnValue);
+          args.unshift(returnValue)
           this.$emit(emitName, ...args)
         }
       }

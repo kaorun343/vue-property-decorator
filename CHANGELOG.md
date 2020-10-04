@@ -1,5 +1,10 @@
 Changelog
 
+# v9.0.1
+
+- Fix ProvideReactive (#328)
+- Fix README.md (#329)
+
 # v9.0.0
 
 - Move `vue-class-component` to `peerDependencies`
