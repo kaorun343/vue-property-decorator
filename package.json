@@ -29,8 +29,8 @@
     "rollup": "^1.15.6",
     "ts-jest": "^24.0.2",
     "typescript": "^3.5.2",
-    "vue": "^2.6.10",
-    "vue-class-component": "^7.2.3"
+    "vue": "^3.0.0",
+    "vue-class-component": "^8.0.0-beta.4"
   },
   "typings": "./lib/vue-property-decorator.d.ts",
   "dependencies": {},

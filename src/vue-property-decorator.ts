@@ -1,9 +1,13 @@
 /** vue-property-decorator verson 9.0.2 MIT LICENSE copyright 2020 kaorun343 */
 /// <reference types='reflect-metadata'/>
 'use strict'
-import Vue, { PropOptions, WatchOptions } from 'vue'
-import Component, { createDecorator, mixins } from 'vue-class-component'
-import { InjectKey, ComponentOptions } from 'vue/types/options'
+import { Prop, WatchOptions } from 'vue'
+import { Options as Component, Vue, createDecorator, mixins } from 'vue-class-component'
+import { ComponentOptions } from 'vue'
+
+type PropOptions = Prop<any>;
+
+type InjectKey = string | symbol;
 
 export type Constructor = {
   new (...args: any[]): any
@@ -215,7 +219,7 @@ export function PropSync(
         get() {
           return (this as any)[propName]
         },
-        set(value) {
+        set(value: any) {
           // @ts-ignore
           this.$emit(`update:${propName}`, value)
         },
