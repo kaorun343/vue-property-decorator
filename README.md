@@ -22,6 +22,7 @@ There are several decorators and 1 function (Mixin):
 - [`@Prop`](#Prop)
 - [`@PropSync`](#PropSync)
 - [`@Model`](#Model)
+- [`@ModelSync](#ModelSync)
 - [`@Watch`](#Watch)
 - [`@Provide`](#Provide)
 - [`@Inject`](#Provide)
@@ -151,6 +152,45 @@ export default {
 ```
 
 `@Model` property can also set `type` property from its type definition via `reflect-metadata` .
+
+### <a id="ModelSync"></a> `@ModelSync(propName: string, event?: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
+
+```ts
+import { Vue, Component, ModelSync } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
+  @ModelSync('checked', 'change', { type: Boolean }) readonly checkedValue!: boolean
+}
+```
+
+is equivalent to
+
+```js
+export default {
+  model: {
+    prop: 'checked',
+    event: 'change'
+  },
+  props: {
+    checked: {
+      type: Boolean
+    }
+  },
+  computed: {
+    checkedValue: {
+      get() {
+        return this.checked
+      },
+      set(value) {
+        this.$emit('change', value)
+      }
+    }
+  }
+}
+```
+
+`@ModelSync` property can also set `type` property from its type definition via `reflect-metadata` .
 
 ### <a id="Watch"></a> `@Watch(path: string, options: WatchOptions = {})` decorator
 
