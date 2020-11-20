@@ -32,7 +32,7 @@
     "vue": "^2.6.10",
     "vue-class-component": "^7.2.3"
   },
-  "typings": "./lib/vue-property-decorator.d.ts",
+  "typings": "./lib/index.d.ts",
   "dependencies": {},
   "peerDependencies": {
     "vue": "*",
