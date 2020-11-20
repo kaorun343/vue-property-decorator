@@ -7,11 +7,11 @@ Changelog
 - Add `@ModelSync` decorator (#254)
 - Add `@VModel` decorator (#276)
 
-# Bug fixes
+## Bug fixes
 
 - Make reactive provided values configureable (#330)
 
-# Refactoring / others
+## Refactoring / others
 
 - **Breaking change** Rename `vue-property-decorator.ts` to `index.ts` (c8c88642f589c8cb1a2f3a09034a01b17152bae7)
   - Exported files are also renamed from `vue-property-decorator.*` to `index.*`
