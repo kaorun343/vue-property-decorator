@@ -1,5 +1,11 @@
 Changelog
 
+# v9.1.1
+
+## Bug fixes
+
+- Fix `main` and `module` field in `package.json`
+
 # v9.1.0
 
 ## New features
