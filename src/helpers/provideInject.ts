@@ -27,6 +27,7 @@ export function produceProvide(original: any) {
       rv[provide.managedReactive[i]] = this[i] // Duplicates the behavior of `@Provide`
       Object.defineProperty(rv[reactiveInjectKey], provide.managedReactive[i], {
         enumerable: true,
+        configurable: true,
         get: () => this[i],
       })
     }
