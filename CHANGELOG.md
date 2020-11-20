@@ -1,5 +1,11 @@
 Changelog
 
+# v9.1.2
+
+## Bug fixes
+
+- Fix `typings` field in `package.json` (#356)
+
 # v9.1.1
 
 ## Bug fixes
