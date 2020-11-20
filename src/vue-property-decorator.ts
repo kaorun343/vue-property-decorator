@@ -281,18 +281,19 @@ export function Ref(refKey?: string) {
 
 /**
  * decorator for capturings v-model binding to component
- * @param propsArgs the options for the prop
+ * @param options the options for the prop
  */
-export function VModel(propsArgs: PropOptions = {}) {
+export function VModel(options: PropOptions = {}) {
   const valueKey: string = 'value'
   return createDecorator((componentOptions, key) => {
-    ;(componentOptions.props || ((componentOptions.props = {}) as any))[valueKey] = propsArgs
+    ;(componentOptions.props || ((componentOptions.props = {}) as any))[
+      valueKey
+    ] = options
     ;(componentOptions.computed || (componentOptions.computed = {}))[key] = {
       get() {
         return (this as any)[valueKey]
       },
-      set(value: any) {
-        // @ts-ignore
+      set(this: Vue, value: any) {
         this.$emit('input', value)
       },
     }
