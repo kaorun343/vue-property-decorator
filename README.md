@@ -30,6 +30,7 @@ There are several decorators and 1 function (Mixin):
 - [`@InjectReactive`](#ProvideReactive)
 - [`@Emit`](#Emit)
 - [`@Ref`](#Ref)
+- [`@VModel`](#VModel)
 - `@Component` (**provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 - `Mixins` (the helper function named `mixins` **provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 
@@ -420,6 +421,39 @@ export default {
       cache: false,
       get() {
         return this.$refs.aButton as HTMLButtonElement
+      }
+    }
+  }
+}
+```
+
+### <a id="VModel"></a> `@VModel(propsArgs?: PropOptions)` decorator
+
+```ts
+import { Vue, Component, VModel } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
+  @VModel({ type: String }) name!: string
+}
+```
+
+is equivalent to
+
+```js
+export default {
+  props: {
+    value: {
+      type: String
+    }
+  },
+  computed: {
+    name: {
+      get() {
+        return this.value
+      },
+      set(value) {
+        this.$emit('input', value)
       }
     }
   }
