@@ -1,4 +1,4 @@
-import { PropOptions } from 'vue'
+import Vue, { PropOptions } from 'vue'
 import { createDecorator } from 'vue-class-component'
 
 /**
