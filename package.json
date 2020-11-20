@@ -2,8 +2,8 @@
   "name": "vue-property-decorator",
   "version": "9.1.0",
   "description": "property decorators for Vue Component",
-  "main": "lib/vue-property-decorator.umd.js",
-  "module": "lib/vue-property-decorator.js",
+  "main": "lib/index.umd.js",
+  "module": "lib/index.js",
   "keywords": [
     "vue",
     "typescript",
