@@ -1,5 +1,7 @@
 import Vue from 'vue'
-import { Provide, Component, Inject } from '../src'
+import Component from 'vue-class-component'
+import { Inject } from '../../src/decorators/Inject'
+import { Provide } from '../../src/decorators/Provide'
 
 describe(Provide, () => {
   describe('when key is not given', () => {
@@ -39,7 +41,7 @@ describe(Provide, () => {
 
     const parent = new ParentComponent()
     const node = new NodeComponent({ parent })
-    const component = new ChildComponent({ parent: node  })
+    const component = new ChildComponent({ parent: node })
 
     test('provides value', () => {
       expect(component.node).toBe('node')

@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import { Watch, Component } from '../src'
+import Component from 'vue-class-component'
+import { Watch } from '../../src/decorators/Watch'
 
 describe(Watch, () => {
   const expressionA = 'EXPRESSION_A'

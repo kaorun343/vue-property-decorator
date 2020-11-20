@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import { Inject, Component } from '../src'
+import Component from 'vue-class-component'
+import { Inject } from '../../src/decorators/Inject'
 
 describe(Inject, () => {
   describe('when inject key is given', () => {
@@ -9,9 +10,9 @@ describe(Inject, () => {
     @Component({
       provide() {
         return {
-          [injectKey]: value
+          [injectKey]: value,
         }
-      }
+      },
     })
     class ParentComponent extends Vue {}
 
@@ -34,9 +35,9 @@ describe(Inject, () => {
     @Component({
       provide() {
         return {
-          [propertyName]: value
+          [propertyName]: value,
         }
-      }
+      },
     })
     class ParentComponent extends Vue {}
 

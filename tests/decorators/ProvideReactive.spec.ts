@@ -1,11 +1,9 @@
 import Vue from 'vue'
-import {
-  Component,
-  ProvideReactive,
-  InjectReactive,
-  Provide,
-  Inject
-} from '../src'
+import Component from 'vue-class-component'
+import { Inject } from '../../src/decorators/Inject'
+import { InjectReactive } from '../../src/decorators/InjectReactive'
+import { Provide } from '../../src/decorators/Provide'
+import { ProvideReactive } from '../../src/decorators/ProvideReactive'
 
 describe(ProvideReactive, () => {
   describe('when key is not given', () => {
@@ -41,7 +39,6 @@ describe(ProvideReactive, () => {
     })
   })
 
-
   describe('is compatible with @Provide()', () => {
     @Component
     class ParentComponent extends Vue {
@@ -61,7 +58,6 @@ describe(ProvideReactive, () => {
     })
   })
 
-
   describe('can @Inject() dependency provided using @ProvideReactive()', () => {
     @Component
     class ParentComponent extends Vue {
@@ -80,7 +76,6 @@ describe(ProvideReactive, () => {
     })
   })
 
-
   describe('does not override parent reactive dependencies', () => {
     @Component
     class ParentComponent extends Vue {
@@ -98,7 +93,7 @@ describe(ProvideReactive, () => {
 
     const parent = new ParentComponent()
     const node = new NodeComponent({ parent })
-    const component = new ChildComponent({ parent: node  })
+    const component = new ChildComponent({ parent: node })
 
     test('provides value', () => {
       expect(component.node).toBe('node')
@@ -111,7 +106,6 @@ describe(ProvideReactive, () => {
       expect(component.node).toBe('new node')
     })
   })
-
 
   describe('when key is given', () => {
     const key = 'KEY'
@@ -173,13 +167,12 @@ describe(ProvideReactive, () => {
       const parent1 = new ParentChain1()
       const child1 = new ChildChain1({ parent: parent1 })
       const parent2 = new ParentChain2()
-      const child2 = new ChildChain2( { parent: parent2})
+      const child2 = new ChildChain2({ parent: parent2 })
 
       test('respect values in chains', () => {
         expect(child1.injected).toBe(value1)
         expect(child2.injected).toBe(value2)
       })
-
     })
 
     describe('middle component participating in provider chain', () => {
@@ -213,9 +206,6 @@ describe(ProvideReactive, () => {
         expect(child.baz).toBe(rootValue)
         expect(child.foo).toBe(middleValue)
       })
-
     })
-
-
   })
 })

@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Prop } from '../src'
+import { Prop } from '../../src/decorators/Prop'
 
 describe(Prop, () => {
   describe('when constructor is given', () => {

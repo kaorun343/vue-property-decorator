@@ -1,6 +1,7 @@
-import Vue from 'vue'
 import 'reflect-metadata'
-import { Component, PropSync } from '../src'
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import { PropSync } from '../../src/decorators/PropSync'
 
 describe(PropSync, () => {
   const propertyName = 'PROPERTY_NAME'

@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import { Emit, Component } from '../src'
+import Component from 'vue-class-component'
+import { Emit } from '../../src/decorators/Emit'
 
 describe(Emit, () => {
   describe('when event name is given', () => {
@@ -103,7 +104,7 @@ describe(Emit, () => {
       count = 0
 
       @Emit() increment(n1: number, n2: number) {
-        return n1 + n2;
+        return n1 + n2
       }
     }
 

@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import { Ref, Component } from '../src'
+import Component from 'vue-class-component'
+import { Ref } from '../../src/decorators/Ref'
 
 describe(Ref, () => {
   describe('when key is not given', () => {
