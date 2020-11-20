@@ -1,5 +1,23 @@
 Changelog
 
+# v9.1.0
+
+## New features
+
+- Add `@ModelSync` decorator (#254)
+- Add `@VModel` decorator (#276)
+
+# Bug fixes
+
+- Make reactive provided values configureable (#330)
+
+# Refactoring / others
+
+- **Breaking change** Rename `vue-property-decorator.ts` to `index.ts` (c8c88642f589c8cb1a2f3a09034a01b17152bae7)
+  - Exported files are also renamed from `vue-property-decorator.*` to `index.*`
+- Split source code into separate files (d7954f8ca1a729a53da207317139fc76cefe98b2)
+- Bump dependency versions
+
 # v9.0.2
 
 # v9.0.1 (Failed to publish to npm)
