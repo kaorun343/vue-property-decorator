@@ -15,6 +15,7 @@ export function applyMetadata(
     if (
       !Array.isArray(options) &&
       typeof options !== 'function' &&
+      !options.hasOwnProperty('type') &&
       typeof options.type === 'undefined'
     ) {
       const type = Reflect.getMetadata('design:type', target, key)

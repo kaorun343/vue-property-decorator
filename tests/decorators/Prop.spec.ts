@@ -61,4 +61,75 @@ describe(Prop, () => {
       expect(props[propertyName]).toEqual({ type: Boolean })
     })
   })
+
+  describe('Boolean type', () => {
+    describe('when type is not given', () => {
+      @Component
+      class Test extends Vue {
+        @Prop() target!: boolean
+      }
+
+      describe('when prop is given', () => {
+        const component = new Test({ propsData: { target: true } })
+
+        it('returns true', () => {
+          expect(component.target).toBe(true)
+        })
+      })
+
+      describe('when prop is not given', () => {
+        const component = new Test()
+
+        it('returns false', () => {
+          expect(component.target).toBe(false)
+        })
+      })
+    })
+
+    describe('when type is undefined', () => {
+      @Component
+      class Test extends Vue {
+        @Prop({ type: undefined }) target!: boolean
+      }
+
+      describe('when prop is given', () => {
+        const component = new Test({ propsData: { target: true } })
+
+        it('returns true', () => {
+          expect(component.target).toBe(true)
+        })
+      })
+
+      describe('when prop is not given', () => {
+        const component = new Test()
+
+        it('returns undefined', () => {
+          expect(component.target).toBe(undefined)
+        })
+      })
+    })
+
+    describe('when type is Boolean', () => {
+      @Component
+      class Test extends Vue {
+        @Prop({ type: Boolean }) target!: boolean
+      }
+
+      describe('when prop is given', () => {
+        const component = new Test({ propsData: { target: true } })
+
+        it('returns true', () => {
+          expect(component.target).toBe(true)
+        })
+      })
+
+      describe('when prop is not given', () => {
+        const component = new Test()
+
+        it('returns false', () => {
+          expect(component.target).toBe(false)
+        })
+      })
+    })
+  })
 })
