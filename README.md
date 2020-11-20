@@ -22,7 +22,7 @@ There are several decorators and 1 function (Mixin):
 - [`@Prop`](#Prop)
 - [`@PropSync`](#PropSync)
 - [`@Model`](#Model)
-- [`@ModelSync](#ModelSync)
+- [`@ModelSync`](#ModelSync)
 - [`@Watch`](#Watch)
 - [`@Provide`](#Provide)
 - [`@Inject`](#Provide)
@@ -161,7 +161,8 @@ import { Vue, Component, ModelSync } from 'vue-property-decorator'
 
 @Component
 export default class YourComponent extends Vue {
-  @ModelSync('checked', 'change', { type: Boolean }) readonly checkedValue!: boolean
+  @ModelSync('checked', 'change', { type: Boolean })
+  readonly checkedValue!: boolean
 }
 ```
 
@@ -171,12 +172,12 @@ is equivalent to
 export default {
   model: {
     prop: 'checked',
-    event: 'change'
+    event: 'change',
   },
   props: {
     checked: {
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
   computed: {
     checkedValue: {
@@ -185,9 +186,9 @@ export default {
       },
       set(value) {
         this.$emit('change', value)
-      }
-    }
-  }
+      },
+    },
+  },
 }
 ```
 
@@ -444,8 +445,8 @@ is equivalent to
 export default {
   props: {
     value: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
     name: {
@@ -454,8 +455,8 @@ export default {
       },
       set(value) {
         this.$emit('input', value)
-      }
-    }
-  }
+      },
+    },
+  },
 }
 ```
