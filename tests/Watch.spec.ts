@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Watch, Component } from '../src/vue-property-decorator'
+import { Watch, Component } from '../src'
 
 describe(Watch, () => {
   const expressionA = 'EXPRESSION_A'

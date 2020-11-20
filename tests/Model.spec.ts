@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Model, Component } from '../src/vue-property-decorator'
+import { Model, Component } from '../src'
 
 describe(Model, () => {
   @Component

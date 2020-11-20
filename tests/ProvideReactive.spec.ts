@@ -5,7 +5,7 @@ import {
   InjectReactive,
   Provide,
   Inject
-} from '../src/vue-property-decorator'
+} from '../src'
 
 describe(ProvideReactive, () => {
   describe('when key is not given', () => {
@@ -187,33 +187,33 @@ describe(ProvideReactive, () => {
       const middleKey = Symbol()
       const rootValue = 'ROOT_VALUE'
       const middleValue = 'MIDDLE_VALUE'
-  
+
       @Component
       class RootComponent extends Vue {
         @ProvideReactive(rootKey) baz = rootValue
       }
-  
+
       const root = new RootComponent()
-  
+
       @Component
       class MiddleComponent extends Vue {
         @ProvideReactive(middleKey) foo = middleValue
       }
-  
+
       @Component
       class ChildComponent extends Vue {
         @InjectReactive(rootKey) baz!: string
         @InjectReactive(middleKey) foo!: string
       }
-  
+
       const middle = new MiddleComponent({ parent: root })
       const child = new ChildComponent({ parent: middle })
-  
+
       test('provided values from the chain', () => {
         expect(child.baz).toBe(rootValue)
         expect(child.foo).toBe(middleValue)
       })
-  
+
     })
 
 

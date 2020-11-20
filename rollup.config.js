@@ -1,7 +1,7 @@
 export default {
-  input: 'lib/vue-property-decorator.js',
+  input: 'lib/index.js',
   output: {
-    file: 'lib/vue-property-decorator.umd.js',
+    file: 'lib/index.umd.js',
     format: 'umd',
     name: 'VuePropertyDecorator',
     globals: {

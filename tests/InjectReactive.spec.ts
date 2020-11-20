@@ -3,7 +3,7 @@ import {
   Component,
   InjectReactive,
   ProvideReactive
-} from '../src/vue-property-decorator'
+} from '../src'
 
 describe(InjectReactive, () => {
   describe('when inject key is given', () => {

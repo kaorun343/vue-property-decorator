@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Inject, Component } from '../src/vue-property-decorator'
+import { Inject, Component } from '../src'
 
 describe(Inject, () => {
   describe('when inject key is given', () => {

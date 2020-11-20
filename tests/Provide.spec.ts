@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Provide, Component, Inject } from '../src/vue-property-decorator'
+import { Provide, Component, Inject } from '../src'
 
 describe(Provide, () => {
   describe('when key is not given', () => {

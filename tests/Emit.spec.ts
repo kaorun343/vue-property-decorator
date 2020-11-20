@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Emit, Component } from '../src/vue-property-decorator'
+import { Emit, Component } from '../src'
 
 describe(Emit, () => {
   describe('when event name is given', () => {
@@ -61,14 +61,14 @@ describe(Emit, () => {
       expect(mockFn.mock.calls[0][1]).toBe(value)
     })
   })
-  
+
   describe('when multiple arguments is given', () => {
     @Component
     class ChildComponent extends Vue {
       count = 0
 
       @Emit() increment(n1: number, n2: number) {
-        this.count += n1 + n2 
+        this.count += n1 + n2
       }
     }
 
