@@ -836,6 +836,11 @@
   resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.0.6.tgz#d65576430fc4ad383dc7c829118798e5169178d4"
   integrity sha512-c37C60HpelUZIx+SNZVEINSxkFzQYhIXFg5AynnIA4QDBmY4iSPoACfGSwSUTCTKImukPeCgY2oqRJVP3R1Mnw==
 
+"@vue/test-utils@^2.0.0-rc.1":
+  version "2.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@vue/test-utils/-/test-utils-2.0.0-rc.1.tgz#cc462997b50dc07d73dee151da0cbb1c39a40a5a"
+  integrity sha512-WWzSbHtszmSyC1KQ3Ak6lSs9FVcdyMekZFe/g0Fdcpi3TNxUj5mEfj98sn4/ySiC4gDh53bXgveqxXKK4RspDg==
+
 abab@^2.0.3:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.5.tgz#c0b678fb32d60fc1219c784d6a826fe385aeb79a"
