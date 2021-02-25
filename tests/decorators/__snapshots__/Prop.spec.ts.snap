@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Prop with constructor without prop values from its parent component sets props correctly 1`] = `
+Object {
+  "arrayProp": [Function],
+  "booleanProp": [Function],
+  "dateProp": [Function],
+  "functionProp": [Function],
+  "numberProp": [Function],
+  "objectProp": [Function],
+  "stringProp": [Function],
+  "symbolProp": [Function],
+}
+`;
+
+exports[`Prop with multiple constructors sets prop options correctly 1`] = `
+Object {
+  "myId": Array [
+    [Function],
+    [Function],
+  ],
+}
+`;
+
+exports[`Prop with prop option sets prop options correctly 1`] = `
+Object {
+  "arrayProp": Object {
+    "0": false,
+    "1": true,
+    "default": [Function],
+    "type": [Function],
+  },
+  "booleanProp": Object {
+    "0": true,
+    "1": true,
+    "default": true,
+    "type": [Function],
+  },
+  "dateProp": Object {
+    "0": false,
+    "1": true,
+    "default": [Function],
+    "type": [Function],
+  },
+  "functionProp": Object {
+    "0": false,
+    "1": true,
+    "default": [Function],
+    "type": [Function],
+  },
+  "numberProp": Object {
+    "0": false,
+    "1": true,
+    "default": 1234,
+    "type": [Function],
+  },
+  "objectProp": Object {
+    "0": false,
+    "1": true,
+    "default": [Function],
+    "type": [Function],
+  },
+  "stringProp": Object {
+    "0": false,
+    "1": true,
+    "default": "DEFAULT-STRING",
+    "type": [Function],
+  },
+  "symbolProp": Object {
+    "0": false,
+    "1": true,
+    "default": Symbol(DEFAULT-SYMBOL),
+    "type": [Function],
+  },
+}
+`;
+
+exports[`Prop without argument without prop values from its parent component sets props correctly 1`] = `
+Object {
+  "arrayProp": undefined,
+  "booleanProp": undefined,
+  "dateProp": undefined,
+  "functionProp": undefined,
+  "numberProp": undefined,
+  "objectProp": undefined,
+  "stringProp": undefined,
+  "symbolProp": undefined,
+}
+`;

@@ -1,20 +1,18 @@
-import Vue, { PropOptions } from 'vue'
-import { createDecorator } from 'vue-class-component'
-import { Constructor } from 'vue/types/options'
-import { applyMetadata } from '../helpers/metadata'
+import { createDecorator, PropOptions, VueDecorator } from 'vue-class-component'
+
+type Constructor = (new () => any) | SymbolConstructor
 
 /**
- * decorator of a prop
- * @param  options the options for the prop
- * @return PropertyDecorator | void
+ * Decorator for prop options
+ * @param propOptions the options for the prop
  */
-export function Prop(options: PropOptions | Constructor[] | Constructor = {}) {
-  return (target: Vue, key: string) => {
-    applyMetadata(options, target, key)
-    createDecorator((componentOptions, k) => {
-      ;(componentOptions.props || ((componentOptions.props = {}) as any))[
-        k
-      ] = options
-    })(target, key)
-  }
+export function Prop(
+  propOptions?: Constructor | Constructor[] | PropOptions,
+): VueDecorator {
+  return createDecorator((componentOptions, key) => {
+    if (typeof componentOptions.props === 'undefined') {
+      componentOptions.props = Object.create(null)
+    }
+    componentOptions.props[key] = propOptions
+  })
 }

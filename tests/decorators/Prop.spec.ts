@@ -1,135 +1,233 @@
-import 'reflect-metadata'
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { mount, VueWrapper } from '@vue/test-utils'
+import { h } from 'vue'
+import { Vue } from 'vue-class-component'
 import { Prop } from '../../src/decorators/Prop'
 
 describe(Prop, () => {
-  describe('when constructor is given', () => {
-    const propertyName = 'PROPERTY_NAME'
+  describe('without argument', () => {
+    class MyComponent extends Vue {
+      @Prop() stringProp: string | undefined
+      @Prop() numberProp: number | undefined
+      @Prop() booleanProp: boolean | undefined
+      @Prop() arrayProp: Array<any> | undefined
+      @Prop() objectProp: Record<string, any> | undefined
+      @Prop() dateProp: Date | undefined
+      @Prop() functionProp: Function | undefined
+      @Prop() symbolProp: Symbol | undefined
 
-    @Component
-    class Test extends Vue {
-      @Prop(Number) [propertyName]!: number
+      render() {
+        return h('div')
+      }
     }
 
-    const value = 10
-    const component = new Test({ propsData: { [propertyName]: value } })
+    let wrapper: VueWrapper<MyComponent>
 
-    test('defines prop option', () => {
-      const props = component.$options.props as any
-      expect(props[propertyName]).toEqual({ type: Number })
+    describe('without prop values from its parent component', () => {
+      beforeEach(() => {
+        wrapper = mount(MyComponent)
+      })
+
+      it('sets props correctly', () => {
+        expect(wrapper.vm.$options.props).toMatchSnapshot()
+      })
+
+      const properties: (keyof MyComponent)[] = [
+        'stringProp',
+        'numberProp',
+        'booleanProp',
+        'arrayProp',
+        'objectProp',
+        'functionProp',
+        'symbolProp',
+      ]
+
+      it.each(properties)(`%s is undefined`, (property) => {
+        expect(wrapper.vm[property]).toBeUndefined()
+      })
     })
 
-    test('component recieves prop', () => {
-      expect(component[propertyName]).toBe(value)
+    describe('with prop values from its parent component', () => {
+      beforeEach(() => {
+        wrapper = mount(MyComponent, {
+          props: {
+            stringProp: 'STRING-PROP',
+            numberProp: 2000,
+            booleanProp: true,
+            arrayProp: [],
+            objectProp: {},
+            dateProp: new Date('2020-01-01'),
+            functionProp: new Function(),
+            symbolProp: Symbol.for('SYMBOL-PROP'),
+          },
+        })
+      })
+
+      const properties: [keyof MyComponent, any][] = [
+        ['stringProp', 'STRING-PROP'],
+        ['numberProp', 2000],
+        ['booleanProp', true],
+        ['arrayProp', []],
+        ['objectProp', {}],
+        ['dateProp', new Date('2020-01-01')],
+        ['functionProp', expect.any(Function)],
+        ['symbolProp', Symbol.for('SYMBOL-PROP')],
+      ]
+
+      it.each(properties)(
+        `%s equals to the given prop value`,
+        (property, expected) => {
+          expect(wrapper.vm[property]).toEqual(expected)
+        },
+      )
     })
   })
 
-  describe('when default value is given', () => {
-    const propertyName = 'PROPERTY_NAME'
-    const value = 'DEFAULT_VALUE'
+  describe('with constructor', () => {
+    class MyComponent extends Vue {
+      @Prop(String) stringProp: string | undefined
+      @Prop(Number) numberProp: Number | undefined
+      @Prop(Boolean) booleanProp!: boolean
+      @Prop(Array) arrayProp: Array<any> | undefined
+      @Prop(Object) objectProp: Record<string, any> | undefined
+      @Prop(Date) dateProp: Date | undefined
+      @Prop(Function) functionProp: Function | undefined
+      @Prop(Symbol) symbolProp: Symbol | undefined
 
-    @Component
-    class Test extends Vue {
-      @Prop({ default: value }) [propertyName]!: string
+      render() {
+        return h('div')
+      }
     }
 
-    const component = new Test()
+    let wrapper: VueWrapper<MyComponent>
 
-    test('defines prop option', () => {
-      const props = component.$options.props as any
-      expect(props[propertyName]).toEqual({ type: String, default: value })
+    describe('without prop values from its parent component', () => {
+      beforeEach(() => {
+        wrapper = mount(MyComponent)
+      })
+
+      it('sets props correctly', () => {
+        expect(wrapper.vm.$options.props).toMatchSnapshot()
+      })
+
+      const properties: [keyof MyComponent, any][] = [
+        ['stringProp', undefined],
+        ['numberProp', undefined],
+        ['booleanProp', false],
+        ['arrayProp', undefined],
+        ['objectProp', undefined],
+        ['dateProp', undefined],
+        ['functionProp', undefined],
+        ['symbolProp', undefined],
+      ]
+
+      it.each(properties)('%s equals to %s', (property, expected) => {
+        expect(wrapper.vm[property]).toEqual(expected)
+      })
     })
 
-    test('component uses default value', () => {
-      expect(component[propertyName]).toBe(value)
+    describe('with prop values from its parent component', () => {
+      beforeEach(() => {
+        wrapper = mount(MyComponent, {
+          props: {
+            stringProp: 'STRING-PROP',
+            numberProp: 300,
+            booleanProp: true,
+            arrayProp: [],
+            objectProp: {},
+            dateProp: new Date('2020-01-01'),
+            functionProp: new Function(),
+            symbolProp: Symbol.for('SYMBOL-PROP'),
+          },
+        })
+      })
+
+      const properties: [keyof MyComponent, any][] = [
+        ['stringProp', 'STRING-PROP'],
+        ['numberProp', 300],
+        ['booleanProp', true],
+        ['arrayProp', []],
+        ['objectProp', {}],
+        ['dateProp', new Date('2020-01-01')],
+        ['functionProp', expect.any(Function)],
+        ['symbolProp', Symbol.for('SYMBOL-PROP')],
+      ]
+
+      it.each(properties)(
+        `%s equals to the given prop value`,
+        (property, expected) => {
+          expect(wrapper.vm[property]).toEqual(expected)
+        },
+      )
     })
   })
 
-  describe('when no value is given', () => {
-    const propertyName = 'PROPERTY_NAME'
+  describe('with multiple constructors', () => {
+    class MyComponent extends Vue {
+      @Prop([String, Number]) myId!: string | number
 
-    @Component
-    class Test extends Vue {
-      @Prop() [propertyName]!: boolean
+      render() {
+        return h('div')
+      }
     }
 
-    const component = new Test()
+    let wrapper: VueWrapper<MyComponent>
 
-    test('defines prop option', () => {
-      const props = component.$options.props as any
-      expect(props[propertyName]).toEqual({ type: Boolean })
+    beforeEach(() => {
+      wrapper = mount(MyComponent)
+    })
+
+    it('sets prop options correctly', () => {
+      expect(wrapper.vm.$options.props).toMatchSnapshot()
     })
   })
 
-  describe('Boolean type', () => {
-    describe('when type is not given', () => {
-      @Component
-      class Test extends Vue {
-        @Prop() target!: boolean
+  describe('with prop option', () => {
+    class MyComponent extends Vue {
+      @Prop({ type: String, default: 'DEFAULT-STRING' }) stringProp!: string
+      @Prop({ type: Number, default: 1234 }) numberProp!: number
+      @Prop({ type: Boolean, default: true }) booleanProp!: boolean
+      @Prop({ type: Array, default: () => ['DEFAULT-ARRAY'] })
+      arrayProp!: Array<any>
+      @Prop({ type: Object, default: () => ({ value: 'DEFAULT-OBJECT' }) })
+      objectProp!: Record<string, any>
+      @Prop({ type: Date, default: () => new Date('2020-01-01') })
+      dateProp!: Date
+      @Prop({ type: Function, default: () => () => null })
+      functionProp!: Function
+      @Prop({ type: Symbol, default: Symbol.for('DEFAULT-SYMBOL') })
+      symbolProp!: Symbol
+
+      render() {
+        return h('div')
       }
+    }
 
-      describe('when prop is given', () => {
-        const component = new Test({ propsData: { target: true } })
+    let wrapper: VueWrapper<MyComponent>
 
-        it('returns true', () => {
-          expect(component.target).toBe(true)
-        })
-      })
-
-      describe('when prop is not given', () => {
-        const component = new Test()
-
-        it('returns false', () => {
-          expect(component.target).toBe(false)
-        })
-      })
+    beforeEach(() => {
+      wrapper = mount(MyComponent)
     })
 
-    describe('when type is undefined', () => {
-      @Component
-      class Test extends Vue {
-        @Prop({ type: undefined }) target!: boolean
-      }
-
-      describe('when prop is given', () => {
-        const component = new Test({ propsData: { target: true } })
-
-        it('returns true', () => {
-          expect(component.target).toBe(true)
-        })
-      })
-
-      describe('when prop is not given', () => {
-        const component = new Test()
-
-        it('returns undefined', () => {
-          expect(component.target).toBe(undefined)
-        })
-      })
+    it('sets prop options correctly', () => {
+      expect(wrapper.vm.$options.props).toMatchSnapshot()
     })
 
-    describe('when type is Boolean', () => {
-      @Component
-      class Test extends Vue {
-        @Prop({ type: Boolean }) target!: boolean
-      }
+    const properties: [keyof MyComponent, any][] = [
+      ['stringProp', 'DEFAULT-STRING'],
+      ['numberProp', 1234],
+      ['booleanProp', true],
+      ['arrayProp', ['DEFAULT-ARRAY']],
+      ['objectProp', { value: 'DEFAULT-OBJECT' }],
+      ['dateProp', new Date('2020-01-01')],
+      ['functionProp', expect.any(Function)],
+      ['symbolProp', Symbol.for('DEFAULT-SYMBOL')],
+    ]
 
-      describe('when prop is given', () => {
-        const component = new Test({ propsData: { target: true } })
-
-        it('returns true', () => {
-          expect(component.target).toBe(true)
-        })
-      })
-
-      describe('when prop is not given', () => {
-        const component = new Test()
-
-        it('returns false', () => {
-          expect(component.target).toBe(false)
-        })
-      })
-    })
+    it.each(properties)(
+      `%s equals to the given prop value`,
+      (property, expected) => {
+        expect(wrapper.vm[property]).toEqual(expected)
+      },
+    )
   })
 })
