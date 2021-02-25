@@ -1,52 +1,59 @@
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { mount, VueWrapper } from '@vue/test-utils'
+import { h } from 'vue'
+import { Vue } from 'vue-class-component'
 import { Ref } from '../../src/decorators/Ref'
 
 describe(Ref, () => {
-  describe('when key is not given', () => {
-    const propertyName = 'PROPERTY_NAME'
+  describe('without refKey', () => {
+    const KEY = 'KEY'
+    class MyComponent extends Vue {
+      @Ref()
+      [KEY]!: HTMLDivElement
 
-    @Component
-    class Test extends Vue {
-      @Ref() [propertyName]: any
+      render() {
+        return h('div', { ref: KEY }, 'THIS-IS-MY-REF-OBJECT')
+      }
     }
 
-    const component = new Test()
-    const ref = 'REFERENCE' as any
-    component.$refs[propertyName] = ref
+    let wrapper: VueWrapper<MyComponent>
 
-    test('defines computed option', () => {
-      const computed = component.$options.computed as any
-      expect(computed[propertyName].cache).toBe(false)
-      expect(computed[propertyName].get).toBeInstanceOf(Function)
+    beforeEach(() => {
+      wrapper = mount(MyComponent)
     })
 
-    test('computed property returns ref object', () => {
-      expect(component[propertyName]).toBe(ref)
+    it('returns ref object', () => {
+      expect(wrapper.vm[KEY]).toMatchInlineSnapshot(`
+        <div>
+          THIS-IS-MY-REF-OBJECT
+        </div>
+      `)
     })
   })
 
-  describe('when key is given', () => {
-    const referenceName = 'REFERENCE_NAME'
-    const propertyName = 'PROPERTY_NAME'
+  describe('with refKey', () => {
+    const REF_KEY = 'REF_KEY'
+    const KEY = 'KEY'
+    class MyComponent extends Vue {
+      @Ref(REF_KEY)
+      [KEY]!: HTMLDivElement
 
-    @Component
-    class Test extends Vue {
-      @Ref(referenceName) [propertyName]: any
+      render() {
+        return h('div', { ref: REF_KEY }, 'THIS-IS-MY-REF-OBJECT')
+      }
     }
 
-    const component = new Test()
-    const ref = 'REFERENCE' as any
-    component.$refs[referenceName] = ref
+    let wrapper: VueWrapper<MyComponent>
 
-    test('defines computed option', () => {
-      const computed = component.$options.computed as any
-      expect(computed[propertyName].cache).toBe(false)
-      expect(computed[propertyName].get).toBeInstanceOf(Function)
+    beforeEach(() => {
+      wrapper = mount(MyComponent)
     })
 
-    test('computed property returns ref object', () => {
-      expect(component[propertyName]).toBe(ref)
+    it('returns ref object', () => {
+      expect(wrapper.vm[KEY]).toMatchInlineSnapshot(`
+        <div>
+          THIS-IS-MY-REF-OBJECT
+        </div>
+      `)
     })
   })
 })
