@@ -1,25 +1,35 @@
-import Vue, { PropOptions } from 'vue'
-import { createDecorator } from 'vue-class-component'
-import { Constructor } from 'vue/types/options'
-import { applyMetadata } from '../helpers/metadata'
+import {
+  createDecorator,
+  PropOptions,
+  Vue,
+  VueDecorator,
+} from 'vue-class-component'
+
+type Constructor = (new () => any) | SymbolConstructor
 
 /**
- * decorator of model
- * @param  event event name
- * @param options options
- * @return PropertyDecorator
+ * Decorator for v-model
+ * @param propName e.g. `modelValue`
+ * @param propOptions the options for the prop
  */
 export function Model(
-  event?: string,
-  options: PropOptions | Constructor[] | Constructor = {},
-) {
-  return (target: Vue, key: string) => {
-    applyMetadata(options, target, key)
-    createDecorator((componentOptions, k) => {
-      ;(componentOptions.props || ((componentOptions.props = {}) as any))[
-        k
-      ] = options
-      componentOptions.model = { prop: k, event: event || k }
-    })(target, key)
-  }
+  propName: string,
+  propOptions?: Constructor | Constructor[] | PropOptions,
+): VueDecorator {
+  return createDecorator((componentOptions, key) => {
+    const eventName = `update:${propName}`
+    componentOptions.props ??= Object.create(null)
+    componentOptions.props[propName] = propOptions
+    componentOptions.emits ??= []
+    componentOptions.emits.push(eventName)
+    componentOptions.computed ??= Object.create(null)
+    componentOptions.computed[key] = {
+      get(this: any) {
+        return this[propName]
+      },
+      set(this: Vue, newValue: any) {
+        this.$emit(eventName, newValue)
+      },
+    }
+  })
 }
