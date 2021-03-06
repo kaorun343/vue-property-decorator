@@ -6,9 +6,7 @@ import { createDecorator, Vue, VueDecorator } from 'vue-class-component'
  */
 export function Ref(refKey?: string): VueDecorator {
   return createDecorator((componentOptions, key) => {
-    if (typeof componentOptions.computed === 'undefined') {
-      componentOptions.computed = Object.create(null)
-    }
+    componentOptions.computed ??= Object.create(null)
     componentOptions.computed[key] = {
       cache: false,
       get(this: Vue) {

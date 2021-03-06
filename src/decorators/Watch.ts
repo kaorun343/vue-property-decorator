@@ -8,12 +8,7 @@ import { createDecorator, VueDecorator } from 'vue-class-component'
  */
 export function Watch(path: string, watchOptions?: WatchOptions): VueDecorator {
   return createDecorator((componentOptions, handler) => {
-    if (typeof componentOptions.watch === 'undefined') {
-      type W = NonNullable<typeof componentOptions['watch']>
-      const watch = Object.create(null) as W
-      componentOptions.watch = watch
-    }
-
+    componentOptions.watch ??= Object.create(null)
     const watch: any = componentOptions.watch
     if (typeof watch[path] === 'object' && !Array.isArray(watch[path])) {
       watch[path] = [watch[path]]
