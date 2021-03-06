@@ -1,167 +1,162 @@
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { mount } from '@vue/test-utils'
+import { defineComponent, h } from 'vue'
+import { Vue } from 'vue-class-component'
 import { Emit } from '../../src/decorators/Emit'
+
+const mockFn = jest.fn()
 
 describe(Emit, () => {
   describe('when event name is given', () => {
-    @Component
     class ChildComponent extends Vue {
       count = 0
 
       @Emit('reset') resetCount() {
         this.count = 0
       }
-    }
 
-    const child = new ChildComponent()
-    const mockFn = jest.fn()
-    child.$emit = mockFn
-
-    beforeAll(() => {
-      child.resetCount()
-    })
-
-    test('call $emit method', () => {
-      expect(mockFn).toHaveBeenCalled()
-    })
-
-    test('emit event with given name', () => {
-      expect(mockFn.mock.calls[0][0]).toBe('reset')
-    })
-  })
-
-  describe('when argument is given', () => {
-    @Component
-    class ChildComponent extends Vue {
-      count = 0
-
-      @Emit() increment(n: number) {
-        this.count += n
+      render() {
+        return h('div')
       }
     }
 
-    const child = new ChildComponent()
-    const mockFn = jest.fn()
-    child.$emit = mockFn
-
-    const value = 30
-
-    beforeAll(() => {
-      child.increment(value)
+    const ParentComponent = defineComponent({
+      render() {
+        return h(ChildComponent, { onReset: mockFn, ref: 'child' })
+      },
     })
 
-    test('call $emit method', () => {
-      expect(mockFn).toHaveBeenCalled()
+    const mountParentComponet = () => mount(ParentComponent)
+    let wrapper: ReturnType<typeof mountParentComponet>
+    let child: ChildComponent
+
+    beforeEach(() => {
+      wrapper = mount(ParentComponent)
+      child = wrapper.vm.$refs['child'] as ChildComponent
+      child.resetCount()
     })
 
-    test('emit event with method name', () => {
-      expect(mockFn.mock.calls[0][0]).toBe('increment')
+    it('adds event name into emits array', () => {
+      expect(child.$options.emits).toContain('reset')
     })
 
-    test('emit event with argument', () => {
-      expect(mockFn.mock.calls[0][1]).toBe(value)
+    test('emit event with given name', () => {
+      expect(mockFn).toHaveBeenCalledWith()
     })
   })
 
-  describe('when multiple arguments is given', () => {
-    @Component
+  describe('when arguments are given', () => {
     class ChildComponent extends Vue {
       count = 0
 
       @Emit() increment(n1: number, n2: number) {
         this.count += n1 + n2
       }
+
+      render() {
+        return h('div')
+      }
     }
 
-    const child = new ChildComponent()
-    const mockFn = jest.fn()
-    child.$emit = mockFn
-
-    const value1 = 30
-    const value2 = 40
-
-    beforeAll(() => {
-      child.increment(value1, value2)
+    const ParentComponent = defineComponent({
+      render() {
+        return h(ChildComponent, { onIncrement: mockFn, ref: 'child' })
+      },
     })
 
-    test('call $emit method', () => {
-      expect(mockFn).toHaveBeenCalled()
+    const mountParentComponet = () => mount(ParentComponent)
+    let wrapper: ReturnType<typeof mountParentComponet>
+    let child: ChildComponent
+
+    const NEW_VALUE1 = 30
+    const NEW_VALUE2 = 40
+
+    beforeEach(() => {
+      wrapper = mount(ParentComponent)
+      child = wrapper.vm.$refs['child'] as ChildComponent
+      child.increment(NEW_VALUE1, NEW_VALUE2)
     })
 
-    test('emit event with method name', () => {
-      expect(mockFn.mock.calls[0][0]).toBe('increment')
+    it('adds event name into emits array', () => {
+      expect(child.$options.emits).toContain('increment')
     })
 
-    test('emit event with multiple arguments', () => {
-      expect(mockFn.mock.calls[0][1]).toBe(value1)
-      expect(mockFn.mock.calls[0][2]).toBe(value2)
+    test('emit event with argument', () => {
+      expect(mockFn).toHaveBeenCalledWith(NEW_VALUE1, NEW_VALUE2)
     })
   })
 
-  describe('when the value is returned and multiple arguments is given', () => {
-    @Component
+  describe('when the value is returned and arguments are given', () => {
     class ChildComponent extends Vue {
       count = 0
 
       @Emit() increment(n1: number, n2: number) {
         return n1 + n2
       }
+
+      render() {
+        return h('div')
+      }
     }
 
-    const child = new ChildComponent()
-    const mockFn = jest.fn()
-    child.$emit = mockFn
-
-    const value1 = 30
-    const value2 = 40
-
-    beforeAll(() => {
-      child.increment(value1, value2)
+    const ParentComponent = defineComponent({
+      render() {
+        return h(ChildComponent, { onIncrement: mockFn, ref: 'child' })
+      },
     })
 
-    test('call $emit method', () => {
-      expect(mockFn).toHaveBeenCalled()
-    })
+    const mountParentComponet = () => mount(ParentComponent)
+    let wrapper: ReturnType<typeof mountParentComponet>
+    let child: ChildComponent
 
-    test('emit event with method name', () => {
-      expect(mockFn.mock.calls[0][0]).toBe('increment')
+    const NEW_VALUE1 = 30
+    const NEW_VALUE2 = 40
+
+    beforeEach(() => {
+      wrapper = mount(ParentComponent)
+      child = wrapper.vm.$refs['child'] as ChildComponent
+      child.increment(NEW_VALUE1, NEW_VALUE2)
     })
 
     test('emit event with multiple arguments', () => {
-      expect(mockFn.mock.calls[0][1]).toBe(value1 + value2)
-      expect(mockFn.mock.calls[0][2]).toBe(value1)
-      expect(mockFn.mock.calls[0][3]).toBe(value2)
+      expect(mockFn).toHaveBeenCalledWith(
+        NEW_VALUE1 + NEW_VALUE2,
+        NEW_VALUE1,
+        NEW_VALUE2,
+      )
     })
   })
 
   describe('when promise has been returned', () => {
-    const value = 10
+    const VALUE = 10
 
-    @Component
     class ChildComponent extends Vue {
       @Emit() promise() {
-        return Promise.resolve(value)
+        return Promise.resolve(VALUE)
+      }
+
+      render() {
+        return h('div')
       }
     }
 
-    const child = new ChildComponent()
-    const mockFn = jest.fn()
-    child.$emit = mockFn
+    const ParentComponent = defineComponent({
+      render() {
+        return h(ChildComponent, { onPromise: mockFn, ref: 'child' })
+      },
+    })
 
-    beforeAll(async () => {
+    const mountParentComponet = () => mount(ParentComponent)
+    let wrapper: ReturnType<typeof mountParentComponet>
+    let child: ChildComponent
+
+    beforeEach(async () => {
+      wrapper = mount(ParentComponent)
+      child = wrapper.vm.$refs['child'] as ChildComponent
       await child.promise()
     })
 
-    test('call $emit method', () => {
-      expect(mockFn).toHaveBeenCalled()
-    })
-
-    test('emit event with method name', () => {
-      expect(mockFn.mock.calls[0][0]).toBe('promise')
-    })
-
     test('emit even with resolved value', () => {
-      expect(mockFn.mock.calls[0][1]).toBe(value)
+      expect(mockFn).toHaveBeenCalledWith(VALUE)
     })
   })
 })
