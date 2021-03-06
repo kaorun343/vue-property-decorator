@@ -10,8 +10,8 @@ const hyphenate = (str: string) => str.replace(hyphenateRE, '-$1').toLowerCase()
  */
 export function Emit(event?: string): VueDecorator {
   return createDecorator((componentOptions, propertyKey) => {
-    const emitName = event ?? hyphenate(propertyKey)
-    componentOptions.emits ??= []
+    const emitName = event || hyphenate(propertyKey)
+    componentOptions.emits ||= []
     componentOptions.emits.push(emitName)
     const original = componentOptions.methods[propertyKey]
     componentOptions.methods[propertyKey] = function emitter(...args: any[]) {

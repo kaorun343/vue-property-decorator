@@ -16,7 +16,7 @@ export function Provide(to?: string): VueDecorator {
 
       return {
         ...providedValue,
-        [to ?? key]: computed(() => this[key]),
+        [to || key]: computed(() => this[key]),
       }
     }
   })

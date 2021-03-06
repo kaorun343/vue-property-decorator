@@ -10,7 +10,7 @@ export function Prop(
   propOptions?: Constructor | Constructor[] | PropOptions,
 ): VueDecorator {
   return createDecorator((componentOptions, key) => {
-    componentOptions.props ??= Object.create(null)
+    componentOptions.props ||= Object.create(null)
     componentOptions.props[key] = propOptions
   })
 }

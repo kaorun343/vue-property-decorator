@@ -18,11 +18,11 @@ export function Model(
 ): VueDecorator {
   return createDecorator((componentOptions, key) => {
     const eventName = `update:${propName}`
-    componentOptions.props ??= Object.create(null)
+    componentOptions.props ||= Object.create(null)
     componentOptions.props[propName] = propOptions
-    componentOptions.emits ??= []
+    componentOptions.emits ||= []
     componentOptions.emits.push(eventName)
-    componentOptions.computed ??= Object.create(null)
+    componentOptions.computed ||= Object.create(null)
     componentOptions.computed[key] = {
       get(this: any) {
         return this[propName]

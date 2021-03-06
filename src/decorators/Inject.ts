@@ -17,7 +17,7 @@ export function Inject(
     const originalSetup = componentOptions.setup
     componentOptions.setup = (props, ctx) => {
       const result = originalSetup?.(props, ctx)
-      const injectedValue = inject(options.from ?? key, options.default)
+      const injectedValue = inject(options.from || key, options.default)
       return {
         ...result,
         [key]: injectedValue,
