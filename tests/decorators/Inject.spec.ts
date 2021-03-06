@@ -1,70 +1,106 @@
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { mount } from '@vue/test-utils'
+import { defineComponent, h, provide, reactive, ref } from 'vue'
+import { Vue } from 'vue-class-component'
 import { Inject } from '../../src/decorators/Inject'
 
+const PRIMITIVE_VALUE_KEY = 'PRIMITIVE_VALUE_KEY'
+const OBJECT_VALUE_KEY = 'OBJECT_VALUE_KEY'
+
+const ParentComponentBuilder = (ChildComponent: any) =>
+  defineComponent({
+    setup() {
+      const primitive = ref(30)
+      const object = reactive({ age: 30, food: 'Apple' })
+      provide(PRIMITIVE_VALUE_KEY, primitive)
+      provide(OBJECT_VALUE_KEY, object)
+      return { primitive, object }
+    },
+    render() {
+      return h(ChildComponent, { ref: 'child' })
+    },
+  })
+
 describe(Inject, () => {
-  describe('when inject key is given', () => {
-    const injectKey = Symbol()
-    const value = 'PROVIDED_VALUE'
-
-    @Component({
-      provide() {
-        return {
-          [injectKey]: value,
-        }
-      },
-    })
-    class ParentComponent extends Vue {}
-
-    @Component
+  describe('without options', () => {
     class ChildComponent extends Vue {
-      @Inject(injectKey) foo!: string
+      @Inject() [PRIMITIVE_VALUE_KEY]!: number;
+      @Inject() [OBJECT_VALUE_KEY]!: { age: number; food: string }
+
+      render() {
+        return h('div')
+      }
     }
 
-    const component = new ChildComponent({ parent: new ParentComponent() })
+    const ParentComponent = ParentComponentBuilder(ChildComponent)
+    const mountParentComponet = () => mount(ParentComponent)
+    let wrapper: ReturnType<typeof mountParentComponet>
+    let child: ChildComponent
 
-    test('injects provided value', () => {
-      expect(component.foo).toBe(value)
+    beforeEach(() => {
+      wrapper = mountParentComponet()
+      child = wrapper.vm.$refs['child'] as ChildComponent
+    })
+
+    it('injects value', () => {
+      expect(child[PRIMITIVE_VALUE_KEY]).toEqual(wrapper.vm.primitive)
+      expect(child[OBJECT_VALUE_KEY]).toEqual(wrapper.vm.object)
+    })
+
+    it(`follows parent's updates`, () => {
+      wrapper.vm.primitive = 40
+      wrapper.vm.object.food = 'Lemon'
+      expect(child[PRIMITIVE_VALUE_KEY]).toEqual(wrapper.vm.primitive)
+      expect(child[OBJECT_VALUE_KEY]).toEqual(wrapper.vm.object)
     })
   })
 
-  describe('when inject key is not given', () => {
-    const propertyName = 'PROPERTY_NAME'
-    const value = 'PROVIDED_VALUE'
-
-    @Component({
-      provide() {
-        return {
-          [propertyName]: value,
-        }
-      },
-    })
-    class ParentComponent extends Vue {}
-
-    @Component
+  describe('with from', () => {
     class ChildComponent extends Vue {
-      @Inject() [propertyName]!: string
+      @Inject({ from: PRIMITIVE_VALUE_KEY }) renamed!: number
+
+      render() {
+        return h('div')
+      }
     }
 
-    const component = new ChildComponent({ parent: new ParentComponent() })
+    const ParentComponent = ParentComponentBuilder(ChildComponent)
+    const mountParentComponet = () => mount(ParentComponent)
+    let wrapper: ReturnType<typeof mountParentComponet>
+    let child: ChildComponent
 
-    test('injects provided value', () => {
-      expect(component[propertyName]).toBe(value)
+    beforeEach(() => {
+      wrapper = mountParentComponet()
+      child = wrapper.vm.$refs['child'] as ChildComponent
+    })
+
+    it('injects value', () => {
+      expect(child.renamed).toEqual(wrapper.vm.primitive)
     })
   })
 
-  describe('when default value is given', () => {
-    const value = 'DEFAULT_VALUE'
+  describe('with default', () => {
+    const UNDEFINED_VALUE_KEY = 'UNDEFINED_VALUE_KEY'
 
-    @Component
     class ChildComponent extends Vue {
-      @Inject({ from: 'notFound', default: value }) optional!: string
+      @Inject({ default: 'DEFAULT VALUE' }) [UNDEFINED_VALUE_KEY]!: string
+
+      render() {
+        return h('div')
+      }
     }
 
-    const component = new ChildComponent()
+    const ParentComponent = ParentComponentBuilder(ChildComponent)
+    const mountParentComponet = () => mount(ParentComponent)
+    let wrapper: ReturnType<typeof mountParentComponet>
+    let child: ChildComponent
 
-    test('injects default value', () => {
-      expect(component.optional).toBe(value)
+    beforeEach(() => {
+      wrapper = mountParentComponet()
+      child = wrapper.vm.$refs['child'] as ChildComponent
+    })
+
+    it('injects default value', () => {
+      expect(child[UNDEFINED_VALUE_KEY]).toEqual('DEFAULT VALUE')
     })
   })
 })

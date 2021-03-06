@@ -1,20 +1,27 @@
-import { createDecorator } from 'vue-class-component'
-import { InjectKey } from 'vue/types/options'
+import { inject, InjectionKey } from 'vue'
+import { createDecorator, VueDecorator } from 'vue-class-component'
 
-export type InjectOptions = { from?: InjectKey; default?: any }
+export type InjectOptions = {
+  from?: string | InjectionKey<any>
+  default?: any
+}
+
 /**
- * decorator of an inject
- * @param from key
- * @return PropertyDecorator
+ * Decorator for inject options
+ * @param options the options for the injected value
  */
-
-export function Inject(options?: InjectOptions | InjectKey) {
+export function Inject(
+  options: InjectOptions = Object.create(null),
+): VueDecorator {
   return createDecorator((componentOptions, key) => {
-    if (typeof componentOptions.inject === 'undefined') {
-      componentOptions.inject = {}
-    }
-    if (!Array.isArray(componentOptions.inject)) {
-      componentOptions.inject[key] = options || key
+    const originalSetup = componentOptions.setup
+    componentOptions.setup = (props, ctx) => {
+      const result = originalSetup?.(props, ctx)
+      const injectedValue = inject(options.from ?? key, options.default)
+      return {
+        ...result,
+        [key]: injectedValue,
+      }
     }
   })
 }
