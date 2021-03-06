@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/vue-property-decorator.svg)](https://www.npmjs.com/package/vue-property-decorator)
 [![Build Status](https://travis-ci.org/kaorun343/vue-property-decorator.svg?branch=master)](https://travis-ci.org/kaorun343/vue-property-decorator)
 
-This library fully depends on [vue-class-component](https://github.com/vuejs/vue-class-component), so please read its README before using this library.
+This library fully depends on [vue-class-component](https://github.com/vuejs/vue-class-component), so please read its README **BEFORE** using this library.
 
 ## License
 
@@ -12,38 +12,34 @@ MIT License
 ## Install
 
 ```bash
-npm i -S vue-property-decorator
+npm i -S vue-property-decorator vue-class-component vue
 ```
 
 ## Usage
 
-There are several decorators and 1 function (Mixin):
+There are several decorators:
 
 - [`@Prop`](#Prop)
-- [`@PropSync`](#PropSync)
 - [`@Model`](#Model)
-- [`@ModelSync`](#ModelSync)
 - [`@Watch`](#Watch)
 - [`@Provide`](#Provide)
-- [`@Inject`](#Provide)
-- [`@ProvideReactive`](#ProvideReactive)
-- [`@InjectReactive`](#ProvideReactive)
+- [`@Inject`](#Inject)
 - [`@Emit`](#Emit)
 - [`@Ref`](#Ref)
-- [`@VModel`](#VModel)
-- `@Component` (**provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
-- `Mixins` (the helper function named `mixins` **provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 
-## See also
+Also, these are re-exported from `vue-class-component`
 
-[vuex-class](https://github.com/ktsn/vuex-class/)
+- `@Option`
+- `mixins`
+- `Vue`
 
-### <a id="Prop"></a> `@Prop(options: (PropOptions | Constructor[] | Constructor) = {})` decorator
+### <a id="Prop"></a> `@Prop` decorator
+
+#### Example
 
 ```ts
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Prop } from 'vue-property-decorator'
 
-@Component
 export default class YourComponent extends Vue {
   @Prop(Number) readonly propA: number | undefined
   @Prop({ default: 'default value' }) readonly propB!: string
@@ -69,35 +65,21 @@ export default {
 }
 ```
 
-**Note that:**
+#### Description
 
-## If you'd like to set `type` property of each prop value from its type definition, you can use [reflect-metadata](https://github.com/rbuckton/reflect-metadata).
-
-1. Set `emitDecoratorMetadata` to `true`.
-2. Import `reflect-metadata` **before** importing `vue-property-decorator` (importing `reflect-metadata` is needed just once.)
-
-```ts
-import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
-
-@Component
-export default class MyComponent extends Vue {
-  @Prop() age!: number
-}
-```
-
-## Each prop's default value need to be defined as same as the example code shown in above.
-
+Each prop's default value need to be defined as same as the example code shown in above.
 It's **not** supported to define each `default` property like `@Prop() prop = 'default value'` .
 
-### <a id="PropSync"></a> `@PropSync(propName: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
+### <a id="Model"></a> `@Model` decorator
+
+#### Example
 
 ```ts
-import { Vue, Component, PropSync } from 'vue-property-decorator'
+import { Vue, Model } from 'vue-property-decorator'
 
-@Component
 export default class YourComponent extends Vue {
-  @PropSync('name', { type: String }) syncedName!: string
+  @Model('modelValue', { type: String, default: 'Default Value' })
+  readonly value!: string
 }
 ```
 
@@ -106,100 +88,32 @@ is equivalent to
 ```js
 export default {
   props: {
-    name: {
+    modelValue: {
       type: String,
+      default: 'Default Value',
     },
-  },
-  computed: {
-    syncedName: {
-      get() {
-        return this.name
-      },
-      set(value) {
-        this.$emit('update:name', value)
+    emits: ['update:ModelValue'],
+    computed: {
+      value: {
+        get() {
+          return this.modelValue
+        },
+        set(newValue) {
+          this.$emit('update:modelValue')
+        },
       },
     },
   },
 }
 ```
 
-[`@PropSync`](#PropSync) works like [`@Prop`](#Prop) besides the fact that it takes the propName as an argument of the decorator, and also creates a computed getter and setter behind the scenes. This way you can interface with the property as if it was a regular data property whilst making it as easy as appending the `.sync` modifier in the parent component.
+### <a id="Watch"></a> `@Watch` decorator
 
-### <a id="Model"></a> `@Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
+#### Example
 
 ```ts
-import { Vue, Component, Model } from 'vue-property-decorator'
+import { Vue, Watch } from 'vue-property-decorator'
 
-@Component
-export default class YourComponent extends Vue {
-  @Model('change', { type: Boolean }) readonly checked!: boolean
-}
-```
-
-is equivalent to
-
-```js
-export default {
-  model: {
-    prop: 'checked',
-    event: 'change',
-  },
-  props: {
-    checked: {
-      type: Boolean,
-    },
-  },
-}
-```
-
-`@Model` property can also set `type` property from its type definition via `reflect-metadata` .
-
-### <a id="ModelSync"></a> `@ModelSync(propName: string, event?: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
-
-```ts
-import { Vue, Component, ModelSync } from 'vue-property-decorator'
-
-@Component
-export default class YourComponent extends Vue {
-  @ModelSync('checked', 'change', { type: Boolean })
-  readonly checkedValue!: boolean
-}
-```
-
-is equivalent to
-
-```js
-export default {
-  model: {
-    prop: 'checked',
-    event: 'change',
-  },
-  props: {
-    checked: {
-      type: Boolean,
-    },
-  },
-  computed: {
-    checkedValue: {
-      get() {
-        return this.checked
-      },
-      set(value) {
-        this.$emit('change', value)
-      },
-    },
-  },
-}
-```
-
-`@ModelSync` property can also set `type` property from its type definition via `reflect-metadata` .
-
-### <a id="Watch"></a> `@Watch(path: string, options: WatchOptions = {})` decorator
-
-```ts
-import { Vue, Component, Watch } from 'vue-property-decorator'
-
-@Component
 export default class YourComponent extends Vue {
   @Watch('child')
   onChildChanged(val: string, oldVal: string) {}
@@ -220,8 +134,6 @@ export default {
     child: [
       {
         handler: 'onChildChanged',
-        immediate: false,
-        deep: false,
       },
     ],
     person: [
@@ -232,8 +144,6 @@ export default {
       },
       {
         handler: 'onPersonChanged2',
-        immediate: false,
-        deep: false,
       },
     ],
   },
@@ -245,76 +155,90 @@ export default {
 }
 ```
 
-### <a id="Provide"></a> `@Provide(key?: string | symbol)` / `@Inject(options?: { from?: InjectKey, default?: any } | InjectKey)` decorator
+### <a id="Provide"></a> `@Provide` decorator
+
+#### Description
+
+Provided values are automatically wrapped with `computed` function, so when the values are modified, its child values can receives the new value.
+
+#### Example
 
 ```ts
-import { Component, Inject, Provide, Vue } from 'vue-property-decorator'
+import { Vue, Provide } from 'vue-property-decorator'
 
-const symbol = Symbol('baz')
+const symbolKey = Symbol()
 
-@Component
 export class MyComponent extends Vue {
-  @Inject() readonly foo!: string
-  @Inject('bar') readonly bar!: string
-  @Inject({ from: 'optional', default: 'default' }) readonly optional!: string
-  @Inject(symbol) readonly baz!: string
-
   @Provide() foo = 'foo'
   @Provide('bar') baz = 'bar'
+  @Provide(symbolKey) nice = 'nice'
 }
 ```
 
 is equivalent to
 
 ```js
-const symbol = Symbol('baz')
+import { computed } from 'vue'
 
-export const MyComponent = Vue.extend({
-  inject: {
-    foo: 'foo',
-    bar: 'bar',
-    optional: { from: 'optional', default: 'default' },
-    baz: symbol,
-  },
+const symbolKey = Symbol()
+
+export default {
   data() {
     return {
       foo: 'foo',
       baz: 'bar',
+      nice: 'nice',
     }
   },
   provide() {
     return {
-      foo: this.foo,
-      bar: this.baz,
+      foo: computed(() => this.foo),
+      bar: computed(() => this.baz),
+      [symbolKey]: computed(() => this.nice),
     }
   },
-})
+}
 ```
 
-### <a id="ProvideReactive"></a> `@ProvideReactive(key?: string | symbol)` / `@InjectReactive(options?: { from?: InjectKey, default?: any } | InjectKey)` decorator
+#### <a id="Inject"></a> `@Inject` decorator
 
-These decorators are reactive version of `@Provide` and `@Inject`. If a provided value is modified by parent component, then the child component can catch this modification.
+#### Example
 
 ```ts
-const key = Symbol()
-@Component
-class ParentComponent extends Vue {
-  @ProvideReactive() one = 'value'
-  @ProvideReactive(key) two = 'value'
-}
+import { Vue, Inject } from 'vue-property-decorator'
 
-@Component
-class ChildComponent extends Vue {
-  @InjectReactive() one!: string
-  @InjectReactive(key) two!: string
+export class MyComponent extends Vue {
+  @Inject() foo!: string
+  @Inject({ from: 'bar' }) baz!: string
+  @Inject({ default: '' }) nice!: string
 }
 ```
 
-### <a id="Emit"></a> `@Emit(event?: string)` decorator
+is equivalent to
+
+```js
+export default {
+  inject: {
+    foo: 'foo',
+    baz: {
+      from: 'bar',
+    },
+    nice: {
+      default: '',
+    },
+  },
+}
+```
+
+### <a id="Emit"></a> `@Emit` decorator
+
+#### Description
 
 The functions decorated by `@Emit` `$emit` their return value followed by their original arguments. If the return value is a promise, it is resolved before being emitted.
 
 If the name of the event is not supplied via the `event` argument, the function name is used instead. In that case, the camelCase name will be converted to kebab-case.
+
+#### Example
 
 ```ts
 import { Vue, Component, Emit } from 'vue-property-decorator'
@@ -393,11 +317,12 @@ export default {
 }
 ```
 
-### <a id="Ref"></a> `@Ref(refKey?: string)` decorator
+### <a id="Ref"></a> `@Ref` decorator
+
+#### Example
 
 ```ts
 import { Vue, Component, Ref } from 'vue-property-decorator'
-
 import AnotherComponent from '@/path/to/another-component.vue'
 
 @Component
@@ -425,38 +350,5 @@ export default {
       }
     }
   }
-}
-```
-
-### <a id="VModel"></a> `@VModel(propsArgs?: PropOptions)` decorator
-
-```ts
-import { Vue, Component, VModel } from 'vue-property-decorator'
-
-@Component
-export default class YourComponent extends Vue {
-  @VModel({ type: String }) name!: string
-}
-```
-
-is equivalent to
-
-```js
-export default {
-  props: {
-    value: {
-      type: String,
-    },
-  },
-  computed: {
-    name: {
-      get() {
-        return this.value
-      },
-      set(value) {
-        this.$emit('input', value)
-      },
-    },
-  },
 }
 ```
