@@ -1,5 +1,11 @@
 Changelog
 
+# v10.0.0-rc.2
+
+## others
+
+- Update README.md
+
 # v10.0.0-rc.1
 
 ## Breaking changes
