@@ -1,5 +1,18 @@
 Changelog
 
+# v10.0.0-rc.1
+
+## Breaking changes
+
+- Support Vue 3
+- Remove `reflect-metadata` support from `@Prop` and `@Model` decorators
+- Remove `@ProvideReactive` and `@InjectReactive` due to support reactive properties by `@Provide`
+- Remove `@ModelSync` and `@PropSyc`. Please use `@Model` instead.
+
+## New features
+
+- `@Emit` and `@Model` decorators now assigns `emits` options, which is introduced by Vue 3
+
 # v9.1.2
 
 ## Bug fixes
