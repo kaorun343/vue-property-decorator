@@ -1,72 +1,93 @@
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { Inject } from '../../src/decorators/Inject'
+import { mount, VueWrapper } from '@vue/test-utils'
+import { defineComponent, h, inject } from 'vue'
+import { Vue } from 'vue-class-component'
 import { Provide } from '../../src/decorators/Provide'
 
+const PRIMITIVE_VALUE_KEY = 'PRIMITIVE_VALUE_KEY'
+const OBJECT_VALUE_KEY = 'OBJECT_VALUE_KEY'
+
+type ObjectType = { age: number; food: string }
+
+const ChildComponent = defineComponent({
+  setup() {
+    const primitive = inject<number>(PRIMITIVE_VALUE_KEY)
+    const object = inject<{ age: number; food: string }>(OBJECT_VALUE_KEY)
+    return {
+      primitive,
+      object,
+    }
+  },
+  render() {
+    return h('div')
+  },
+})
+
+interface ChildType {
+  primitive: number | undefined
+  object: ObjectType | undefined
+}
+
 describe(Provide, () => {
-  describe('when key is not given', () => {
-    const value = 'VALUE'
-
-    @Component
+  describe(`without 'to' option`, () => {
     class ParentComponent extends Vue {
-      @Provide() one = value
+      @Provide() [PRIMITIVE_VALUE_KEY] = 30;
+      @Provide() [OBJECT_VALUE_KEY] = { age: 30, food: 'Apple' }
+
+      $refs!: {
+        child: ChildType
+      }
+
+      render() {
+        return h(ChildComponent, { ref: 'child' })
+      }
     }
 
-    @Component
-    class ChildComponent extends Vue {
-      @Inject() one!: string
-    }
+    let wrapper: VueWrapper<ParentComponent>
+    let child: typeof ParentComponent['prototype']['$refs']['child']
 
-    const component = new ChildComponent({ parent: new ParentComponent() })
+    beforeEach(() => {
+      wrapper = mount(ParentComponent)
+      child = wrapper.vm.$refs.child
+    })
 
-    test('provides value', () => {
-      expect(component.one).toBe(value)
+    it('provides values', () => {
+      expect(child.primitive).toEqual(wrapper.vm[PRIMITIVE_VALUE_KEY])
+      expect(child.object).toEqual(wrapper.vm[OBJECT_VALUE_KEY])
+    })
+
+    it('dispatches updates', () => {
+      wrapper.vm[PRIMITIVE_VALUE_KEY] = 40
+      wrapper.vm[OBJECT_VALUE_KEY].food = 'Lemon'
+      expect(child.primitive).toEqual(wrapper.vm[PRIMITIVE_VALUE_KEY])
+      expect(child.object).toEqual(wrapper.vm[OBJECT_VALUE_KEY])
     })
   })
 
-  describe('does not override parent dependencies', () => {
-    @Component
+  describe(`with 'to' option`, () => {
     class ParentComponent extends Vue {
-      @Provide() root = 'root'
-    }
-    @Component
-    class NodeComponent extends Vue {
-      @Provide() node = 'node'
-    }
-    @Component
-    class ChildComponent extends Vue {
-      @Inject() root!: string
-      @Inject() node!: string
+      @Provide(PRIMITIVE_VALUE_KEY) primitive = 30
+      @Provide(OBJECT_VALUE_KEY) object = { age: 30, food: 'Apple' }
+
+      $refs!: {
+        child: ChildType
+      }
+
+      render() {
+        return h(ChildComponent, { ref: 'child' })
+      }
     }
 
-    const parent = new ParentComponent()
-    const node = new NodeComponent({ parent })
-    const component = new ChildComponent({ parent: node })
+    let wrapper: VueWrapper<ParentComponent>
+    let child: typeof ParentComponent['prototype']['$refs']['child']
 
-    test('provides value', () => {
-      expect(component.node).toBe('node')
-      expect(component.root).toBe('root')
+    beforeEach(() => {
+      wrapper = mount(ParentComponent)
+      child = wrapper.vm.$refs.child
     })
-  })
 
-  describe('when key is given', () => {
-    const key = 'KEY'
-    const value = 'VALUE'
-
-    @Component
-    class ParentComponent extends Vue {
-      @Provide(key) eleven = value
-    }
-
-    @Component
-    class ChildComponent extends Vue {
-      @Inject(key) one!: string
-    }
-
-    const component = new ChildComponent({ parent: new ParentComponent() })
-
-    test('provides value', () => {
-      expect(component.one).toBe(value)
+    it('provides values', () => {
+      expect(child.primitive).toEqual(wrapper.vm.primitive)
+      expect(child.object).toEqual(wrapper.vm.object)
     })
   })
 })

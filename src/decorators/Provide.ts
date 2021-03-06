@@ -1,23 +1,23 @@
-import { createDecorator } from 'vue-class-component'
-import {
-  inheritInjected,
-  needToProduceProvide,
-  produceProvide,
-} from '../helpers/provideInject'
+import { computed } from 'vue'
+import { createDecorator, VueDecorator } from 'vue-class-component'
 
 /**
- * decorator of a provide
- * @param key key
- * @return PropertyDecorator | void
+ * Decorator for provide options
+ * @param to to
  */
+export function Provide(to?: string): VueDecorator {
+  return createDecorator((componentOptions, key) => {
+    const originalProvide = componentOptions.provide
+    componentOptions.provide = function (this: any) {
+      const providedValue =
+        typeof originalProvide === 'function'
+          ? originalProvide.call(this)
+          : originalProvide
 
-export function Provide(key?: string | symbol) {
-  return createDecorator((componentOptions, k) => {
-    let provide: any = componentOptions.provide
-    inheritInjected(componentOptions)
-    if (needToProduceProvide(provide)) {
-      provide = componentOptions.provide = produceProvide(provide)
+      return {
+        ...providedValue,
+        [to ?? key]: computed(() => this[key]),
+      }
     }
-    provide.managed[k] = key || k
   })
 }
