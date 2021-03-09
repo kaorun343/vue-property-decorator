@@ -3,6 +3,8 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { ModelSync } from '../../src/decorators/ModelSync'
 
+const mockFunction = jest.fn()
+
 describe(ModelSync, () => {
   const eventName = 'change'
   const propertyName = 'checked'
@@ -17,11 +19,14 @@ describe(ModelSync, () => {
   }
 
   const initialValue = false
-  const component = new TestComponent({
-    propsData: { [propertyName]: initialValue },
+  let component: TestComponent
+
+  beforeEach(() => {
+    component = new TestComponent({
+      propsData: { [propertyName]: initialValue },
+    })
+    component.$emit = mockFunction
   })
-  const mockFunction = jest.fn()
-  component.$emit = mockFunction
 
   test('define model option correctly', () => {
     expect(component.$options.model).toEqual({
@@ -41,7 +46,10 @@ describe(ModelSync, () => {
 
   describe('when props has been changed', () => {
     const newValue = true
-    component.changeChecked(newValue)
+
+    beforeEach(() => {
+      component.changeChecked(newValue)
+    })
 
     test('calls $emit method', () => {
       expect(mockFunction).toHaveBeenCalled()

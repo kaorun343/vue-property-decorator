@@ -17,9 +17,13 @@ describe(PropSync, () => {
   }
 
   const value = 'John'
-  const component = new Test({ propsData: { [propertyName]: value } })
+  let component: Test
   const mockFn = jest.fn()
-  component.$emit = mockFn
+
+  beforeEach(() => {
+    component = new Test({ propsData: { [propertyName]: value } })
+    component.$emit = mockFn
+  })
 
   test('defines prop option', () => {
     const props = component.$options.props as any
@@ -32,7 +36,10 @@ describe(PropSync, () => {
 
   describe('when prop has been changed', () => {
     const newValue = 'Ola'
-    component.changeName(newValue)
+
+    beforeEach(() => {
+      component.changeName(newValue)
+    })
 
     test('calls $emit method', () => {
       expect(mockFn).toHaveBeenCalled()
