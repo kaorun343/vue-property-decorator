@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsc -p ./src/tsconfig.json && rollup -c",
     "test": "jest",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "files": [
     "lib"
