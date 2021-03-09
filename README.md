@@ -159,7 +159,8 @@ export default {
 
 #### Description
 
-Provided values are automatically wrapped with `computed` function, so when the values are modified, its child values can receives the new value.
+If you set `reactive` to true, the provided value is wrapped with `computed` function.
+Provided values with `reactive` option dispatches their new values to child components.
 
 #### Example
 
@@ -170,8 +171,9 @@ const symbolKey = Symbol()
 
 export class MyComponent extends Vue {
   @Provide() foo = 'foo'
-  @Provide('bar') baz = 'bar'
-  @Provide(symbolKey) nice = 'nice'
+  @Provide({ to: 'bar' }) baz = 'bar'
+  @Provide({ to: symbolKey }) nice = 'nice'
+  @Provide({ reactive: true }) age = 30
 }
 ```
 
@@ -188,13 +190,15 @@ export default {
       foo: 'foo',
       baz: 'bar',
       nice: 'nice',
+      age: 30,
     }
   },
   provide() {
     return {
-      foo: computed(() => this.foo),
-      bar: computed(() => this.baz),
-      [symbolKey]: computed(() => this.nice),
+      foo: this.key,
+      bar: this.baz,
+      [symbolKey]: this.nice,
+      age: computed(() => this.age),
     }
   },
 }
