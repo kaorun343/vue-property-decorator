@@ -69,9 +69,7 @@ export default {
 }
 ```
 
-**Note that:**
-
-## If you'd like to set `type` property of each prop value from its type definition, you can use [reflect-metadata](https://github.com/rbuckton/reflect-metadata).
+#### If you'd like to set `type` property of each prop value from its type definition, you can use [reflect-metadata](https://github.com/rbuckton/reflect-metadata).
 
 1. Set `emitDecoratorMetadata` to `true`.
 2. Import `reflect-metadata` **before** importing `vue-property-decorator` (importing `reflect-metadata` is needed just once.)
@@ -86,7 +84,7 @@ export default class MyComponent extends Vue {
 }
 ```
 
-## Each prop's default value need to be defined as same as the example code shown in above.
+#### Each prop's default value need to be defined as same as the example code shown in above.
 
 It's **not** supported to define each `default` property like `@Prop() prop = 'default value'` .
 
