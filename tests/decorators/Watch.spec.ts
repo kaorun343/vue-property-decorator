@@ -1,5 +1,5 @@
 import { mount, VueWrapper } from '@vue/test-utils'
-import { h } from 'vue'
+import { defineComponent, h } from 'vue'
 import { Vue } from 'vue-class-component'
 import { Watch } from '../../src/decorators/Watch'
 
@@ -97,6 +97,103 @@ describe(Watch, () => {
           ],
         }
       `)
+    })
+  })
+
+  describe('when multiple child components have the same watch event name', () => {
+    const watcher1 = jest.fn()
+    const watcher2 = jest.fn()
+    const watcher3 = jest.fn()
+
+    class ChildComponent1 extends Vue {
+      target = 30
+
+      @Watch('target')
+      handle(...args: any[]) {
+        watcher1(...args)
+      }
+
+      render() {
+        return h('div')
+      }
+    }
+
+    class ChildComponent2 extends Vue {
+      target = 30
+
+      @Watch('target')
+      handle(...args: any[]) {
+        watcher2(...args)
+      }
+
+      render() {
+        return h('div')
+      }
+    }
+
+    class ChildComponent3 extends Vue {
+      target = 30
+
+      @Watch('target')
+      handle(...args: any[]) {
+        watcher3(...args)
+      }
+
+      render() {
+        return h('div')
+      }
+    }
+
+    class ParentComponent extends Vue {
+      $refs!: {
+        child1: ChildComponent1
+        child2: ChildComponent2
+        child3: ChildComponent3
+      }
+
+      render() {
+        return h('div', null, [
+          h(ChildComponent1, { ref: 'child1' }),
+          h(ChildComponent2, { ref: 'child2' }),
+          h(ChildComponent3, { ref: 'child3' }),
+        ])
+      }
+    }
+
+    let wrapper: VueWrapper<ParentComponent>
+
+    beforeEach(() => {
+      wrapper = mount(ParentComponent)
+    })
+
+    describe('child component 1', () => {
+      it('triggers watch event once at each child component', async () => {
+        wrapper.vm.$refs.child1.target += 10
+        await wrapper.vm.$nextTick()
+        expect(watcher1).toHaveBeenCalledTimes(1)
+        expect(watcher2).toHaveBeenCalledTimes(0)
+        expect(watcher3).toHaveBeenCalledTimes(0)
+      })
+    })
+
+    describe('child component 2', () => {
+      it('triggers watch event once at each child component', async () => {
+        wrapper.vm.$refs.child2.target += 10
+        await wrapper.vm.$nextTick()
+        expect(watcher1).toHaveBeenCalledTimes(0)
+        expect(watcher2).toHaveBeenCalledTimes(1)
+        expect(watcher3).toHaveBeenCalledTimes(0)
+      })
+    })
+
+    describe('child component 3', () => {
+      it('triggers watch event once at each child component', async () => {
+        wrapper.vm.$refs.child3.target += 10
+        await wrapper.vm.$nextTick()
+        expect(watcher1).toHaveBeenCalledTimes(0)
+        expect(watcher2).toHaveBeenCalledTimes(0)
+        expect(watcher3).toHaveBeenCalledTimes(1)
+      })
     })
   })
 })
