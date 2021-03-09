@@ -35,6 +35,11 @@ Also, these are re-exported from `vue-class-component`
 
 ### <a id="Prop"></a> `@Prop` decorator
 
+#### Description
+
+Each prop's default value need to be defined as same as the example code shown in above.
+It's **not** supported to define each `default` property like `@Prop() prop = 'default value'` .
+
 #### Example
 
 ```ts
@@ -52,9 +57,7 @@ is equivalent to
 ```js
 export default {
   props: {
-    propA: {
-      type: Number,
-    },
+    propA: Number,
     propB: {
       default: 'default value',
     },
@@ -65,12 +68,13 @@ export default {
 }
 ```
 
+### <a id="Model"></a> `@Model` decorator
+
 #### Description
 
-Each prop's default value need to be defined as same as the example code shown in above.
-It's **not** supported to define each `default` property like `@Prop() prop = 'default value'` .
+The first argument is the prop's name that the component accepts from its parent component. If you set the name as `modelValue`, then the component can use `v-model` .
 
-### <a id="Model"></a> `@Model` decorator
+The second argument is the same with `@Prop` decorator's argument.
 
 #### Example
 
@@ -92,15 +96,15 @@ export default {
       type: String,
       default: 'Default Value',
     },
-    emits: ['update:ModelValue'],
-    computed: {
-      value: {
-        get() {
-          return this.modelValue
-        },
-        set(newValue) {
-          this.$emit('update:modelValue')
-        },
+  },
+  emits: ['update:modelValue'],
+  computed: {
+    value: {
+      get() {
+        return this.modelValue
+      },
+      set(newValue) {
+        this.$emit('update:modelValue')
       },
     },
   },
@@ -245,9 +249,8 @@ If the name of the event is not supplied via the `event` argument, the function 
 #### Example
 
 ```ts
-import { Vue, Component, Emit } from 'vue-property-decorator'
+import { Vue, Emit } from 'vue-property-decorator'
 
-@Component
 export default class YourComponent extends Vue {
   count = 0
 
@@ -326,10 +329,9 @@ export default {
 #### Example
 
 ```ts
-import { Vue, Component, Ref } from 'vue-property-decorator'
+import { Vue, Ref } from 'vue-property-decorator'
 import AnotherComponent from '@/path/to/another-component.vue'
 
-@Component
 export default class YourComponent extends Vue {
   @Ref() readonly anotherComponent!: AnotherComponent
   @Ref('aButton') readonly button!: HTMLButtonElement
