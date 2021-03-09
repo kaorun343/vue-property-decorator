@@ -1,11 +1,15 @@
 import { computed } from 'vue'
 import { createDecorator, VueDecorator } from 'vue-class-component'
 
+export type ProvideOption = {
+  to?: string | symbol
+  reactive?: boolean
+}
+
 /**
  * Decorator for provide options
- * @param to to
  */
-export function Provide(to?: string): VueDecorator {
+export function Provide(options?: ProvideOption): VueDecorator {
   return createDecorator((componentOptions, key) => {
     const originalProvide = componentOptions.provide
     componentOptions.provide = function (this: any) {
@@ -16,7 +20,9 @@ export function Provide(to?: string): VueDecorator {
 
       return {
         ...providedValue,
-        [to || key]: computed(() => this[key]),
+        [options?.to || key]: options?.reactive
+          ? computed(() => this[key])
+          : this[key],
       }
     }
   })
