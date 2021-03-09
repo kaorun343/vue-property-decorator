@@ -1,5 +1,15 @@
 Changelog
 
+# v10.0.0-rc.3
+
+## Breaking changes
+
+- Update `@Provide` decorator's option to accept `reactive` option
+
+## others
+
+- Fix README.md
+
 # v10.0.0-rc.2
 
 ## others
