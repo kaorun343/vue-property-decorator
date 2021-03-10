@@ -34,7 +34,18 @@ describe(Watch, () => {
     })
 
     it('sets options correctly', () => {
-      expect(wrapper.vm.$options.watch).toMatchInlineSnapshot(`Object {}`)
+      expect(wrapper.vm.$options.watch?.[WATCH_PATH]).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "handler": "onChange",
+            "user": true,
+          },
+          Object {
+            "handler": "onChangeAnother",
+            "user": true,
+          },
+        ]
+      `)
     })
 
     it('does not call on mounted', () => {
@@ -76,7 +87,16 @@ describe(Watch, () => {
     })
 
     it('sets options correctly', () => {
-      expect(wrapper.vm.$options.watch).toMatchInlineSnapshot(`Object {}`)
+      expect(wrapper.vm.$options.watch?.[WATCH_PATH]).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "deep": true,
+            "handler": "onChange",
+            "immediate": true,
+            "user": true,
+          },
+        ]
+      `)
     })
   })
 
