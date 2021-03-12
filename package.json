@@ -27,6 +27,8 @@
     "@types/node": "^14.14.9",
     "@vue/test-utils": "^2.0.0-rc.1",
     "jest": "^26.6.3",
+    "jest-serializer-vue": "^2.0.2",
+    "prettier": "^2.2.1",
     "rollup": "^2.33.3",
     "ts-jest": "^26.4.4",
     "typescript": "^4.1.2",
