@@ -207,6 +207,10 @@ export default class YourComponent extends Vue {
 
   @Watch('person')
   onPersonChanged2(val: Person, oldVal: Person) {}
+
+  @Watch('person')
+  @Watch('child')
+  onPersonAndChildChanged() {}
 }
 ```
 
@@ -218,6 +222,11 @@ export default {
     child: [
       {
         handler: 'onChildChanged',
+        immediate: false,
+        deep: false,
+      },
+      {
+        handler: 'onPersonAndChildChanged',
         immediate: false,
         deep: false,
       },
@@ -233,12 +242,18 @@ export default {
         immediate: false,
         deep: false,
       },
+      {
+        handler: 'onPersonAndChildChanged',
+        immediate: false,
+        deep: false,
+      },
     ],
   },
   methods: {
     onChildChanged(val, oldVal) {},
     onPersonChanged1(val, oldVal) {},
     onPersonChanged2(val, oldVal) {},
+    onPersonAndChildChanged() {},
   },
 }
 ```
