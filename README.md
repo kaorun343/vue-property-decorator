@@ -29,7 +29,7 @@ There are several decorators:
 
 Also, these are re-exported from `vue-class-component`
 
-- `@Option`
+- `@Options`
 - `mixins`
 - `Vue`
 
