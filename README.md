@@ -149,7 +149,7 @@ export default {
   },
   data() {
     return {
-      clonedName: clone(this.$props.clonedName),
+      clonedName: clone(this.$props.name),
     }
   },
   watch: {
