@@ -23,6 +23,10 @@ export function clone<T extends any>(obj: T) {
     return obj
   }
 
+  if (obj === null) {
+    return null
+  }
+
   if (Array.isArray(obj)) {
     return cloneArray(obj)
   }
