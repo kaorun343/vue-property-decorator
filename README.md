@@ -21,6 +21,7 @@ There are several decorators and 1 function (Mixin):
 
 - [`@Prop`](#Prop)
 - [`@PropSync`](#PropSync)
+- [`@PropClone`](#PropClone)
 - [`@Model`](#Model)
 - [`@ModelSync`](#ModelSync)
 - [`@Watch`](#Watch)
@@ -122,6 +123,48 @@ export default {
 ```
 
 [`@PropSync`](#PropSync) works like [`@Prop`](#Prop) besides the fact that it takes the propName as an argument of the decorator, and also creates a computed getter and setter behind the scenes. This way you can interface with the property as if it was a regular data property whilst making it as easy as appending the `.sync` modifier in the parent component.
+
+### <a id="PropClone"></a> `@PropClone(propName: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
+```ts
+import { Vue, Component, PropClone } from 'vue-property-decorator'
+
+@Component
+export default class YourComponent extends Vue {
+  @PropClone('name', { default: 'default value' }) public clonedName!: string
+}
+```
+
+is equivalent to
+
+```ts
+/**
+ * clone() is an helper to clone your object/array and therefore not keeping the reference.
+ **/
+
+export default {
+  props: {
+    name: {
+      default: 'default value',
+    },
+  },
+  data() {
+    return {
+      clonedName: clone(this.$props.clonedName),
+    }
+  },
+  watch: {
+    name: [
+      {
+        handler(newValue: any) {
+          this.clonedName = clone(newValue)
+        },
+        deep: true,
+        immediate: false,
+      }
+    ]
+  }
+}
+```
 
 ### <a id="Model"></a> `@Model(event?: string, options: (PropOptions | Constructor[] | Constructor) = {})` decorator
 
