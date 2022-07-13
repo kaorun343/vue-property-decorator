@@ -30,6 +30,7 @@ There are several decorators and 1 function (Mixin):
 - [`@InjectReactive`](#ProvideReactive)
 - [`@Emit`](#Emit)
 - [`@Ref`](#Ref)
+- [`@Setup`](#Setup)
 - [`@VModel`](#VModel)
 - `@Component` (**provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
 - `Mixins` (the helper function named `mixins` **provided by** [vue-class-component](https://github.com/vuejs/vue-class-component))
@@ -440,6 +441,31 @@ export default {
   }
 }
 ```
+
+### <a id="Setup"></a> `@Setup()` decorator
+
+For use with the setup() from the Composition API within class based components:
+
+```ts
+import { Component, Setup, Vue } from 'vue-property-decorator';
+// ...
+@Component
+export default class MyClassComponent extends Vue {
+  @Setup get setupContext() {
+    return setup(() => {
+      const count = ref(0)
+
+      const increment = () => {
+        count.value++
+      }
+
+      return { count, increment };
+    });
+  }
+}
+```
+
+Then access with e.g., this.setupContext().count.value.
 
 ### <a id="VModel"></a> `@VModel(propsArgs?: PropOptions)` decorator
 
