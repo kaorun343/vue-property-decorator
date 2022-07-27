@@ -25,7 +25,7 @@ There are several decorators and 1 function (Mixin):
 - [`@ModelSync`](#ModelSync)
 - [`@Watch`](#Watch)
 - [`@Provide`](#Provide)
-- [`@Inject`](#Provide)
+- [`@Inject`](#Inject)
 - [`@ProvideReactive`](#ProvideReactive)
 - [`@InjectReactive`](#ProvideReactive)
 - [`@Emit`](#Emit)
