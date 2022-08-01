@@ -15,6 +15,12 @@ MIT License
 npm i -S vue-property-decorator
 ```
 
+OR
+
+```bash
+yarn add vue-property-decorator vue-class-component
+```
+
 ## Usage
 
 There are several decorators and 1 function (Mixin):
