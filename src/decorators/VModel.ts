@@ -2,7 +2,7 @@ import Vue, { PropOptions } from 'vue'
 import { createDecorator } from 'vue-class-component'
 
 /**
- * decorator for capturings v-model binding to component
+ * decorator for capturing v-model binding to component
  * @param options the options for the prop
  */
 export function VModel(options: PropOptions = {}) {
