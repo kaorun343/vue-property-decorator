@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Inject } from '../../src/decorators/Inject'
-import { InjectReactive } from '../../src/decorators/InjectReactive'
-import { Provide } from '../../src/decorators/Provide'
-import { ProvideReactive } from '../../src/decorators/ProvideReactive'
+import { Inject, InjectReactive, Provide, ProvideReactive } from '../../src'
 
 describe(ProvideReactive, () => {
   describe('when key is not given', () => {

@@ -1,14 +1,14 @@
 import 'reflect-metadata'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { ModelSync } from '../../src/decorators/ModelSync'
+import { ModelSync } from '../../src'
 
 const mockFunction = jest.fn()
 
 describe(ModelSync, () => {
   const eventName = 'change'
   const propertyName = 'checked'
-  const accessorName = 'chackedValue'
+  const accessorName = 'checkedValue'
   @Component
   class TestComponent extends Vue {
     @ModelSync(propertyName, eventName, Boolean) [accessorName]!: boolean
@@ -40,7 +40,7 @@ describe(ModelSync, () => {
     expect(props![propertyName]).toEqual({ type: Boolean })
   })
 
-  test('component recieves prop', () => {
+  test('component receives prop', () => {
     expect(component[accessorName]).toBe(initialValue)
   })
 

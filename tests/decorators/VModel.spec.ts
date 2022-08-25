@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { VModel } from '../../src/decorators/VModel'
+import { VModel } from '../../src'
 
 describe(VModel, () => {
   @Component
