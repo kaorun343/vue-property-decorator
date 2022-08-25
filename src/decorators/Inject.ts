@@ -4,7 +4,7 @@ import { InjectKey } from 'vue/types/options'
 export type InjectOptions = { from?: InjectKey; default?: any }
 /**
  * decorator of an inject
- * @param from key
+ * @param options key
  * @return PropertyDecorator
  */
 

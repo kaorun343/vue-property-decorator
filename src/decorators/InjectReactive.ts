@@ -5,7 +5,7 @@ import { InjectOptions } from './Inject'
 
 /**
  * decorator of a reactive inject
- * @param from key
+ * @param options key
  * @return PropertyDecorator
  */
 
