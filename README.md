@@ -383,7 +383,7 @@ export default {
     },
     resetCount() {
       this.count = 0
-      this.$emit('reset')
+      this.$emit('reset-count')
     },
     returnValue() {
       this.$emit('return-value', 10)
