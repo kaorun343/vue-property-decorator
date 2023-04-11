@@ -1,4 +1,9 @@
-# Vue Property Decorator
+
+# [DEPRECATED] Vue Property Decorator
+## ⚠️ Notice
+This library is no longer actively maintained. If you still want to use classes, check out the community-maintained project [`vue-facing-decorator`](https://facing-dev.github.io/vue-facing-decorator/#/).
+
+---
 
 [![npm](https://img.shields.io/npm/v/vue-property-decorator.svg)](https://www.npmjs.com/package/vue-property-decorator)
 [![Build Status](https://travis-ci.org/kaorun343/vue-property-decorator.svg?branch=master)](https://travis-ci.org/kaorun343/vue-property-decorator)
