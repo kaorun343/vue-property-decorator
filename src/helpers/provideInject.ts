@@ -29,6 +29,7 @@ export function produceProvide(original: any) {
         enumerable: true,
         configurable: true,
         get: () => this[i],
+        set: (newValue) => this[i] = newValue,
       })
     }
     return rv
