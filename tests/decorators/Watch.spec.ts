@@ -1,7 +1,7 @@
 import { mount, Wrapper } from '@vue/test-utils'
 import Vue, { CreateElement } from 'vue'
 import Component from 'vue-class-component'
-import { Watch } from '../../src/decorators/Watch'
+import { Watch } from '../../src'
 
 describe(Watch, () => {
   const onChange = jest.fn()

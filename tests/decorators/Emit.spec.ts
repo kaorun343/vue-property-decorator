@@ -1,7 +1,7 @@
 import { mount, Wrapper } from '@vue/test-utils'
 import Vue, { CreateElement } from 'vue'
 import Component from 'vue-class-component'
-import { Emit } from '../../src/decorators/Emit'
+import { Emit } from '../../src'
 
 const mockFn = jest.fn()
 

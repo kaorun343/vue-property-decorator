@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Inject } from '../../src/decorators/Inject'
+import { Inject } from '../../src'
 
 describe(Inject, () => {
   describe('when inject key is given', () => {

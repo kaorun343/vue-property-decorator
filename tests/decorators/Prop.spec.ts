@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Prop } from '../../src/decorators/Prop'
+import { Prop } from '../../src'
 
 describe(Prop, () => {
   describe('when constructor is given', () => {
@@ -20,7 +20,7 @@ describe(Prop, () => {
       expect(props[propertyName]).toEqual({ type: Number })
     })
 
-    test('component recieves prop', () => {
+    test('component receives prop', () => {
       expect(component[propertyName]).toBe(value)
     })
   })

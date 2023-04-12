@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Inject } from '../../src/decorators/Inject'
-import { Provide } from '../../src/decorators/Provide'
+import { Inject, Provide } from '../../src'
 
 describe(Provide, () => {
   describe('when key is not given', () => {

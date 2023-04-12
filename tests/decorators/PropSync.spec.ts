@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { PropSync } from '../../src/decorators/PropSync'
+import { PropSync } from '../../src'
 
 describe(PropSync, () => {
   const propertyName = 'PROPERTY_NAME'
@@ -30,7 +30,7 @@ describe(PropSync, () => {
     expect(props[propertyName]).toEqual({ type: String })
   })
 
-  test('component recieves prop', () => {
+  test('component receives prop', () => {
     expect(component[accessorName]).toBe(value)
   })
 
