@@ -427,9 +427,9 @@ export default class YourComponent extends Vue {
 
 is equivalent to
 
-```js
+```ts
 export default {
-  computed() {
+  computed: {
     anotherComponent: {
       cache: false,
       get() {
