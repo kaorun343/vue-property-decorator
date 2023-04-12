@@ -21,7 +21,7 @@ Changelog
 
 ## Bug fixes
 
-- Make reactive provided values configureable (#330)
+- Make reactive provided values configurable (#330)
 
 ## Refactoring / others
 
